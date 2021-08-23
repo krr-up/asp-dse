@@ -243,347 +243,348 @@ class QuadTree:
 # *********************************************
 # *********************************************
 
-insertions = 0
-vgl = 0
-def distance(A, B):
-    return sqrt((A[0] - B[0]) ** 2 + (A[1] - B[1]) ** 2 + (A[2] - B[2]) ** 2)
-def generateFront(optimal, nadir, steps):
-    if len(optimal) != len(nadir):
-        return []
-    front = []
-    
-    xOpt = [optimal[0], nadir[1], nadir[2]]
-    yOpt = [nadir[0], optimal[1], nadir[2]]
-    zOpt = [nadir[0], nadir[1], optimal[2]]
-    
-    step_x = (nadir[0] - optimal[0]) / float(steps)
-    step_y = (nadir[1] - optimal[1]) / float(steps)
-    step_z = (nadir[2] - optimal[2]) / float(steps)
-    
-    xSource = xOpt[0]
-    ySource = yOpt[1]
-    zSource = zOpt[2]
-    
-    for i in range(steps + 1):
-        xCur = xSource
-        yCur = ySource
-        zCur = zSource
-        for _ in range(steps + 1 - i):
-            
-            front.append([xCur, yCur, zCur])
-            yCur -= step_y
-            zCur += step_z
-            
-        xSource -= step_x
-        zSource += step_z
-        
-    return front
+if __name__ == "__main__":
+	insertions = 0
+	vgl = 0
+	def distance(A, B):
+		return sqrt((A[0] - B[0]) ** 2 + (A[1] - B[1]) ** 2 + (A[2] - B[2]) ** 2)
+	def generateFront(optimal, nadir, steps):
+		if len(optimal) != len(nadir):
+			return []
+		front = []
+		
+		xOpt = [optimal[0], nadir[1], nadir[2]]
+		yOpt = [nadir[0], optimal[1], nadir[2]]
+		zOpt = [nadir[0], nadir[1], optimal[2]]
+		
+		step_x = (nadir[0] - optimal[0]) / float(steps)
+		step_y = (nadir[1] - optimal[1]) / float(steps)
+		step_z = (nadir[2] - optimal[2]) / float(steps)
+		
+		xSource = xOpt[0]
+		ySource = yOpt[1]
+		zSource = zOpt[2]
+		
+		for i in range(steps + 1):
+			xCur = xSource
+			yCur = ySource
+			zCur = zSource
+			for _ in range(steps + 1 - i):
+				
+				front.append([xCur, yCur, zCur])
+				yCur -= step_y
+				zCur += step_z
+				
+			xSource -= step_x
+			zSource += step_z
+			
+		return front
 
-def generateFrontSphere(dimen, r, steps):
-    front = []
-    angles = []
-    step = 80.0 / steps
-    for i in range(steps + 1):
-        angles.append((2*np.pi*(5 + i * step))/360)
-    #print angles
-    if dimen == 2:
-        for a in range(steps+1):
-                x1 = r * np.cos(angles[a])
-                x2 = r * np.sin(angles[a])
-                front.append([x1,x2])
-    if dimen == 3:
-        for a in range(steps+1):
-            for b in range(steps+1):
-                x1 = r * np.cos(angles[a])
-                x2 = r * np.sin(angles[a]) * np.cos(angles[b])
-                x3 = r * np.sin(angles[a]) * np.sin(angles[b])
-                front.append([x1,x2,x3])
-    elif dimen == 4:
-        for a in range(steps+1):
-            for b in range(steps+1):
-                for c in range(steps+1):
-                    x1 = r * np.cos(angles[a])
-                    x2 = r * np.sin(angles[a]) * np.cos(angles[b])
-                    x3 = r * np.sin(angles[a]) * np.sin(angles[b]) * np.cos(angles[c])
-                    x4 = r * np.sin(angles[a]) * np.sin(angles[b]) * np.sin(angles[c])
-                    front.append([x1,x2,x3,x4])
-    elif dimen == 5:
-        for a in range(steps+1):
-            for b in range(steps+1):
-                for c in range(steps+1):
-                    for d in range(steps+1):
-                        x1 = r * np.cos(angles[a])
-                        x2 = r * np.sin(angles[a]) * np.cos(angles[b])
-                        x3 = r * np.sin(angles[a]) * np.sin(angles[b]) * np.cos(angles[c])
-                        x4 = r * np.sin(angles[a]) * np.sin(angles[b]) * np.sin(angles[c]) * np.cos(angles[d])
-                        x5 = r * np.sin(angles[a]) * np.sin(angles[b]) * np.sin(angles[c]) * np.sin(angles[d])
-                        front.append([x1,x2,x3,x4,x5])
-    return front
-    
-def fig(x:list, y:list, z:list):    
-    fig = plt.figure()
-    ax = Axes3D(fig)
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
-    ax.set_zlabel('Z')
-    ax.view_init(elev=30, azim=45)
-     
-    ax.scatter(x, y, z, c='m')
-    plt.show()
+	def generateFrontSphere(dimen, r, steps):
+		front = []
+		angles = []
+		step = 80.0 / steps
+		for i in range(steps + 1):
+			angles.append((2*np.pi*(5 + i * step))/360)
+		#print angles
+		if dimen == 2:
+			for a in range(steps+1):
+					x1 = r * np.cos(angles[a])
+					x2 = r * np.sin(angles[a])
+					front.append([x1,x2])
+		if dimen == 3:
+			for a in range(steps+1):
+				for b in range(steps+1):
+					x1 = r * np.cos(angles[a])
+					x2 = r * np.sin(angles[a]) * np.cos(angles[b])
+					x3 = r * np.sin(angles[a]) * np.sin(angles[b])
+					front.append([x1,x2,x3])
+		elif dimen == 4:
+			for a in range(steps+1):
+				for b in range(steps+1):
+					for c in range(steps+1):
+						x1 = r * np.cos(angles[a])
+						x2 = r * np.sin(angles[a]) * np.cos(angles[b])
+						x3 = r * np.sin(angles[a]) * np.sin(angles[b]) * np.cos(angles[c])
+						x4 = r * np.sin(angles[a]) * np.sin(angles[b]) * np.sin(angles[c])
+						front.append([x1,x2,x3,x4])
+		elif dimen == 5:
+			for a in range(steps+1):
+				for b in range(steps+1):
+					for c in range(steps+1):
+						for d in range(steps+1):
+							x1 = r * np.cos(angles[a])
+							x2 = r * np.sin(angles[a]) * np.cos(angles[b])
+							x3 = r * np.sin(angles[a]) * np.sin(angles[b]) * np.cos(angles[c])
+							x4 = r * np.sin(angles[a]) * np.sin(angles[b]) * np.sin(angles[c]) * np.cos(angles[d])
+							x5 = r * np.sin(angles[a]) * np.sin(angles[b]) * np.sin(angles[c]) * np.sin(angles[d])
+							front.append([x1,x2,x3,x4,x5])
+		return front
+		
+	def fig(x:list, y:list, z:list):    
+		fig = plt.figure()
+		ax = Axes3D(fig)
+		ax.set_xlabel('X')
+		ax.set_ylabel('Y')
+		ax.set_zlabel('Z')
+		ax.view_init(elev=30, azim=45)
+		
+		ax.scatter(x, y, z, c='m')
+		plt.show()
 
-def is_dominated(vector1, vector2):
-    global vgl
-    vgl += 1
-    dominated, worse, better = -2, False, False
-    for i in range(0, len(vector1)):
-        if vector1[i] > vector2[i]:
-            worse = True
-        elif vector1[i] < vector2[i]:
-            better = True
-    
-    if worse and better:
-        dominated = 0
-    elif worse:
-        dominated = 1
-    elif better:
-        dominated = -1
-            
-    return dominated
+	def is_dominated(vector1, vector2):
+		global vgl
+		vgl += 1
+		dominated, worse, better = -2, False, False
+		for i in range(0, len(vector1)):
+			if vector1[i] > vector2[i]:
+				worse = True
+			elif vector1[i] < vector2[i]:
+				better = True
+		
+		if worse and better:
+			dominated = 0
+		elif worse:
+			dominated = 1
+		elif better:
+			dominated = -1
+				
+		return dominated
 
-def check_pareto(newVector, archive, quadtree):
-    #Only tests if the current partial assignement is already dominated
-    if quadtree: #Archive is a QuadTree
-        if archive == None:
-            return True
-        
-        if archive.isdominated(newVector, archive):
-            return False
-        return True
-    else: #Archive is a list
-        if archive.isEmpty():
-            return True
-        else:
-            removeme = False
-            #Check if current model is dominated by current front
-            for point in archive:
-#                     print point[1], point[0]
-                frontVec = point
-                dominated = is_dominated(frontVec, newVector) 
-                # check if it is dominated: -2 indifferent, -1 frontVec dominated current model, 0 incomparable, 1 current model dominates frontVec
-                if dominated <= -1:
-                    removeme = True
-                    break
-                elif dominated == 0:
-                    continue
-                else:  # dominated > 0:
-                    # new model still dominates frontVec. Can break
-                    break
-            if removeme:
-                return False
-    return True   
+	def check_pareto(newVector, archive, quadtree):
+		#Only tests if the current partial assignement is already dominated
+		if quadtree: #Archive is a QuadTree
+			if archive == None:
+				return True
+			
+			if archive.isdominated(newVector, archive):
+				return False
+			return True
+		else: #Archive is a list
+			if archive.isEmpty():
+				return True
+			else:
+				removeme = False
+				#Check if current model is dominated by current front
+				for point in archive:
+	#                     print point[1], point[0]
+					frontVec = point
+					dominated = is_dominated(frontVec, newVector) 
+					# check if it is dominated: -2 indifferent, -1 frontVec dominated current model, 0 incomparable, 1 current model dominates frontVec
+					if dominated <= -1:
+						removeme = True
+						break
+					elif dominated == 0:
+						continue
+					else:  # dominated > 0:
+						# new model still dominates frontVec. Can break
+						break
+				if removeme:
+					return False
+		return True   
 
-def check(vec, archive, quadtree):
-    #checks the completed solution and inserts it
-    global _archive
-    global insertions
-    
-    insertions += 1
-    if quadtree:
-        # at this point, it is clear that that the new found point is not dominated
-        if archive == None:
-            _archive = QuadTree(vec, [], len(vec))
-        else:
-            _archive.insert_new(vec, [])
-        return True    
-    else:
-        if archive.isEmpty():
-            _archive.append(vec)
-        else:
-            k=0
-            remove = []
-            for point in _archive:
-                frontVec = point
-                dominated = is_dominated(frontVec, vec)
-                
-                if dominated == 0:
-                    k+=1
-                    continue
-                else:  # dominated == 1:
-                    remove.append(point)
-                    continue
-            for elem in remove:
-                _archive.remove(elem)
-            
-            _archive.append(vec)
-        return True
-def handler(signum, frame):
-    raise Exception("Timeout")
-def run(quadtree):
-    global time
-    global vectors
-    global _archive
-    global front
-    global ordered
-    if quadtree == True:
-        _archive = None 
-    else:
-        _archive = LinkedList()
-    
-    
-    t0 = time.clock()
-    for vector in vectors:
-        for decision in vector:
-            val = check_pareto(decision, _archive, quadtree)
-            if val == False:
-                break
-        else:
-            final_vec = vector[-1]
-            check(final_vec, _archive, quadtree)
-    
-    _time = time.clock() - t0
-            
-    if quadtree:
-        #_archive.print_tree_indented()
-        archive = _archive.to_unordered_list()
-        print(len(archive))
-    else:
-        print(len(_archive))
-        archive = _archive
-    
-#     x = map(lambda x: x[0], archive)
-#     y = map(lambda x: x[1], archive)
-#     if len(archive[0]) > 2:
-#         z = map(lambda x: x[2], archive)
-#     else:
-#         z = [0] * len(x)
-#     fig(x,y,z)
-#     print "Finished after ", _time, "seconds"
-    return _time
-
-
-# *********************************************
-# *********************************************
-# *************Benchmark starts here***********
-# *********************************************
-# *********************************************
-
-# Arguments:
-# python QuadTree.py <nbr of dimensions> <nbr of steps> <nbr of hops> <partial solution step> <timeout> <i|o|u>
-m=3 
-steps=50
-hops=100
-dec_steps=0.1
-timeout = 3600
-ordered=0
-if len(sys.argv) > 1: m = int(sys.argv[1])
-if len(sys.argv) > 2: steps = int(sys.argv[2])
-if len(sys.argv) > 3: hops = int(sys.argv[3])
-if len(sys.argv) > 4: dec_steps = float(sys.argv[4])
-if len(sys.argv) > 5: timeout = int(sys.argv[5])
-if len(sys.argv) > 6: 
-    if sys.argv[6] == "o": 
-        ordered=1
-    elif sys.argv[6] == "i":
-        ordered=2
-    else:
-        ordered=0
-#front = generateFront([105, 121, 135], [160, 171, 190], 60)
-front = generateFrontSphere(m,100,steps)
+	def check(vec, archive, quadtree):
+		#checks the completed solution and inserts it
+		global _archive
+		global insertions
+		
+		insertions += 1
+		if quadtree:
+			# at this point, it is clear that that the new found point is not dominated
+			if archive == None:
+				_archive = QuadTree(vec, [], len(vec))
+			else:
+				_archive.insert_new(vec, [])
+			return True    
+		else:
+			if archive.isEmpty():
+				_archive.append(vec)
+			else:
+				k=0
+				remove = []
+				for point in _archive:
+					frontVec = point
+					dominated = is_dominated(frontVec, vec)
+					
+					if dominated == 0:
+						k+=1
+						continue
+					else:  # dominated == 1:
+						remove.append(point)
+						continue
+				for elem in remove:
+					_archive.remove(elem)
+				
+				_archive.append(vec)
+			return True
+	def handler(signum, frame):
+		raise Exception("Timeout")
+	def run(quadtree):
+		global time
+		global vectors
+		global _archive
+		global front
+		global ordered
+		if quadtree == True:
+			_archive = None 
+		else:
+			_archive = LinkedList()
+		
+		
+		t0 = time.clock()
+		for vector in vectors:
+			for decision in vector:
+				val = check_pareto(decision, _archive, quadtree)
+				if val == False:
+					break
+			else:
+				final_vec = vector[-1]
+				check(final_vec, _archive, quadtree)
+		
+		_time = time.clock() - t0
+				
+		if quadtree:
+			#_archive.print_tree_indented()
+			archive = _archive.to_unordered_list()
+			print(len(archive))
+		else:
+			print(len(_archive))
+			archive = _archive
+		
+	#     x = map(lambda x: x[0], archive)
+	#     y = map(lambda x: x[1], archive)
+	#     if len(archive[0]) > 2:
+	#         z = map(lambda x: x[2], archive)
+	#     else:
+	#         z = [0] * len(x)
+	#     fig(x,y,z)
+	#     print "Finished after ", _time, "seconds"
+		return _time
 
 
+	# *********************************************
+	# *********************************************
+	# *************Benchmark starts here***********
+	# *********************************************
+	# *********************************************
 
-x = map(lambda x: x[0], front)
-y = map(lambda x: x[1], front)
-if len(front[0]) > 2:
-    z = map(lambda x: x[2], front)
-else:
-    z = [0] * len(front)
+	# Arguments:
+	# python QuadTree.py <nbr of dimensions> <nbr of steps> <nbr of hops> <partial solution step> <timeout> <i|o|u>
+	m=3 
+	steps=50
+	hops=100
+	dec_steps=0.1
+	timeout = 3600
+	ordered=0
+	if len(sys.argv) > 1: m = int(sys.argv[1])
+	if len(sys.argv) > 2: steps = int(sys.argv[2])
+	if len(sys.argv) > 3: hops = int(sys.argv[3])
+	if len(sys.argv) > 4: dec_steps = float(sys.argv[4])
+	if len(sys.argv) > 5: timeout = int(sys.argv[5])
+	if len(sys.argv) > 6: 
+		if sys.argv[6] == "o": 
+			ordered=1
+		elif sys.argv[6] == "i":
+			ordered=2
+		else:
+			ordered=0
+	#front = generateFront([105, 121, 135], [160, 171, 190], 60)
+	front = generateFrontSphere(m,100,steps)
 
-# print(front)
 
-# fig(list(x),list(y),list(z))
-print(time.asctime())
-if ordered == 2:
-    steps_top = matplotlib.mlab.frange(3, 1.2, -dec_steps)
-else:
-    steps_top = matplotlib.mlab.frange(1.2, 3, dec_steps)
-r = np.random.RandomState(1723492062)
-r.shuffle(front)
 
-vectors = []
-for step_top in steps_top:
-    stack = front[:]
-    
-    print("-", step_top)
-    while stack:
-        point = stack.pop()
-        mu = [0] * len(point)
-        for i in range(len(point)):
-            mu[i] = point[i] / float(hops)
-        
-        factors = r.uniform(0.8, step_top, hops)
-        
-        _sum = [0] * len(point)
-        decisions = []
-        for factor in factors:
-            for i in range(len(_sum)):
-                _sum[i] += mu[i] * factor
-            decisions.append(_sum[:])
-        if(_sum[0] < point[0]):
-            for i in range(len(_sum)):
-                _sum[i] = point[i]
-            decisions.append(_sum[:])
-        vectors.append(decisions)
+	x = map(lambda x: x[0], front)
+	y = map(lambda x: x[1], front)
+	if len(front[0]) > 2:
+		z = map(lambda x: x[2], front)
+	else:
+		z = [0] * len(front)
 
-print(m,steps,hops,dec_steps,len(front),len(vectors),timeout)
+	# print(front)
 
-#r.shuffle(vectors)
+	fig(list(x),list(y),list(z))
+	print(time.asctime())
+	if ordered == 2:
+		steps_top = matplotlib.mlab.frange(3, 1.2, -dec_steps)
+	else:
+		steps_top = matplotlib.mlab.frange(1.2, 3, dec_steps)
+	r = np.random.RandomState(172349062)
+	r.shuffle(front)
 
-x = map(lambda x: x[-1][0], vectors)
-y = map(lambda x: x[-1][1], vectors)
-if len(front[0]) > 2:
-    z = map(lambda x: x[-1][2], vectors)
-else:
-    z = [0] * len(vectors)
+	vectors = []
+	for step_top in steps_top:
+		stack = front[:]
+		
+		print("-", step_top)
+		while stack:
+			point = stack.pop()
+			mu = [0] * len(point)
+			for i in range(len(point)):
+				mu[i] = point[i] / float(hops)
+			
+			factors = r.uniform(0.8, step_top, hops)
+			
+			_sum = [0] * len(point)
+			decisions = []
+			for factor in factors:
+				for i in range(len(_sum)):
+					_sum[i] += mu[i] * factor
+				decisions.append(_sum[:])
+			if(_sum[0] < point[0]):
+				for i in range(len(_sum)):
+					_sum[i] = point[i]
+				decisions.append(_sum[:])
+			vectors.append(decisions)
 
-# for i in range(len(x)):
-#     print z[i],y[i],x[i]
+	print(m,steps,hops,dec_steps,len(front),len(vectors),timeout)
 
-# fig(list(x),list(y),list(z))
-if ordered == 0:
-    r.shuffle(vectors)
-    
-# print vectors[1][4]
-runtimes_quadtree = []
-runtimes_list = []
-linux = platform.system() != "Windows"
-if linux: signal.signal(signal.SIGALRM, handler)
-for i in range(5):
-    warn("QT"+str(i))
-    insertions = 0
-    if linux: signal.alarm(timeout)
-    try:
-        runtimes_quadtree.append(run(quadtree=True))
-    except Exception as exc:
-        print("QuadTree Error:", exc)
-        break 
-    print(insertions)
-    print("vgl QT", _archive.getvgl())
-# _archive.print_tree_indented()
-for i in range(5):
-    warn("List"+str(i))
-    insertions = 0
-    if linux: signal.alarm(timeout)
-    # try:
-    runtimes_list.append(run(quadtree=False))
-    # except Exception as exc:
-    #     print("List Error:", exc)
-    #     break
-    print(insertions)
-    print ("vgl List", vgl)
-if linux: signal.alarm(10)    
-print("Run times Quad--Tree:", runtimes_quadtree)
-print("Mean:", np.mean(runtimes_quadtree), "Standard Deviation:", np.std(runtimes_quadtree))
-print("Run times List:", runtimes_list)
-print("Mean:", np.mean(runtimes_list), "Standard Deviation:", np.std(runtimes_list))
+	#r.shuffle(vectors)
+
+	x = map(lambda x: x[-1][0], vectors)
+	y = map(lambda x: x[-1][1], vectors)
+	if len(front[0]) > 2:
+		z = map(lambda x: x[-1][2], vectors)
+	else:
+		z = [0] * len(vectors)
+
+	# for i in range(len(x)):
+	#     print z[i],y[i],x[i]
+
+	fig(list(x),list(y),list(z))
+	if ordered == 0:
+		r.shuffle(vectors)
+		
+	# print vectors[1][4]
+	runtimes_quadtree = []
+	runtimes_list = []
+	linux = platform.system() != "Windows"
+	if linux: signal.signal(signal.SIGALRM, handler)
+	for i in range(1):
+		warn("QT"+str(i))
+		insertions = 0
+		if linux: signal.alarm(timeout)
+		try:
+			runtimes_quadtree.append(run(quadtree=True))
+		except Exception as exc:
+			print("QuadTree Error:", exc)
+			break 
+		print(insertions)
+		print("vgl QT", _archive.getvgl())
+	# _archive.print_tree_indented()
+	for i in range(1):
+		warn("List"+str(i))
+		insertions = 0
+		if linux: signal.alarm(timeout)
+		# try:
+		runtimes_list.append(run(quadtree=False))
+		# except Exception as exc:
+		#     print("List Error:", exc)
+		#     break
+		print(insertions)
+		print ("vgl List", vgl)
+	if linux: signal.alarm(10)    
+	print("Run times Quad--Tree:", runtimes_quadtree)
+	print("Mean:", np.mean(runtimes_quadtree), "Standard Deviation:", np.std(runtimes_quadtree))
+	print("Run times List:", runtimes_list)
+	print("Mean:", np.mean(runtimes_list), "Standard Deviation:", np.std(runtimes_list))
 
