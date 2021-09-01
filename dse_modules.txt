@@ -1,3 +1,7 @@
 This document collects ideas for different versions of the project
+
 - with vs. without configuration ID
+
 - latency <= period vs. latency > period
+
+- For the time one communication takes its complete routing path is blocked. vs. During one communication, per timestep one resource is blocked.
