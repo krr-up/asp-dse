@@ -1,0 +1,3 @@
+Things that have to be aligned to get one common version of the project
+- implementation of link with ID
+- comm(T1,T2,A) vs. comm(task(T1,A),task(T2,A),A)
