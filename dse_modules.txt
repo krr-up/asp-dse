@@ -4,4 +4,4 @@ This document collects ideas for different versions of the project
 
 - latency <= period vs. latency > period
 
-- For the time one communication takes its complete routing path is blocked. vs. During one communication, per timestep one resource is blocked.
+- Circuit Switching vs. Packet Switching (packet switching distinguishes Stall & Forward Switching and Cut-through / Wormhole Switching)
