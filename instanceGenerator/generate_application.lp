@@ -1,5 +1,3 @@
-patterns(1,0,1).
-
 application(AID) :- patterns(_,_,X), AID=@getId(a,(X,)).
 
 series(P,AID) :- patterns(NS,NP,A), P=1..NS, AID=@getId(a,(A,)).
