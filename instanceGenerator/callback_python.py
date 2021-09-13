@@ -11,6 +11,3 @@ def getValue(min,max,seed,args):
 	t=r.randint(min.number,max.number+1)
 	return Number(int(t))
 #end.
-
-%patterns(7,5,1).
-%patterns(2,8,2).
