@@ -1,7 +1,0 @@
-This document collects ideas for different versions of the project
-
-- with vs. without configuration ID
-
-- latency <= period vs. latency > period
-
-- Circuit Switching vs. Packet Switching (packet switching distinguishes Stall & Forward Switching and Cut-through / Wormhole Switching)
