@@ -8,7 +8,7 @@ if [ -z "$line" ]
 then
     line=$(grep -n 'Search interrupted: Approximate Pareto front:' $1 | cut -d : -f 1)
 fi
-lower_bound=$(( ${line}+1 ))
-sed -n ${lower_bound},'$p' $1 > $2
+lowerBound=$(( ${line}+1 ))
+sed -n ${lowerBound},'$p' $1 > $2
 
 echo "Pareto-optimal front from" $1 "was saved in" $2

@@ -10,7 +10,7 @@ The tool checks if a given implementation is valid concerning a given specificat
 
 ## Additional scripts
 
- - **scripts/get_front.sh** : Given the output of a DSE (input file), it extracts the resulting Pareto optimal front (output file) 
- - **scripts/select_impl.sh** : Given a Pareto optimal front (input file), it extracts a certain implementation (output file)
+ - **scripts/getFront.sh** : Given the output of a DSE (input file), it extracts the resulting Pareto optimal front (output file) 
+ - **scripts/selectImpl.sh** : Given a Pareto optimal front (input file), it extracts a certain implementation (output file)
  (further information about the execution of these scripts can be found in the respective file)
  
