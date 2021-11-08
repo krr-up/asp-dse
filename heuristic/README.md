@@ -13,7 +13,7 @@ This folder contain the following implementations:
 
 - **h3.1.lp** : Heuristic preferring equal decisions (v2) (via modifier **true**)
 
-- **h3.1.lp** : Heuristic avoiding unequal decisions (v2) (via modifier **false**)
+- **h3.2.lp** : Heuristic avoiding unequal decisions (v2) (via modifier **false**)
 
 - **h4.lp** : Preventing unequal decisions (via **integrity constraints**)
 
