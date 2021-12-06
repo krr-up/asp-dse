@@ -1,0 +1,86 @@
+\documentclass[11pt]{beamer}
+\usetheme{Warsaw}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage{courier}
+\usepackage{xcolor}
+\usepackage{relsize}
+
+\newcommand{\Underscore}{\textscale{1}{\textunderscore}}
+\author[Müller et al.]{Luise Müller and Kai Neubauer and Philipp Wanko}
+\title[DSE with ASP: Progress and Outlook]{DSE with ASP: Progress and Outlook}
+%\setbeamercovered{transparent} 
+%\setbeamertemplate{navigation symbols}{} 
+%\logo{} 
+%\institute{} 
+\date{} 
+%\subject{} 
+
+\begin{document}
+\input{listings}
+\input{systems}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\section{Overview}
+
+\begin{frame}{Overview}
+\begin{itemize}
+  \item Consolidated old work
+  \item Reimplemented system with \clingo's application class
+  \pause
+  \item Currently working on experiments and writeup for \emph{Evolutionary System Design}
+  \pause
+  \item Collecting material and ideas for \emph{Generative Design Space Exploration}
+\end{itemize}
+\end{frame}
+
+\section{Evolutionary System Design}
+
+\begin{frame}{Problem Description}
+  \begin{itemize}
+    \item Given is an implementation of a specification
+    \item Specification is modified
+    \item Given new specification and legacy implementation, find implementations that are, first, Pareto-optimal and, second, close to the legacy implementation
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Experimental Setup}
+  \begin{enumerate}
+    \item Find best-possible implementations to our benchmark set with a high timeout - currently running
+    \item Select among the non-dominated implementations a random implementation - TODO
+    \item Modify instance benchmark set to varying degrees - TODO
+    \item Find implementations to new benchmarks with small timeout - TODO
+    \item Employ strategies, optimization, domain-specific heuristic to find implementations to new benchmarks that are similar to legacy solution with same timeout as above - TODO
+  \end{enumerate}
+  \pause
+  Expectation: We have faster convergence and smaller distance with similarity information, giving us high-quality solutions faster while being easier to produce.
+\end{frame}
+
+\begin{frame}{Strategies}
+\end{frame}
+
+\begin{frame}{Optimization}
+\end{frame}
+
+\begin{frame}{Heuristics}
+\end{frame}
+
+\section{Generative Design Space Exploration}
+
+\begin{frame}{Problem Description}
+\end{frame}
+
+\begin{frame}{Relevant Links}
+\end{frame}
+
+\begin{frame}{Switching schemes}
+\end{frame}
+
+\end{document}
