@@ -9,6 +9,8 @@
 \usepackage{courier}
 \usepackage{xcolor}
 \usepackage{relsize}
+\usepackage{tikz}
+\usepackage{listings}
 
 \newcommand{\Underscore}{\textscale{1}{\textunderscore}}
 \author[Müller et al.]{Luise Müller and Kai Neubauer and Philipp Wanko}
@@ -75,7 +77,70 @@
 \section{Generative Design Space Exploration}
 
 \begin{frame}{Problem Description}
+  \begin{itemize}
+    \item Architecture unknown prior to design process
+    \item Instead of structure, we only have a set of hardware types (i.e., \textit{device library})
+    \item As before, classified into processing and communication elements
+    \item Mapping options assign tasks to processing \textit{types}, not to specific instances
+    \item Topology of architecture is subject to exploration 
+    \item Research questions:
+    \begin{itemize}
+      \item Can we define upper/lower bounds on the number of hardware types to instantiate?
+      \item Should we constrain the topology? 
+    \end{itemize}
+  \end{itemize}
 \end{frame}
+
+\begin{frame}{Solution Approaches }
+  Specification
+  \begin{itemize} 
+     \item Define processing types, e.g., \texttt{proc\_type(dsp). proc\_type(uC).}
+     \item Define communication types, e.g., \texttt{comm\_type(router). comm\_type(bus).}
+     \item Mapping options assign a task to a processing type, e.g., \texttt{map(m0, t1, dsp). map(m1, t1, uC).}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Solution Approaches (cntd.)}
+    Allocation
+  \begin{itemize} 
+     \item Allocate number of instances
+     \item Maximum number of instances per type must be constrained by upper bound
+     \item an 'always safe' lower bound is zero
+  \end{itemize}
+
+  Binding
+  \begin{itemize} 
+     \item First, select type binding 
+     \item Second, select specific instance for final binding
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Solution Approaches (cntd.)}
+  \label{slide:bounds}
+  \begin{itemize} 
+    \item Can we define upper/lower bounds on the number of hardware types to instantiate?
+    \begin{itemize}
+      \item General upper bound: number of processing element instances at most number of tasks \[\sum(instances)\leq \vert T\vert\]
+      \item Specific upper bound: number of instances of a specific type at most number of mappings that contain that type \[\forall type: \sum(instance_{type}) \leq \sum(m)\mid m=(t, type)\]
+      \item Lower bound: Only reliably decidable after type-binding
+    \end{itemize}
+    % \item Should we constrain the topology? 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Solution Approaches (cntd.)}
+  \lstinputlisting[basicstyle=\tiny,breaklines=true]{alloc.lp}
+  \pause
+  4 Answer Sets:
+  {\tiny
+  \[\{\{(t_1,dsp_1),(t_2,dsp_1)\},\{(t_1,dsp_1),(t_2,dsp_2)\},\{(t_1,dsp_2),(t_2,dsp_1)\},\{(t_1,uC_1),(t_2,dsp_1)\}\}\]
+  }
+\end{frame}
+
+\begin{frame}{Solution Approaches (cntd.)}
+  
+\end{frame}
+
 
 \begin{frame}{Relevant Links}
 \end{frame}
