@@ -70,7 +70,7 @@
 		\item Prevent that unequal design decisions are made
 		\item Constrain the search space
 		\item E.g. If possible, prevent that the same task is bound on different resources and force this way equal bindings 
-		\lstinputlisting[basicstyle=\small,breaklines=true, firstline=1,lastline=1]{listings.lp}
+		{\small\lstinputlisting[language=clingo,breaklines=true, firstline=1,lastline=1]{listings.lp}}
 		\pause
 		\item Similarly, force equal Routing and equal Scheduling if possible
 	\end{itemize}
@@ -92,9 +92,9 @@
 		\item Direct the search
 		\pause
 		\item Modular implementation by the use of constants
-		\lstinputlisting[basicstyle=\small,breaklines=true, firstline=3,lastline=4]{listings.lp}
+		{\small\lstinputlisting[language=clingo,breaklines=true, firstline=3,lastline=4]{listings.lp}}
 		\pause
-		\lstinputlisting[basicstyle=\small,breaklines=true, firstline=5,lastline=5]{listings.lp}
+		{\small\lstinputlisting[language=clingo,breaklines=true, firstline=5,lastline=5]{listings.lp}}
 		\pause
 		\item Considered heuristic modifier: true, false, factor, sign, level
 	\end{itemize}
@@ -104,10 +104,10 @@
 	\begin{itemize}
 		\item Different concepts for heuristics
 		\item Concept 1
-		\lstinputlisting[basicstyle=\small,breaklines=true, firstline=7,lastline=7]{listings.lp}
+		{\small\lstinputlisting[language=clingo,breaklines=true, firstline=7,lastline=7]{listings.lp}}
 		\pause
 		\item Concept 2
-		\lstinputlisting[basicstyle=\small,breaklines=true, firstline=8,lastline=8]{listings.lp}
+		{\small\lstinputlisting[language=clingo,breaklines=true, firstline=8,lastline=8]{listings.lp}}
 		\pause
 		\item As well, for both a version for not equal decisions
 		\item Similarly, for Routing and Scheduling decisions
@@ -169,7 +169,8 @@
 \end{frame}
 
 \begin{frame}[fragile]{Solution Approaches (cntd.)}
-  \lstinputlisting[basicstyle=\tiny,breaklines=true]{alloc.lp}
+
+  {\tiny\lstinputlisting[language=clingo,numbers=left,breaklines=true]{alloc.lp}}
   \pause
   4 Answer Sets:
   {\tiny
