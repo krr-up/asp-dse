@@ -12,7 +12,10 @@ lower_bound(dsp, 0). lower_bound(uC, 0). % TODO
 1{quant_alloc(TYPE,LOWER..UPPER)}1 :- proc_type(TYPE), upper_bound(TYPE,UPPER), lower_bound(TYPE,LOWER).
 instance(TYPE,1..N) :- quant_alloc(TYPE,N).
 
-1{bind_type(M,T,X) : map(M,T,X)}1 :- task(T).
-1{bind(M,T,X,N) : instance(X,N),bind_type(M,T,X)}1 :- task(T).
+1 { selected_mapping(T,M,X) : map(M,T,X) } 1 :- task(T).
+:- selected_mapping(T,M,X), not bind(T,X,_).
 
-:- instance(TYPE,N), not bind(_,_,TYPE,N).
+1{ bind(T,X,L..U) : lower_bound(X,L), upper_bound(X,U) }1 :- task(T).
+:- bind(T,X,N), not instance(X,N).
+:- bind(T,X,N), not map(_,T,X).
+:- instance(TYPE,N), not bind(_,TYPE,N).

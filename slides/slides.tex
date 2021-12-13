@@ -49,7 +49,7 @@
   \begin{itemize}
     \item Given is a legacy specification
     \item Specification is modified
-    \item Given new specification and legacy implementation, find implementations that are, first, Pareto-optimal and, second, close to the legacy implementation
+    \item Given modified specification and implementation of the legacy specification, find implementations that are, first, Pareto-optimal and, second, close to the legacy implementation
   \end{itemize}
 \end{frame}
 
@@ -59,10 +59,11 @@
     \item Select among the non-dominated implementations a random implementation - TODO
     \item Modify instance benchmark set to varying degrees - TODO
     \item Find implementations to new benchmarks with small timeout - TODO
-    \item Employ strategies, optimization, domain-specific heuristics to find implementations to new benchmarks that are similar to legacy solution with same timeout as above - TODO
+    \item Employ strategies, optimization, domain-specific heuristics to find implementations to new benchmarks that are similar to legacy solution with same timeout as previous step - TODO
   \end{enumerate}
   \pause
-  Expectation: We have faster convergence and smaller distance with similarity information, giving us high-quality solutions faster while being easier to produce.
+  Expectation: We have faster convergence and smaller distance with similarity information. 
+  This gives us high-quality solutions faster while being easier to produce.
 \end{frame}
 
 \begin{frame}{Strategies}
