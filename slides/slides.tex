@@ -47,7 +47,7 @@
 
 \begin{frame}{Problem Description}
   \begin{itemize}
-    \item Given is an implementation of a specification
+    \item Given is a legacy specification
     \item Specification is modified
     \item Given new specification and legacy implementation, find implementations that are, first, Pareto-optimal and, second, close to the legacy implementation
   \end{itemize}
@@ -59,19 +59,59 @@
     \item Select among the non-dominated implementations a random implementation - TODO
     \item Modify instance benchmark set to varying degrees - TODO
     \item Find implementations to new benchmarks with small timeout - TODO
-    \item Employ strategies, optimization, domain-specific heuristic to find implementations to new benchmarks that are similar to legacy solution with same timeout as above - TODO
+    \item Employ strategies, optimization, domain-specific heuristics to find implementations to new benchmarks that are similar to legacy solution with same timeout as above - TODO
   \end{enumerate}
   \pause
   Expectation: We have faster convergence and smaller distance with similarity information, giving us high-quality solutions faster while being easier to produce.
 \end{frame}
 
 \begin{frame}{Strategies}
+	\begin{itemize}
+		\item Prevent that unequal design decisions are made
+		\item Constrain the search space
+		\item E.g. If possible, prevent that the same task is bound on different resources and force this way equal bindings 
+		\lstinputlisting[basicstyle=\small,breaklines=true, firstline=1,lastline=1]{listings.lp}
+		\pause
+		\item Similarly, force equal Routing and equal Scheduling if possible
+	\end{itemize}
 \end{frame}
 
 \begin{frame}{Optimization}
+	\begin{itemize}
+		\item Implementation of a similarity metric based on equal / unequal design decisions
+		\item Similarity metric can be used, first, for optimization during exploration and, second, for evaluating how close the resulting implementations are to the legacy implementation
+		\newline
+		\pause 
+		\item TODO - questions: How to implement? (e.g. using Hamming distance), How to weight the system synthesis steps?
+	\end{itemize}
 \end{frame}
 
 \begin{frame}{Heuristics}
+	\begin{itemize}
+		\item Prefer equal / unequal design decisions
+		\item Direct the search
+		\pause
+		\item Modular implementation by the use of constants
+		\lstinputlisting[basicstyle=\small,breaklines=true, firstline=3,lastline=4]{listings.lp}
+		\pause
+		\lstinputlisting[basicstyle=\small,breaklines=true, firstline=5,lastline=5]{listings.lp}
+		\pause
+		\item Considered heuristic modifier: true, false, factor, sign, level
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Heuristics (cntd.)}
+	\begin{itemize}
+		\item Different concepts for heuristics
+		\item Concept 1
+		\lstinputlisting[basicstyle=\small,breaklines=true, firstline=7,lastline=7]{listings.lp}
+		\pause
+		\item Concept 2
+		\lstinputlisting[basicstyle=\small,breaklines=true, firstline=8,lastline=8]{listings.lp}
+		\pause
+		\item As well, for both a version for not equal decisions
+		\item Similarly, for Routing and Scheduling decisions
+	\end{itemize}
 \end{frame}
 
 \section{Generative Design Space Exploration}
