@@ -1,5 +1,6 @@
 \documentclass[11pt]{beamer}
 \usetheme{Warsaw}
+\setbeamertemplate{page number in head/foot}[totalframenumber]
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{amsthm}
@@ -135,8 +136,8 @@
 \begin{frame}{Solution Approaches }
   Specification
   \begin{itemize} 
-     \item Define processing types, e.g., \texttt{proc\_type(dsp). proc\_type(uC).}
-     \item Define communication types, e.g., \texttt{comm\_type(router). comm\_type(bus).}
+     \item Define processing types, e.g., \texttt{procType(dsp). procType(uC).}
+     \item Define communication types, e.g., \texttt{commType(router). commType(bus).}
      \item Mapping options assign a task to a processing type, e.g., \texttt{map(m0, t1, dsp). map(m1, t1, uC).}
   \end{itemize}
 \end{frame}
@@ -173,21 +174,43 @@
 
   {\tiny\lstinputlisting[language=clingo,numbers=left,breaklines=true]{alloc.lp}}
   \pause
-  4 Answer Sets:
+  4 Answer Sets: (only allocation \& binding!)
   {\tiny
   \[\{\{(t_1,dsp_1),(t_2,dsp_1)\},\{(t_1,dsp_1),(t_2,dsp_2)\},\{(t_1,dsp_2),(t_2,dsp_1)\},\{(t_1,uC_1),(t_2,dsp_1)\}\}\]
   }
 \end{frame}
 
 \begin{frame}{Solution Approaches (cntd.)}
-  
+  Topology
+  \begin{itemize}
+    \item So far, only binding and allocation is decided
+    \item Connection between processing elements is not decided yet
+    \item Must be conducted through available communication types and links
+    \item Theoretically, infinite connection patterns
+    \item Practically, upper bound depends on the number of messages in the application
+  \end{itemize}
 \end{frame}
 
+\begin{frame}{Solution Approaches (cntd.)}
+  Topology
+  \begin{itemize}
+  \item However: How many connections do we allow for each communication device?
+    \begin{itemize}
+      \item Could be defined in device library: e.g., \texttt{commType(bus;router). allowedConnections(bus,20). allowedConnections(router,5)\footnote{North, East, South, West, Home}.}
+      \item Self-edges should not be allowed (probably?!)
+    \end{itemize}
+    \item Processing instances do not have to be connected if no message is routed between them
+    \item Maybe reuse code from instance generator\ldots
+  \end{itemize}
+\end{frame}
 
 \begin{frame}{Relevant Links}
-\end{frame}
-
-\begin{frame}{Switching schemes}
+  \begin{itemize}
+    \item Some links can be discarded for the routing
+    \item If (r1,r2) is used, (r2,r1) can be discarded (sic!)
+    \item DOR: (r1,r2) can be discarded if always leading to the wrong direction
+    \item DOR: (r1,r2) can be discarded if one is always in the wrong direction
+  \end{itemize}
 \end{frame}
 
 \end{document}
