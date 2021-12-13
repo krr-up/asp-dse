@@ -67,52 +67,49 @@
   This gives us high-quality solutions faster while being easier to produce.
 \end{frame}
 
+\begin{frame}{Adapted DSE}
+	\begin{itemize}
+		\item Adapt exploration based on knowledge of equal / unequal design decisions
+		{\tiny\lstinputlisting[language=clingo,breaklines=true, firstline=1,lastline=6]{listings.lp}}
+		\pause
+		\item Additionally, based on detailed similarity information
+		{\tiny\lstinputlisting[language=clingo,breaklines=true, firstline=8,lastline=12]{listings.lp}}
+		\pause
+		\item Similarly, for decisions on the Routing and Scheduling
+	\end{itemize}
+\end{frame}
+
 \begin{frame}{Strategies}
 	\begin{itemize}
-		\item Prevent that unequal design decisions are made
 		\item Constrain the search space
-		\item E.g. If possible, prevent that the same task is bound on different resources and force this way equal bindings 
-		{\small\lstinputlisting[language=clingo,breaklines=true, firstline=1,lastline=1]{listings.lp}}
+		{\small\lstinputlisting[language=clingo,breaklines=true, firstline=14,lastline=15]{listings.lp}}
 		\pause
-		\item Similarly, force equal Routing and equal Scheduling if possible
+		\item Additional information could be used to allow Satisfiability, e.g. forcing a binding to a deleted resource cause Unsatisfiability
+		{\small\lstinputlisting[language=clingo,breaklines=true, firstline=17,lastline=17]{listings.lp}}
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Optimization}
 	\begin{itemize}
-		\item Implementation of a similarity metric based on equal / unequal design decisions
-		\item Similarity metric can be used, first, for optimization during exploration and, second, for evaluating how close the resulting implementations are to the legacy implementation
-		\newline
-		\pause 
-		\item TODO - questions: How to implement? (e.g. using Hamming distance), How to weight the system synthesis steps?
+		\item Punish unequal design decisions
+		{\footnotesize\lstinputlisting[language=clingo,breaklines=true, firstline=19,lastline=20]{listings.lp}}
+		\item Reward equal design decisions
+		{\footnotesize\lstinputlisting[language=clingo,breaklines=true, firstline=22,lastline=23]{listings.lp}}
+		\pause
+		\item Similarity metric can be used, first, for optimization during exploration and, second, for evaluating how close the resulting implementations are to the legacy implementation (using Hamming distance)
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Heuristics}
 	\begin{itemize}
-		\item Prefer equal / unequal design decisions
-		\item Direct the search
-		\pause
+		\item Direct search by preferring equal / unequal design decisions
 		\item Modular implementation by the use of constants
-		{\small\lstinputlisting[language=clingo,breaklines=true, firstline=3,lastline=4]{listings.lp}}
+		{\footnotesize\lstinputlisting[language=clingo,breaklines=true, firstline=25,lastline=26]{listings.lp}}
 		\pause
-		{\small\lstinputlisting[language=clingo,breaklines=true, firstline=5,lastline=5]{listings.lp}}
-		\pause
-		\item Considered heuristic modifier: true, false, factor, sign, level
-	\end{itemize}
-\end{frame}
-
-\begin{frame}{Heuristics (cntd.)}
-	\begin{itemize}
-		\item Different concepts for heuristics
-		\item Concept 1
-		{\small\lstinputlisting[language=clingo,breaklines=true, firstline=7,lastline=7]{listings.lp}}
-		\pause
-		\item Concept 2
-		{\small\lstinputlisting[language=clingo,breaklines=true, firstline=8,lastline=8]{listings.lp}}
-		\pause
-		\item As well, for both a version for not equal decisions
-		\item Similarly, for Routing and Scheduling decisions
+		{\footnotesize\lstinputlisting[language=clingo,breaklines=true, firstline=27,lastline=27]{listings.lp}}
+		\item As well as:
+		{\footnotesize\lstinputlisting[language=clingo,breaklines=true, firstline=28,lastline=28]{listings.lp}}
+		\item Considered heuristic modifiers: true, false, factor, sign, level
 	\end{itemize}
 \end{frame}
 
