@@ -14,7 +14,7 @@ notEquallyBind(bind(M1,T,R1),legacy(bind(M2,T,R2))) :- 				bind(M1,T,R1), legacy
 :- unequal(bind(M,T,R)).
 :- not equal(bind(M,T,R)).
 
-:- notEquallyBind(bind(M1,T,R1),legacy(bind(M2,T,R2))).
+:- unequal(bind(M,T,R)), equalProc(R).
 
 :~ unequal(bind(M,T,R)). [1@1, bind(M,T,R)]
 :~ not equal(bind(M,T,R)). [1@1, bind(M,T,R)]
