@@ -2,7 +2,7 @@
 % #heuristic equal(_,X). [heuristicValue, heuristicModifier]
 
 % For different options of the synthesis step
-#heuristic equal(_,bind(M,T,R)) : step(S), S == binding. [heuristicValue, heuristicModifier]
-#heuristic equal(_,reached(C,L,R1,R2)) : step(S), S == routing. [heuristicValue, heuristicModifier]
-#heuristic equal(_,hops(C,N)) : step(S), S == routing. [heuristicValue, heuristicModifier]
-#heuristic equal(_,priority(TC1,TC2)) : step(S), S == scheduling. [heuristicValue, heuristicModifier]
+#heuristic equal(_,bind(M,T,R)) : binding == true. [heuristicValue, heuristicModifier]
+#heuristic equal(_,reached(C,L,R1,R2)) : routing == true. [heuristicValue, heuristicModifier]
+#heuristic equal(_,hops(C,N)) : routing == true. [heuristicValue, heuristicModifier]
+#heuristic equal(_,priority(TC1,TC2)) : scheduling == true. [heuristicValue, heuristicModifier]
