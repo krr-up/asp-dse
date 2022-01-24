@@ -1,6 +1,7 @@
 % Compare the implementations of new and legacy configuration
 
 #show equal/2.
+#show equal/1.
 #show unequal/2.
 
 %%%%%%%%%%%
@@ -41,10 +42,10 @@ unequal(parent,hops(C,N)) :- not hops(C,N), legacy(hops(C,N)).
 % %%%%%%%%%%%%%%
 % A priority is either equally existing or equally not existing
 equal(exist,priority(TC1,TC2)) :- priority(TC1,TC2), legacy(priority(TC1,TC2)).
-equal(notExist,priority(TC1,TC2)) :- not priority(TC1,TC2), not legacy(priority(TC1,TC2)), task(TC1,A), task(TC2,A).
-equal(notExist,priority(TC1,TC2)) :- not priority(TC1,TC2), not legacy(priority(TC1,TC2)), comm(TC1,A), comm(TC2,A).
-equal(notExist,priority(TC1,TC2)) :- not priority(TC1,TC2), not legacy(priority(TC1,TC2)), legacy(task(TC1,A)), legacy(task(TC2,A)).
-equal(notExist,priority(TC1,TC2)) :- not priority(TC1,TC2), not legacy(priority(TC1,TC2)), legacy(comm(TC1,A)), legacy(comm(TC2,A)).
+equal(notExist,priority(TC1,TC2)) :- not priority(TC1,TC2), not legacy(priority(TC1,TC2)), task(TC1,A1), task(TC2,A2).
+equal(notExist,priority(TC1,TC2)) :- not priority(TC1,TC2), not legacy(priority(TC1,TC2)), comm(TC1,A1), comm(TC2,A2).
+equal(notExist,priority(TC1,TC2)) :- not priority(TC1,TC2), not legacy(priority(TC1,TC2)), legacy(task(TC1,A1)), legacy(task(TC2,A2)).
+equal(notExist,priority(TC1,TC2)) :- not priority(TC1,TC2), not legacy(priority(TC1,TC2)), legacy(comm(TC1,A1)), legacy(comm(TC2,A2)).
 
 % Unequal, if a priority only exists in one implementation
 unequal(child,priority(TC1,TC2)) :- priority(TC1,TC2), not legacy(priority(TC1,TC2)).

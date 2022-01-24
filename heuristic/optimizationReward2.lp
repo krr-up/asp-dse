@@ -1,5 +1,3 @@
-%TODO Is not working for any synthesis step correctly yet
-
 % Option binding
 :~ not unequal(_,bind(M,T,R)), map(M,T,R), binding == true. [-1@1, bind(M,T,R)]
 :~ not unequal(_,bind(M,T,R)), legacy(bind(M,T,R)), binding == true. [-1@1, bind(M,T,R)]
@@ -7,7 +5,7 @@
 % Option routing
 :~ not unequal(_,reached(C,L,R1,R2)), comm(C,A), link(L,R1,R2), routing == true. [-1@1, reached(C,L,R1,R2)]
 :~ not unequal(_,reached(C,L,R1,R2)), legacy(reached(C,L,R1,R2)), routing == true. [-1@1, reached(C,L,R1,R2)]
-:~ not unequal(_,hops(C,_)), comm(C,A), routing == true. [-1@1,comm(C,A)]
+:~ not unequal(_,hops(C,_)), comm(C,A), not legacy(hops(C,_)), routing == true. [-1@1,comm(C,A)]
 :~ not unequal(_,hops(C,N)), legacy(hops(C,N)), routing == true. [-1@1, hops(C,N)]
 
 % Option scheduling 

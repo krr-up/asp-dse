@@ -1,5 +1,3 @@
-%TODO Works for all synthesis steps except for scheduling
-
 % For all synthesis steps at once
 % :~ equal(_,X). [-1@1, X]
 

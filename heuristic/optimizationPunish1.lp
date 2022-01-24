@@ -1,5 +1,3 @@
-% TODO It works for all single cases, but all cases together ignores unequal(_,priority(TC1,TC2))
-
 % For all synthesis steps at once
 %:~ unequal(_,X). [1@1, X]
 
