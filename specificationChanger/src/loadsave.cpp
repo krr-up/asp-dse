@@ -150,7 +150,7 @@ void LoadSaveOperations::loadSpecASP(DSE::SpecificationGraph *specification, lis
 
             Node *res1 = specification->getArchitectureGraph()->getResources().at(res1_id),
                  *res2 = specification->getArchitectureGraph()->getResources().at(res2_id);
-            specification->getArchitectureGraph()->addEdge(new Link(id, configuration, res1, res2));
+            specification->getArchitectureGraph()->addEdge(id,(new Link(id, configuration, res1, res2)));
         } else if (name == "period") {
             int period = stoi(arguments[0]);
             specification->setPeriod(period);
@@ -194,7 +194,7 @@ void LoadSaveOperations::loadSpecASP(DSE::SpecificationGraph *specification, lis
                     break;
                 }
             }
-            applicationGraph->addEdge(new Dependency(task, comm));
+            applicationGraph->addEdge(comm_id, new Dependency(task, comm));
         } else if (name == "read") {
             /* Get application name */
             auto task_id = arguments[0];
@@ -213,11 +213,11 @@ void LoadSaveOperations::loadSpecASP(DSE::SpecificationGraph *specification, lis
                     break;
                 }
             }
-            applicationGraph->addEdge(new Dependency(comm, task));
+            applicationGraph->addEdge(comm_id, new Dependency(comm, task));
         } else if (name == "routingDelay" || name == "routingEnergy") {
             int delay = stoi(arguments[0]);
-            for (auto *link : specification->getArchitectureGraph()->getEdges()) {
-                link->setAttribute(name, arguments[0]);
+            for (auto link : specification->getArchitectureGraph()->getEdges()) {
+                link.second->setAttribute(name, arguments[0]);
             }
             specification->getArchitectureGraph()->setAttribute(name, arguments[0]);
         }
@@ -304,13 +304,13 @@ void LoadSaveOperations::saveSpecASP(DSE::SpecificationGraph *specification, lis
     string second = "";
     for (auto application : specification->getApplicationGraphs()) {
         for (auto dependency : application.second->getEdges()) {
-            if (dependency->sourceNode()->getType() == Node::NodeType::Task) {
-                first = dependency->sourceNode()->getID();
-                second = dependency->destNode()->getID();
+            if (dependency.second->sourceNode()->getType() == Node::NodeType::Task) {
+                first = dependency.second->sourceNode()->getID();
+                second = dependency.second->destNode()->getID();
                 lines->push_back("send(" + first + "," + second + ").");
-            } else if (dependency->sourceNode()->getType() == Node::NodeType::Message) {
-                first = dependency->destNode()->getID();
-                second = dependency->sourceNode()->getID();
+            } else if (dependency.second->sourceNode()->getType() == Node::NodeType::Message) {
+                first = dependency.second->destNode()->getID();
+                second = dependency.second->sourceNode()->getID();
                 lines->push_back("read(" + first + "," + second + ").");
             }
         }
@@ -338,7 +338,7 @@ void LoadSaveOperations::saveSpecASP(DSE::SpecificationGraph *specification, lis
 
     /* Get link elements (edges from architectureGraph) */
     for (auto link : architecture->getEdges()) {
-        lines->push_back("link(" + link->getID() + "," + link->sourceNode()->getID() + "," + link->destNode()->getID() +
+        lines->push_back("link(" + link.second->getID() + "," + link.second->sourceNode()->getID() + "," + link.second->destNode()->getID() +
                          ").");
     }
 
@@ -361,8 +361,8 @@ void LoadSaveOperations::saveSpecASP(DSE::SpecificationGraph *specification, lis
         conf = conf + configuration.at(configuration.rfind('(') + i);
     }
     lines->push_back("period(" + to_string(specification->getPeriod()) + ").");
-    string routingDelay = architecture->getEdges().front()->getAttribute("routingDelay");
-    string routingEnergy = architecture->getEdges().front()->getAttribute("routingEnergy");
+    string routingDelay = architecture->getEdges().begin()->second->getAttribute("routingDelay");
+    string routingEnergy = architecture->getEdges().begin()->second->getAttribute("routingEnergy");
     lines->push_back("routingDelay(" + routingDelay + ").");
     lines->push_back("routingEnergy(" + routingEnergy + ").");
 }

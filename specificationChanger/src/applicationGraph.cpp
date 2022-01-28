@@ -11,8 +11,8 @@ void ApplicationGraph::addTask(string name, Task* task) {
 void ApplicationGraph::addMessage(string name, Message* message) {
 	this->messages.insert({name, message}); //std::cout << "message added" << std::endl;
 }
-void ApplicationGraph::addEdge(Dependency* edge) {
-	this->edges.push_back(edge); //std::cout << "edge added" << std::endl;
+void ApplicationGraph::addEdge(string name, Dependency* edge) {
+	this->edges.insert({name, edge}); //std::cout << "edge added" << std::endl;
 }
 
 void ApplicationGraph::removeTask(string name) {
@@ -21,6 +21,6 @@ void ApplicationGraph::removeTask(string name) {
 void ApplicationGraph::removeMessage(string name) {
     this->messages.erase(name); //std::cout << "message removed" << std::endl;
     }
-void ApplicationGraph::removeEdge(Dependency* edge) {
-    this->edges.remove(edge); //std::cout << "edge removed" << std::endl;
+void ApplicationGraph::removeEdge(string name) {
+    this->edges.erase(name); //std::cout << "edge removed" << std::endl;
 }

@@ -14,7 +14,7 @@ namespace DSE {
         private:
             map<string, Task*> tasks;
             map<string, Message*> messages;
-            list<Dependency*> edges;
+            map<string, Dependency*> edges;
             
         public:
             ApplicationGraph(string id, string configuration);
@@ -26,16 +26,16 @@ namespace DSE {
             map<string, Message*> getMessages() const{
                 return messages;
             }
-            list<Dependency*> getEdges() const{
+            map<string, Dependency*> getEdges() const{
                 return edges;
             }
 
             void addTask(string name, Task* task);
             void addMessage(string name, Message* message);
-            void addEdge(Dependency* edge);
+            void addEdge(string name, Dependency* edge);
 
             void removeTask(string name);
             void removeMessage(string name);
-            void removeEdge(Dependency* edge);
+            void removeEdge(string name);
     };
 }

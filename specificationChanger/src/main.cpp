@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
     bool status;
 
     // string path_in = "../instanceGenerator/benchmarks_format_2021_11";
-    string path_in = "test/";
+    string path_in = "../test/";
     string file_in, file_out, file_name;
 
     if (!std::filesystem::exists(path_in)) {
@@ -104,17 +104,18 @@ int main(int argc, char *argv[]) {
                     ChangeSpecOperations::exchange_processors(specification, processor_list);
                     break;
                 case 1:
+                    std::cout << "BREAKPOINT 1 \n";
                     ChangeSpecOperations::add_tasks(specification, task_list);
                     ChangeSpecOperations::add_processors(specification, processor_list);
                     break;
-                case 2:
-                    ChangeSpecOperations::delete_tasks(specification, task_list);
-                    ChangeSpecOperations::delete_processors(specification, processor_list);
-                    break;
-                case 3:
-                    ChangeSpecOperations::combined_changes_tasks(specification, task_list);
-                    ChangeSpecOperations::combined_changes_processors(specification, processor_list);
-                    break;
+                // case 2:
+                //     ChangeSpecOperations::delete_tasks(specification, task_list);
+                //     ChangeSpecOperations::delete_processors(specification, processor_list);
+                //     break;
+                // case 3:
+                //     ChangeSpecOperations::combined_changes_tasks(specification, task_list);
+                //     ChangeSpecOperations::combined_changes_processors(specification, processor_list);
+                //     break;
                 default:
                     cout << "Wrong option was set\n";
                     break;

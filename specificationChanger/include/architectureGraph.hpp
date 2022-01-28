@@ -13,7 +13,7 @@ namespace DSE {
         {
         private:
             map<string, Resource*> resources;
-            list<Link*> edges;
+            map<string, Link*> edges;
         public:
             ArchitectureGraph(string id, string configuration);
             ~ArchitectureGraph();
@@ -21,14 +21,14 @@ namespace DSE {
             map<string, Resource*> getResources() const{
                 return resources;
             }
-            list<Link*> getEdges() const{
+            map<string, Link*> getEdges() const{
                 return edges;
             }
 
             void addResource(string name, Resource* resource);
-            void addEdge(Link* edge);
+            void addEdge(string name, Link* edge);
 
             void removeResource(string name);
-            void removeEdge(Link* edge);
+            void removeEdge(string name);
     };
 }
