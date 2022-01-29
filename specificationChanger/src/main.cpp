@@ -104,18 +104,17 @@ int main(int argc, char *argv[]) {
                     ChangeSpecOperations::exchange_processors(specification, processor_list);
                     break;
                 case 1:
-                    std::cout << "BREAKPOINT 1 \n";
                     ChangeSpecOperations::add_tasks(specification, task_list);
                     ChangeSpecOperations::add_processors(specification, processor_list);
                     break;
-                // case 2:
-                //     ChangeSpecOperations::delete_tasks(specification, task_list);
-                //     ChangeSpecOperations::delete_processors(specification, processor_list);
-                //     break;
-                // case 3:
-                //     ChangeSpecOperations::combined_changes_tasks(specification, task_list);
-                //     ChangeSpecOperations::combined_changes_processors(specification, processor_list);
-                //     break;
+                case 2:
+                    ChangeSpecOperations::delete_tasks(specification, task_list);
+                    ChangeSpecOperations::delete_processors(specification, processor_list);
+                    break;
+                case 3:
+                    ChangeSpecOperations::combined_changes_tasks(specification, task_list);
+                    ChangeSpecOperations::combined_changes_processors(specification, processor_list);
+                    break;
                 default:
                     cout << "Wrong option was set\n";
                     break;

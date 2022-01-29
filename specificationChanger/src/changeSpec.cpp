@@ -129,11 +129,13 @@ void ChangeSpecOperations::add_tasks(DSE::SpecificationGraph *specification, map
             application->addMessage(message_name2, message_new2);
 
             auto dependency_new = new Dependency(task_new, message_new2);
-            application->addEdge(message_name2, dependency_new);
+            string dependency_name2 = "s" + message_name2;
+            application->addEdge(dependency_name2, dependency_new);
             for (auto t : application->getTasks()) {
                 if (t.second->getID() == task2_name) {
                     auto dependency_new2 = new Dependency(message_new2, t.second);
-                    application->addEdge(message_name2, dependency_new2);
+                    dependency_name2 = "r" + message_name2;
+                    application->addEdge(dependency_name2, dependency_new2);
                     for (auto e : t.second->incomingEdges()) {
                         if (e->getOpposite(t.second)->getID().find(task.second->getID()) != string::npos) {
                             application->removeEdge(e->getID());
@@ -146,8 +148,10 @@ void ChangeSpecOperations::add_tasks(DSE::SpecificationGraph *specification, map
         }
 
         auto dependency_new = new Dependency(task.second, message_new);
+        string dependency_name = "s" + message_name;
         application->addEdge(message_name, dependency_new);
         auto dependency_new2 = new Dependency(message_new, task_new);
+        dependency_name = "r" + message_name;
         application->addEdge(message_name, dependency_new2);
 
         /* Add new mappings (to randomly selected processors) with characteristics */
@@ -336,219 +340,233 @@ void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification
     }
 }
 
-// /* Delete the given tasks */
-// void ChangeSpecOperations::delete_tasks(DSE::SpecificationGraph *specification, map<int, Task *> task_list) {
-//     string configuration, application_num;
-//     string message_new_name;
-//     ApplicationGraph *application;
+/* Delete the given tasks */
+void ChangeSpecOperations::delete_tasks(DSE::SpecificationGraph *specification, map<int, Task *> task_list) {
+    string configuration, application_num;
+    string message_new_name;
+    ApplicationGraph *application;
 
-//     cout << "Going to delete selected tasks\n";
-//     /* Get current configuration */
-//     configuration = specification->getConfiguration();
-//     configuration = configuration.substr(configuration.find("(") + 1);
-//     configuration.erase(configuration.length() - 1);
+    cout << "Going to delete selected tasks\n";
+    // /* Get current configuration */
+    // configuration = specification->getConfiguration();
+    // configuration = configuration.substr(configuration.find("(") + 1);
+    // configuration.erase(configuration.length() - 1);
+    configuration = "";
 
-//     for (auto task : task_list) {
-//         /* Get current application */
-//         for (auto appl : specification->getApplicationGraphs()) {
-//             for (auto t : appl.second->getTasks()) {
-//                 if (task.second->getID() == t.second->getID()) {
-//                     application = appl.second;
-//                     application_num = application->getID();
-//                     application_num = application_num.substr(application_num.find("(") + 1);
-//                     application_num.erase(application_num.length() - 1);
-//                 }
-//             }
-//         }
+    for (auto task : task_list) {
+        /* Get current application */
+        for (auto appl : specification->getApplicationGraphs()) {
+            for (auto t : appl.second->getTasks()) {
+                if (task.second->getID() == t.second->getID()) {
+                    application = appl.second;
+                    application_num = application->getID();
+                }
+            }
+        }
 
-//         /* Get all predecessors messages and remove incoming edges of task */
-//         list<Node *> messages_pred;
-//         for (auto edge_in : task.second->incomingEdges()) {
-//             messages_pred.push_back(edge_in->getOpposite(task.second));
-//             application->removeEdge((Dependency *)edge_in);
-//         }
+        /* Get all predecessors messages and remove incoming edges of task */
+        list<Node *> messages_pred;
+        for (auto edge_in : task.second->incomingEdges()) {
+            messages_pred.push_back(edge_in->getOpposite(task.second));
+            application->removeEdge(((Dependency *)edge_in)->getID());
+        }
 
-//         /* Get predecessors tasks of predecessors messages */
-//         /* Remove predecessors messages and corresponding edges */
-//         list<Node *> tasks_pred;
-//         for (auto message_pred : messages_pred) {
-//             for (auto edge : message_pred->incomingEdges()) {
-//                 tasks_pred.push_back(edge->getOpposite(message_pred));
-//                 application->removeEdge((Dependency *)edge);
-//             }
-//             application->removeMessage(message_pred->getID());
-//         }
+        /* Get predecessors tasks of predecessors messages */
+        /* Remove predecessors messages and corresponding edges */
+        list<Node *> tasks_pred;
+        for (auto message_pred : messages_pred) {
+            for (auto edge : message_pred->incomingEdges()) {
+                tasks_pred.push_back(edge->getOpposite(message_pred));
+                application->removeEdge(((Dependency *)edge)->getID());
+            }
+            application->removeMessage(message_pred->getID());
+        }
 
-//         /* Get all successors messages and remove outgoing edges of task */
-//         list<Node *> messages_succ;
-//         for (auto edge_out : task.second->outgoingEdges()) {
-//             messages_succ.push_back(edge_out->getOpposite(task.second));
-//             application->removeEdge((Dependency *)edge_out);
-//         }
+        /* Get all successors messages and remove outgoing edges of task */
+        list<Node *> messages_succ;
+        for (auto edge_out : task.second->outgoingEdges()) {
+            messages_succ.push_back(edge_out->getOpposite(task.second));
+            application->removeEdge(((Dependency *)edge_out)->getID());
+        }
 
-//         /* Get successors tasks of successors messages */
-//         /* Remove successors messages and corresponding edges */
-//         list<Node *> tasks_succ;
-//         for (auto message_succ : messages_succ) {
-//             for (auto edge : message_succ->outgoingEdges()) {
-//                 tasks_succ.push_back(edge->getOpposite(message_succ));
-//                 application->removeEdge((Dependency *)edge);
-//             }
-//             application->removeMessage(message_succ->getID());
-//         }
+        /* Get successors tasks of successors messages */
+        /* Remove successors messages and corresponding edges */
+        list<Node *> tasks_succ;
+        for (auto message_succ : messages_succ) {
+            for (auto edge : message_succ->outgoingEdges()) {
+                tasks_succ.push_back(edge->getOpposite(message_succ));
+                application->removeEdge(((Dependency *)edge)->getID());
+            }
+            application->removeMessage(message_succ->getID());
+        }
 
-//         /* Create new message and corresponding edges */
-//         for (auto task_pred : tasks_pred) {
-//             for (auto task_succ : tasks_succ) {
-//                 message_new_name = "comm(" + task_pred->getID() + "," + task_succ->getID() + "," + application_num +
-//                                    "," + configuration + ")";
-//                 auto message_new = new Message(message_new_name, configuration);
-//                 application->addMessage(message_new_name, message_new);
-//                 application->addEdge(new Dependency(task_pred, message_new));
-//                 application->addEdge(new Dependency(message_new, task_succ));
-//             }
-//         }
+        /* Create new message and corresponding edges */
+        for (auto task_pred : tasks_pred) {
+            for (auto task_succ : tasks_succ) {
 
-//         /* Remove mappings of the task */
-//         list<Resource *> mapped_processors;
-//         for (auto mapping : specification->getMappings())
-//             if (task.second->getID() == mapping.second->getTask()->getID())
-//                 specification->removeMapping(mapping.second->getID());
+                auto m_num = application->getMessages().size() + 1;
+                message_new_name = "c" + to_string(m_num);
 
-//         /* remove task itself */
-//         application->removeTask(task.second->getID());
-//     }
-// }
+                // Check if message name already in application exists
+                bool condition = true;
+                while (condition) {
+                    condition = false;
+                    for (auto m : application->getMessages())
+                        if (m.second->getID() == message_new_name) {
+                            message_new_name = "c" + to_string(m_num++);
+                            condition = true;
+                        }
+                }
 
-// /* Delete the given processors, router structure remains */
-// void ChangeSpecOperations::delete_processors(DSE::SpecificationGraph *specification,
-//                                              map<int, Resource *> processor_list) {
-//     Node *router;
-//     list<Node *> resources;
-//     list<Link *> edges;
-//     string name, configuration;
+                auto message_new = new Message(message_new_name, configuration);
+                application->addMessage(message_new_name, message_new);
+                string dependency_new_name = "s" + message_new_name;
+                application->addEdge(dependency_new_name, new Dependency(task_pred, message_new));
+                dependency_new_name = "r" + message_new_name;
+                application->addEdge(dependency_new_name, new Dependency(message_new, task_succ));
+            }
+        }
 
-//     cout << "Going to delete selected processors\n";
-//     /* Get current configuration */
-//     configuration = specification->getConfiguration();
-//     configuration = configuration.substr(configuration.find("(") + 1);
-//     configuration.erase(configuration.length() - 1);
+        /* Remove mappings of the task */
+        list<Resource *> mapped_processors;
+        for (auto mapping : specification->getMappings())
+            if (task.second->getID() == mapping.second->getTask()->getID())
+                specification->removeMapping(mapping.second->getID());
 
-//     for (auto processor : processor_list) {
-//         resources.clear();
-//         /* Get router connected to processor and remove the links */
-//         edges = specification->getArchitectureGraph()->getEdges();
-//         for (auto link : edges) {
-//             if (processor.second->getID() == link->sourceNode()->getID()) {
-//                 router = link->destNode();
-//                 specification->getArchitectureGraph()->removeEdge(link);
-//             }
-//             if (processor.second->getID() == link->destNode()->getID()) {
-//                 specification->getArchitectureGraph()->removeEdge(link);
-//             }
-//         }
+        /* remove task itself */
+        application->removeTask(task.second->getID());
+    }
+}
 
-//         /* Remove mappings to the processor */
-//         list<Task *> mapped_tasks;
-//         for (auto mapping : specification->getMappings()) {
-//             if (processor.second->getID() == mapping.second->getResource()->getID()) {
-//                 specification->removeMapping(mapping.second->getID());
-//                 mapped_tasks.push_back(mapping.second->getTask());
-//             }
-//         }
+/* Delete the given processors, router structure remains */
+void ChangeSpecOperations::delete_processors(DSE::SpecificationGraph *specification,
+                                             map<int, Resource *> processor_list) {
+    Node *router;
+    list<Node *> resources;
+    string name, configuration;
 
-//         /* Remove processor */
-//         specification->getArchitectureGraph()->removeResource(processor.second->getID());
+    cout << "Going to delete selected processors\n";
+    // /* Get current configuration */
+    // configuration = specification->getConfiguration();
+    // configuration = configuration.substr(configuration.find("(") + 1);
+    // configuration.erase(configuration.length() - 1);
+    configuration = "";
 
-//         /* Check if all tasks still have available mapping options */
-//         for (auto mapped_task : mapped_tasks) {
-//             auto mapped = specification->getMappings().size();
-//             for (auto mapping : specification->getMappings()) {
-//                 if (mapped_task->getID() == mapping.second->getTask()->getID())
-//                     break;
-//                 else if (mapped == 1)
-//                     cout << "ERROR: One task (" << mapped_task->getID() << ")  is now without any mapping option\n";
-//                 else
-//                     mapped--;
-//             }
-//         }
-//     }
-// }
+    for (auto processor : processor_list) {
+        resources.clear();
+        /* Get router connected to processor and remove the links */
+        auto edges = specification->getArchitectureGraph()->getEdges();
+        for (auto link : edges) {
+            if (processor.second->getID() == link.second->sourceNode()->getID()) {
+                router = link.second->destNode();
+                specification->getArchitectureGraph()->removeEdge(link.second->getID());
+            }
+            if (processor.second->getID() == link.second->destNode()->getID()) {
+                specification->getArchitectureGraph()->removeEdge(link.second->getID());
+            }
+        }
 
-// /* Do random selected changes on the given tasks */
-// void ChangeSpecOperations::combined_changes_tasks(DSE::SpecificationGraph *specification, map<int, Task *> task_list) {
-//     int selection;
-//     int exchanged = 0;
-//     int added = 0;
-//     int deleted = 0;
-//     map<int, Task *> exchange_list;
-//     map<int, Task *> add_list;
-//     map<int, Task *> delete_list;
+        /* Remove mappings to the processor */
+        list<Task *> mapped_tasks;
+        for (auto mapping : specification->getMappings()) {
+            if (processor.second->getID() == mapping.second->getResource()->getID()) {
+                specification->removeMapping(mapping.second->getID());
+                mapped_tasks.push_back(mapping.second->getTask());
+            }
+        }
 
-//     for (auto task : task_list) {
-//         selection = rand() % 3;
-//         switch (selection) {
-//             case 0: /* Exchange option */
-//                 exchange_list.insert(task);
-//                 exchanged++;
-//                 break;
-//             case 1: /* Add option */
-//                 add_list.insert(task);
-//                 added++;
-//                 break;
-//             case 2: /* Delete option */
-//                 delete_list.insert(task);
-//                 deleted++;
-//                 break;
-//             default:
-//                 break;
-//         }
-//     }
+        /* Remove processor */
+        specification->getArchitectureGraph()->removeResource(processor.second->getID());
 
-//     if (!exchange_list.empty()) exchange_tasks(specification, exchange_list);
-//     if (!add_list.empty()) add_tasks(specification, add_list);
-//     if (!delete_list.empty()) delete_tasks(specification, delete_list);
+        /* Check if all tasks still have available mapping options */
+        for (auto mapped_task : mapped_tasks) {
+            auto mapped = specification->getMappings().size();
+            for (auto mapping : specification->getMappings()) {
+                if (mapped_task->getID() == mapping.second->getTask()->getID())
+                    break;
+                else if (mapped == 1)
+                    cout << "ERROR: One task (" << mapped_task->getID() << ")  is now without any mapping option\n";
+                else
+                    mapped--;
+            }
+        }
+    }
+}
 
-//     cout << exchanged << " exchanged, " << added << " added and " << deleted << " deleted tasks\n";
-// }
+/* Do random selected changes on the given tasks */
+void ChangeSpecOperations::combined_changes_tasks(DSE::SpecificationGraph *specification, map<int, Task *> task_list) {
+    int selection;
+    int exchanged = 0;
+    int added = 0;
+    int deleted = 0;
+    map<int, Task *> exchange_list;
+    map<int, Task *> add_list;
+    map<int, Task *> delete_list;
 
-// /* Do random selected changes on the the given processors */
-// void ChangeSpecOperations::combined_changes_processors(DSE::SpecificationGraph *specification,
-//                                                        map<int, Resource *> processor_list) {
-//     int selection;
-//     int exchanged = 0;
-//     int added = 0;
-//     int deleted = 0;
-//     map<int, Resource *> exchange_list;
-//     map<int, Resource *> add_list;
-//     map<int, Resource *> delete_list;
+    for (auto task : task_list) {
+        selection = rand() % 3;
+        switch (selection) {
+            case 0: /* Exchange option */
+                exchange_list.insert(task);
+                exchanged++;
+                break;
+            case 1: /* Add option */
+                add_list.insert(task);
+                added++;
+                break;
+            case 2: /* Delete option */
+                delete_list.insert(task);
+                deleted++;
+                break;
+            default:
+                break;
+        }
+    }
 
-//     for (auto processor : processor_list) {
-//         selection = rand() % 3;
-//         switch (selection) {
-//             case 0: /* Exchange option */
-//                 exchange_list.insert(processor);
-//                 exchanged++;
-//                 break;
-//             case 1: /* Add option */
-//                 add_list.insert(processor);
-//                 added++;
-//                 break;
-//             case 2: /* Delete option */
-//                 delete_list.insert(processor);
-//                 deleted++;
-//                 break;
-//             default:
-//                 break;
-//         }
-//     }
+    if (!exchange_list.empty()) exchange_tasks(specification, exchange_list);
+    if (!add_list.empty()) add_tasks(specification, add_list);
+    if (!delete_list.empty()) delete_tasks(specification, delete_list);
 
-//     if (!exchange_list.empty()) exchange_processors(specification, exchange_list);
-//     if (!add_list.empty()) add_processors(specification, add_list);
-//     if (!delete_list.empty()) delete_processors(specification, delete_list);
+    cout << exchanged << " exchanged, " << added << " added and " << deleted << " deleted tasks\n";
+}
 
-//     cout << exchanged << " exchanged, " << added << " added and " << deleted << " deleted processors\n";
-// }
+/* Do random selected changes on the the given processors */
+void ChangeSpecOperations::combined_changes_processors(DSE::SpecificationGraph *specification,
+                                                       map<int, Resource *> processor_list) {
+    int selection;
+    int exchanged = 0;
+    int added = 0;
+    int deleted = 0;
+    map<int, Resource *> exchange_list;
+    map<int, Resource *> add_list;
+    map<int, Resource *> delete_list;
+
+    for (auto processor : processor_list) {
+        selection = rand() % 3;
+        switch (selection) {
+            case 0: /* Exchange option */
+                exchange_list.insert(processor);
+                exchanged++;
+                break;
+            case 1: /* Add option */
+                add_list.insert(processor);
+                added++;
+                break;
+            case 2: /* Delete option */
+                delete_list.insert(processor);
+                deleted++;
+                break;
+            default:
+                break;
+        }
+    }
+
+    if (!exchange_list.empty()) exchange_processors(specification, exchange_list);
+    if (!add_list.empty()) add_processors(specification, add_list);
+    if (!delete_list.empty()) delete_processors(specification, delete_list);
+
+    cout << exchanged << " exchanged, " << added << " added and " << deleted << " deleted processors\n";
+}
 
 /* Select randomly a certain percentage of tasks */
 map<int, Task *> ChangeSpecOperations::select_tasks(DSE::SpecificationGraph *specification, int percentage) {
