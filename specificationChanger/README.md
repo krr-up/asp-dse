@@ -18,7 +18,7 @@
  - Build CMake project
  - Then run: `./alterSpec [MODIFY OPTION] [PERCENT TASKS] [PERCENT PROCESSORS] [NUMBER OF GENERATED MODIFIED SPECIFICATIONS] [RANDOM SEED]`
  -  Modify option:
-		  **0** exchange elements (change charateristics)
-		  **1** add elements
-		  **2** delete elements
+		  **0** exchange elements (change charateristics);
+		  **1** add elements;
+		  **2** delete elements;
 		  **3** decide randomly for every element to be changed
