@@ -180,6 +180,7 @@ void LoadSaveOperations::loadSpecASP(DSE::SpecificationGraph *specification, lis
             /* Get application name */
             auto task_id = arguments[0];
             auto comm_id = arguments[1];
+            auto dependency_name = "s" + comm_id;
 
             Task *task;
             Message *comm;
@@ -194,12 +195,13 @@ void LoadSaveOperations::loadSpecASP(DSE::SpecificationGraph *specification, lis
                     break;
                 }
             }
-            applicationGraph->addEdge(comm_id, new Dependency(task, comm));
+            applicationGraph->addEdge(dependency_name, new Dependency(task, comm));
         } else if (name == "read") {
             /* Get application name */
             auto task_id = arguments[0];
             auto comm_id = arguments[1];
-
+            auto dependency_name = "r" + comm_id;
+            
             Task *task;
             Message *comm;
             ApplicationGraph *applicationGraph;
@@ -213,7 +215,7 @@ void LoadSaveOperations::loadSpecASP(DSE::SpecificationGraph *specification, lis
                     break;
                 }
             }
-            applicationGraph->addEdge(comm_id, new Dependency(comm, task));
+            applicationGraph->addEdge(dependency_name, new Dependency(comm, task));
         } else if (name == "routingDelay" || name == "routingEnergy") {
             int delay = stoi(arguments[0]);
             for (auto link : specification->getArchitectureGraph()->getEdges()) {
