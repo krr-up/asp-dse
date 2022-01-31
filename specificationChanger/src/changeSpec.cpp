@@ -156,16 +156,22 @@ void ChangeSpecOperations::add_tasks(DSE::SpecificationGraph *specification, map
 
         /* Add new mappings (to randomly selected processors) with characteristics */
         map<int, Resource *> map_processors = select_processors(specification, 20);
-        string ID, task_num, processor_num;
-
-        task_num = "";
-        task_num = task_num + task_new->getID();
+        string ID, processor_num;
 
         for (auto processor : map_processors) {
             processor_num = "";
             processor_num = processor_num + processor.second->getID();
 
-            ID = "m" + task_num + "x" + application_num + "x" + processor_num;
+            int map_t_num = 0;
+            ID = "mt" + to_string(map_t_num) + "x" + application_num + "x" + processor_num;
+            auto it = specification->getMappings().find(ID);
+            while( specification->getMappings().count(ID) )
+            {
+                map_t_num++;
+                ID = "mt" + to_string(map_t_num) + "x" + application_num + "x" + processor_num;
+            }
+
+            std::cout << "New mapping for task " << task_new->getID() << " with ID " << ID << "\n";
             auto mapping = new Mapping(ID, configuration, task_new, processor.second);
             specification->addMapping(ID, mapping);
             mapping->setAttribute("executionTime", to_string(100));
@@ -313,25 +319,32 @@ void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification
 
         /* Add new mappings (randomly selected tasks) */
         map<int, Task *> map_tasks = select_tasks(specification, 5);
-        string ID, task_num, processor_num, application_num;
+        string ID, processor_num, application_num;
 
         processor_num = "";
         processor_num = processor_num + res_new->getID();
         
         for (auto task : map_tasks) {
-            task_num = "";
-            task_num = task_num + task.second->getID();
 
             for(auto application : specification->getApplicationGraphs())
             {
                 for(auto t : application.second->getTasks())
                 {
-                    if(t.second->getID() == task_num)
+                    if(t.second->getID() == task.second->getID())
                         application_num = application.second->getID();
                 }
             }
 
-            ID = "m" + task_num + "x" + application_num + "x" + processor_num;
+            int map_t_num = 0;
+            ID = "mt" + to_string(map_t_num) + "x" + application_num + "x" + processor_num;
+            auto it = specification->getMappings().find(ID);
+            while( specification->getMappings().count(ID) )
+            {
+                map_t_num++;
+                ID = "mt" + to_string(map_t_num) + "x" + application_num + "x" + processor_num;
+            }
+
+            std::cout << "New mapping to processor " << processor_num << " with ID " << ID << "\n";
             auto mapping = new Mapping(ID, configuration, task.second, res_new);
             specification->addMapping(ID, mapping);
             mapping->setAttribute("executionTime", to_string(100));
