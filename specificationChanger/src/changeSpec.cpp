@@ -128,14 +128,14 @@ void ChangeSpecOperations::add_tasks(DSE::SpecificationGraph *specification, map
             auto message_new2 = new Message(message_name2, configuration);
             application->addMessage(message_name2, message_new2);
 
-            auto dependency_new = new Dependency(task_new, message_new2);
             string dependency_name2 = "s" + message_name2;
-            application->addEdge(dependency_name2, dependency_new);
+            application->addEdge(dependency_name2, new Dependency(task_new, message_new2));
+            application->getEdges().at(dependency_name2)->setID(dependency_name2);
             for (auto t : application->getTasks()) {
                 if (t.second->getID() == task2_name) {
-                    auto dependency_new2 = new Dependency(message_new2, t.second);
                     dependency_name2 = "r" + message_name2;
-                    application->addEdge(dependency_name2, dependency_new2);
+                    application->addEdge(dependency_name2,  new Dependency(message_new2, t.second));
+                    application->getEdges().at(dependency_name2)->setID(dependency_name2);
                     for (auto e : t.second->incomingEdges()) {
                         if (e->getOpposite(t.second)->getID().find(task.second->getID()) != string::npos) {
                             application->removeEdge(e->getID());
@@ -147,12 +147,12 @@ void ChangeSpecOperations::add_tasks(DSE::SpecificationGraph *specification, map
             application->removeEdge(edge_out->getID());
         }
 
-        auto dependency_new = new Dependency(task.second, message_new);
         string dependency_name = "s" + message_name;
-        application->addEdge(message_name, dependency_new);
-        auto dependency_new2 = new Dependency(message_new, task_new);
+        application->addEdge(dependency_name, new Dependency(task.second, message_new));
+        application->getEdges().at(dependency_name)->setID(dependency_name);
         dependency_name = "r" + message_name;
-        application->addEdge(message_name, dependency_new2);
+        application->addEdge(dependency_name, new Dependency(message_new, task_new));
+        application->getEdges().at(dependency_name)->setID(dependency_name);
 
         /* Add new mappings (to randomly selected processors) with characteristics */
         map<int, Resource *> map_processors = select_processors(specification, 20);
@@ -422,8 +422,10 @@ void ChangeSpecOperations::delete_tasks(DSE::SpecificationGraph *specification, 
                 application->addMessage(message_new_name, message_new);
                 string dependency_new_name = "s" + message_new_name;
                 application->addEdge(dependency_new_name, new Dependency(task_pred, message_new));
+                application->getEdges().at(dependency_new_name)->setID(dependency_new_name);
                 dependency_new_name = "r" + message_new_name;
                 application->addEdge(dependency_new_name, new Dependency(message_new, task_succ));
+                application->getEdges().at(dependency_new_name)->setID(dependency_new_name);
             }
         }
 
