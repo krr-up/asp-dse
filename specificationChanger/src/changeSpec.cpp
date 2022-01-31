@@ -109,7 +109,8 @@ void ChangeSpecOperations::add_tasks(DSE::SpecificationGraph *specification, map
          * -> now task_new is being connected to task2 via message_new2) */
         for (auto edge_out : task.second->outgoingEdges()) {
             string task2_name = "";
-            task2_name = task2_name + edge_out->getOpposite(task.second)->getID();
+            auto message = edge_out->getOpposite(task.second);
+            task2_name = task2_name + message->outgoingEdges().front()->getOpposite(message)->getID();
 
             m_num = application->getMessages().size() + 1;
             string message_name2 = "c" + to_string(m_num);
@@ -131,18 +132,17 @@ void ChangeSpecOperations::add_tasks(DSE::SpecificationGraph *specification, map
             string dependency_name2 = "s" + message_name2;
             application->addEdge(dependency_name2, new Dependency(task_new, message_new2));
             application->getEdges().at(dependency_name2)->setID(dependency_name2);
+
+
             for (auto t : application->getTasks()) {
                 if (t.second->getID() == task2_name) {
                     dependency_name2 = "r" + message_name2;
                     application->addEdge(dependency_name2,  new Dependency(message_new2, t.second));
                     application->getEdges().at(dependency_name2)->setID(dependency_name2);
-                    for (auto e : t.second->incomingEdges()) {
-                        if (e->getOpposite(t.second)->getID().find(task.second->getID()) != string::npos) {
-                            application->removeEdge(e->getID());
-                        }
-                    }
                 }
             }
+            
+            application->removeEdge(message->outgoingEdges().front()->getID());
             application->removeMessage(edge_out->getOpposite(task.second)->getID());
             application->removeEdge(edge_out->getID());
         }
