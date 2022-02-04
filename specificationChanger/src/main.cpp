@@ -71,8 +71,7 @@ int main(int argc, char *argv[]) {
         /* Create several modified versions of current child instance */
         for (int i = 0; i < instances_num; i++) {
             std::cout
-                << "##################################################################################################"
-                   "###########################\n";
+                << "##################################################################################################\n";
             file_name = file.path().generic_string();
             file_out = file_name.insert(file_name.rfind("."), "_m" + to_string(i));
 
@@ -90,30 +89,27 @@ int main(int argc, char *argv[]) {
             }
 
             /* Make the random changes */
-            std::cout << "Select randomly an amount of elements depending on task percentage: " << perc_tasks
-                      << "%, processor percentage: " << perc_processors << "% and random seed: " << seed
-                      << " and make random changes\n";
-            std::map<int, Task *> task_list = ChangeSpecOperations::select_tasks(specification, perc_tasks);
+            std::cout << "Select randomly an amount of elements depending on task percentage: " << perc_tasks << "%, processor percentage: " << perc_processors << "% and random seed: " << seed << "\n";
+            std::vector<Task *> task_list = ChangeSpecOperations::select_tasks(specification);
 
-            std::map<int, Resource *> processor_list =
-                ChangeSpecOperations::select_processors(specification, perc_processors);
+            std::vector<Resource *> processor_list = ChangeSpecOperations::select_processors(specification);
 
             switch (option) {
                 case 0:
-                    ChangeSpecOperations::exchange_tasks(specification, task_list);
-                    ChangeSpecOperations::exchange_processors(specification, processor_list);
+                    ChangeSpecOperations::exchange_tasks(specification, task_list, perc_tasks);
+                    ChangeSpecOperations::exchange_processors(specification, processor_list, perc_processors);
                     break;
                 case 1:
-                    ChangeSpecOperations::add_tasks(specification, task_list);
-                    ChangeSpecOperations::add_processors(specification, processor_list);
+                    ChangeSpecOperations::add_tasks(specification, task_list, perc_tasks);
+                   ChangeSpecOperations::add_processors(specification, processor_list, perc_processors);
                     break;
                 case 2:
-                    ChangeSpecOperations::delete_tasks(specification, task_list);
-                    ChangeSpecOperations::delete_processors(specification, processor_list);
+                    ChangeSpecOperations::delete_tasks(specification, task_list, perc_tasks);
+                    ChangeSpecOperations::delete_processors(specification, processor_list, perc_processors);
                     break;
                 case 3:
-                    ChangeSpecOperations::combined_changes_tasks(specification, task_list);
-                    ChangeSpecOperations::combined_changes_processors(specification, processor_list);
+                    ChangeSpecOperations::combined_changes_tasks(specification, task_list, perc_tasks);
+                    ChangeSpecOperations::combined_changes_processors(specification, processor_list, perc_processors);
                     break;
                 default:
                     cout << "Wrong option was set\n";
