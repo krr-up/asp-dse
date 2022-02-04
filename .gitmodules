@@ -1,0 +1,3 @@
+[submodule "include/dse"]
+	path = include/dse
+	url = git@github.com:wanko/dse.git
