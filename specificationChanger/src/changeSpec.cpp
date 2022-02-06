@@ -290,9 +290,6 @@ void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification
             auto link_new = new Link(link_name, configuration, res_new, res2);
             specification->getArchitectureGraph()->addEdge(link_name, link_new);
             
-            l_num = specification->getArchitectureGraph()->getEdges().size() + 1;
-            link_name = "l" + to_string(l_num);
-
             // Check if link name already in application exists
             condition = true;
             while (condition) {
@@ -311,8 +308,6 @@ void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification
                 if (processor->getID() == link.second->sourceNode()->getID()) {
                     auto router = link.second->destNode();
 
-                    l_num = specification->getArchitectureGraph()->getEdges().size() + 1;
-                    link_name = "l" + to_string(l_num);
                     // Check if link name already in application exists
                     condition = true;
                     while (condition) {
@@ -323,11 +318,9 @@ void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification
                                 condition = true;
                             }
                     }
-                    link_new = new Link(name, configuration, res2, router);
-                    specification->getArchitectureGraph()->addEdge(name, link_new);
+                    link_new = new Link(link_name, configuration, res2, router);
+                    specification->getArchitectureGraph()->addEdge(link_name, link_new);
 
-                    l_num = specification->getArchitectureGraph()->getEdges().size() + 1;
-                    link_name = "l" + to_string(l_num);
                     // Check if link name already in application exists
                     condition = true;
                     while (condition) {
@@ -338,8 +331,8 @@ void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification
                                 condition = true;
                             }
                     }
-                    auto link_new = new Link(name, configuration, res2, router);
-                    specification->getArchitectureGraph()->addEdge(name, link_new);
+                    auto link_new = new Link(link_name, configuration, router, res2);
+                    specification->getArchitectureGraph()->addEdge(link_name, link_new);
 
                     break;
                 }
