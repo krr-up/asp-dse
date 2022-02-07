@@ -16,21 +16,21 @@ using namespace DSE;
 class ChangeSpecOperations {
     public:
         /* Exchange the given tasks (improve characteristics) */
-        static void exchange_tasks(DSE::SpecificationGraph *specification, vector<Task *> task_list, int percentage);
+        static void exchange_tasks(DSE::SpecificationGraph *specification, vector<Task *> task_list, double percentage);
         /* Exchange the given processors (improve characteristics) */
-        static void exchange_processors(DSE::SpecificationGraph *specification, vector<Resource *> processor_list, int percentage);
+        static void exchange_processors(DSE::SpecificationGraph *specification, vector<Resource *> processor_list, double percentage);
         /* Add a successor each to the given tasks */
-        static void add_tasks(DSE::SpecificationGraph *specification, vector<Task *> task_list, int percentage);
+        static void add_tasks(DSE::SpecificationGraph *specification, vector<Task *> task_list, double percentage);
         /* Add a neighbour (in z direction) each to the given processors */
-        static void add_processors(DSE::SpecificationGraph *specification, vector<Resource *> processor_list, int percentage);
+        static void add_processors(DSE::SpecificationGraph *specification, vector<Resource *> processor_list, double percentage);
         /* Delete the given tasks */
-        static void delete_tasks(DSE::SpecificationGraph *specification, vector<Task *> task_list, int percentage);
+        static void delete_tasks(DSE::SpecificationGraph *specification, vector<Task *> task_list, double percentage);
         /* Delete the given processors, router structure remains */
-        static void delete_processors(DSE::SpecificationGraph *specification, vector<Resource *> processor_list, int percentage);
+        static double delete_processors(DSE::SpecificationGraph *specification, vector<Resource *> processor_list, double percentage);
         /* Do random selected changes on the given tasks */
-        static void combined_changes_tasks(DSE::SpecificationGraph *specification, vector<Task *> task_list, int percentage);
+        static void combined_changes_tasks(DSE::SpecificationGraph *specification, vector<Task *> task_list, double percentage);
         /* Do random selected changes on the the given processors */
-        static void combined_changes_processors(DSE::SpecificationGraph *specification, vector<Resource *> processor_list, int percentage);
+        static void combined_changes_processors(DSE::SpecificationGraph *specification, vector<Resource *> processor_list, double percentage);
 
         /* Select randomly a certain percentage of tasks */
         static vector<Task *> select_tasks(DSE::SpecificationGraph *specification);
