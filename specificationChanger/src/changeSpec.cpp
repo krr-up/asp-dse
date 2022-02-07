@@ -272,6 +272,9 @@ void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification
             res2->setAttribute("staticPower", staticPower);
             /* TODO possibly copy staticPower, resourceCost from adjacent router */
 
+            /* Get characteristics for new links */
+            string routingDelay = specification->getArchitectureGraph()->getEdges().begin()->second->getAttribute("routingDelay");
+            string routingEnergy = specification->getArchitectureGraph()->getEdges().begin()->second->getAttribute("routingEnergy");
             /* Create corresponding links */
             auto l_num = specification->getArchitectureGraph()->getEdges().size() + 1;
             auto link_name = "l" + to_string(l_num);
@@ -289,6 +292,8 @@ void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification
 
             auto link_new = new Link(link_name, configuration, res_new, res2);
             specification->getArchitectureGraph()->addEdge(link_name, link_new);
+            link_new->setAttribute("routingDelay",routingDelay);
+            link_new->setAttribute("routingEnergy",routingEnergy);
             
             // Check if link name already in application exists
             condition = true;
@@ -303,6 +308,8 @@ void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification
             
             link_new = new Link(link_name, configuration, res2, res_new);
             specification->getArchitectureGraph()->addEdge(link_name, link_new);
+            link_new->setAttribute("routingDelay",routingDelay);
+            link_new->setAttribute("routingEnergy",routingEnergy);
 
             for (auto link : specification->getArchitectureGraph()->getEdges()) {
                 if (processor->getID() == link.second->sourceNode()->getID()) {
@@ -320,6 +327,8 @@ void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification
                     }
                     link_new = new Link(link_name, configuration, res2, router);
                     specification->getArchitectureGraph()->addEdge(link_name, link_new);
+                    link_new->setAttribute("routingDelay",routingDelay);
+                    link_new->setAttribute("routingEnergy",routingEnergy);
 
                     // Check if link name already in application exists
                     condition = true;
@@ -333,6 +342,8 @@ void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification
                     }
                     auto link_new = new Link(link_name, configuration, router, res2);
                     specification->getArchitectureGraph()->addEdge(link_name, link_new);
+                    link_new->setAttribute("routingDelay",routingDelay);
+                    link_new->setAttribute("routingEnergy",routingEnergy);
 
                     break;
                 }
@@ -682,7 +693,7 @@ void ChangeSpecOperations::combined_changes_processors(DSE::SpecificationGraph *
     /* Deletion of processor elements */ 
     double delete_list_part = (100.00 * deleted) / delete_list.size();
     double deleted_part = 100.00;
-    if (!delete_list.empty())
+    if (deleted!=0)
     {
         deleted_part = delete_processors(specification, delete_list, delete_list_part);
         deleted = deleted * deleted_part / delete_list_part;
