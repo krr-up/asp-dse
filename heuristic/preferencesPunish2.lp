@@ -27,5 +27,5 @@ _holds(atom(equal(exist,priority(TC1,TC2))),0) :- not equal(_,priority(TC1,TC2))
 _preference(similarity,(4,10,(TC1,TC2,1)),1,for(atom(equal(exist,priority(TC1,TC2)))), (1,equal(exist,priority(TC1,TC2)))) :- equal(exist,priority(TC1,TC2)).
 _holds(atom(equal(exist,priority(TC1,TC2))),0) :- not equal(_,priority(TC1,TC2)), legacy(comm(TC1,A1)), legacy(comm(TC2,A2)), scheduling == true.
 
-%TODO binding step + hops are counted twice when mapping occurs in child and parent
+%TODO hops are counted twice when communication occurs in child and parent
 % routing and scheduling not counted correctly

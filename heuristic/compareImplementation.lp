@@ -14,7 +14,7 @@ equal(notExist,bind(M,T,R)) :- not bind(M,T,R), not legacy(bind(M,T,R)), legacy(
 % Unequal, if a task only exists in one specification or a task was bound to different resources
 unequal(child,bind(M,T,R)) :- bind(M,T,R), map(M,T,R), not legacy(map(M,T,R)).
 unequal(parent,bind(M,T,R)) :- legacy(bind(M,T,R)), not map(M,T,R), legacy(map(M,T,R)).
-unequal(both,bind(M1,T,R1)) :- bind(M1,T,R1), legacy(bind(M2,T,R2)), R1!=R2.
+unequal(both,bind(M1,T,R1)) :- bind(M1,T,R1), legacy(bind(M2,T,R2)), map(M1,T,R1), legacy(map(M1,T,R1)),  R1!=R2.
 %NOTE This differentiation can be used to avoid counting unequally bound tasks twice
 
 

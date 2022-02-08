@@ -14,4 +14,4 @@
 :~ not equal(_,priority(T1,T2)), legacy(task(T1,A1)), legacy(task(T2,A2)), scheduling == true. [1@1, priority(T1,T2)]
 :~ not equal(_,priority(C1,C2)), legacy(comm(C1,A1)), legacy(comm(C2,A2)), scheduling == true. [1@1, priority(C1,C2)]
 
-%TODO some unequal terms in the implementation are counted twice (for child and for parent) (for example binding and hops)
+%TODO hops terms in the implementation are counted twice (for child and for parent)
