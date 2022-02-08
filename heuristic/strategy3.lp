@@ -7,5 +7,5 @@
 :- unequal(_,hops(C,N)), equalComm(comm(C,A)), routing == true.
 
 % Scheduling
-:- unequal(_,priority(TC1,TC2)), equalTask(task(TC1,A1)),equalTask(task(TC2,A2)), scheduling == true.
+:- unequal(_,priority(TC1,TC2)), equalTask(task(TC1,A1)), equalTask(task(TC2,A2)), scheduling == true.
 :- unequal(_,priority(TC1,TC2)), equalComm(comm(TC1,A1)), equalComm(comm(TC2,A2)), scheduling == true.
