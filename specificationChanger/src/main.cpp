@@ -15,8 +15,8 @@ using namespace DSE;
  *                          1   add elements
  *                          2   delete elements
  *                          3   decide randomly for every element to be changed
- * \param perc_tasks a string (then converted to int) representing the percentage of tasks to be changed
- * \param perc_processors a string (then converted to int) representing the percentage of processors to be changed
+ * \param perc_tasks a string (then converted to double) representing the percentage of tasks to be changed
+ * \param perc_processors a string (then converted to double) representing the percentage of processors to be changed
  * \param instances_num a string (then converted to int) representing the number of modified instances to generate
  * \param seed a string (then converted to int) representing the random seed
  */
@@ -27,8 +27,8 @@ int main(int argc, char *argv[]) {
 
     if (argc == 6) {
         option = stoi(argv[1]);
-        perc_tasks = stoi(argv[2]);
-        perc_processors = stoi(argv[3]);
+        perc_tasks = stod(argv[2]);
+        perc_processors = stod(argv[3]);
         instances_num = stoi(argv[4]);
         seed = stoi(argv[5]);
 
@@ -47,9 +47,10 @@ int main(int argc, char *argv[]) {
 
     bool status;
 
-    // string path_in = "../instanceGenerator/benchmarks_format_2021_11";
-    string path_in = "../test/";
-    string file_in, file_out, file_name;
+    string path_in = "../../benchmarkInstances/parent/specification/";
+    string path_out = "../../benchmarkInstances/child/specification/3_60_60/";
+    // string path_in = "../test/";
+    string file_in, file_out, file_name, file_path;
 
     if (!std::filesystem::exists(path_in)) {
         std::cerr << "Path " << path_in << " does not exist." << std::endl;
@@ -72,8 +73,12 @@ int main(int argc, char *argv[]) {
         for (int i = 0; i < instances_num; i++) {
             std::cout
                 << "##################################################################################################\n";
-            file_name = file.path().generic_string();
-            file_out = file_name.insert(file_name.rfind("."), "_m" + to_string(i));
+            // output in same directory
+            // file_path = file.path().generic_string();
+            // file_out = file_path.insert(file_path.rfind("."), "_m" + to_string(i));
+
+            file_name = file.path().filename().generic_string();
+            file_out = path_out + file_name.insert(file_name.rfind("."), "_m" + to_string(i));
 
             std::cout << "file_in: " << file_in << " and file_out: " << file_out << "\n";
 
@@ -89,7 +94,7 @@ int main(int argc, char *argv[]) {
             }
 
             /* Make the random changes */
-            std::cout << "Select randomly an amount of elements depending on task percentage: " << perc_tasks << "%, processor percentage: " << perc_processors << "% and random seed: " << seed << "\n";
+            std::cout << "Change randomly up to " << perc_processors << "% of the processor elements and up to " << perc_tasks << "% of the task elements (random seed: " << seed << ").\n";
             std::vector<Task *> task_list = ChangeSpecOperations::select_tasks(specification);
 
             std::vector<Resource *> processor_list = ChangeSpecOperations::select_processors(specification);

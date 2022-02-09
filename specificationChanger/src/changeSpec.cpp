@@ -1,10 +1,10 @@
 #include "changeSpec.hpp"
 
 /* Exchange the given tasks (improve characteristics) */
-void ChangeSpecOperations::exchange_tasks(DSE::SpecificationGraph *specification, vector<Task *> task_list, int percentage) {
+void ChangeSpecOperations::exchange_tasks(DSE::SpecificationGraph *specification, vector<Task *> task_list, double percentage) {
     string task_id;
     string executionTime, dynamicEnergy;
-    int selection = 0;
+    double selection = 0.0;
 
     cout << "Going to exchange selected tasks\n";
     for (auto task : task_list) {
@@ -30,9 +30,9 @@ void ChangeSpecOperations::exchange_tasks(DSE::SpecificationGraph *specification
 
 /* Exchange the given processors (improve characteristics) */
 void ChangeSpecOperations::exchange_processors(DSE::SpecificationGraph *specification,
-                                               vector<Resource *> processor_list, int percentage) {
+                                               vector<Resource *> processor_list, double percentage) {
     string resourceCost, staticPower;
-    int selection = 0;
+    double selection = 0.0;
 
     cout << "Going to exchange selected processors\n";
     for (auto processor : processor_list) {
@@ -52,11 +52,11 @@ void ChangeSpecOperations::exchange_processors(DSE::SpecificationGraph *specific
 }
 
 /* Add a successor each to the given tasks */
-void ChangeSpecOperations::add_tasks(DSE::SpecificationGraph *specification, vector<Task *> task_list, int percentage) {
+void ChangeSpecOperations::add_tasks(DSE::SpecificationGraph *specification, vector<Task *> task_list, double percentage) {
     string task_name, message_name;
     string configuration, application_num;
     ApplicationGraph *application;
-    int selection = 0;
+    double selection = 0.0;
 
     cout << "Going to add a successor to selected tasks\n";
     /* Get current configuration */
@@ -174,10 +174,10 @@ void ChangeSpecOperations::add_tasks(DSE::SpecificationGraph *specification, vec
             /* Add new mappings (to randomly selected processors) with characteristics */
             std::vector<Resource *> map_processors = select_processors(specification);
             string ID, processor_num;
-            int map_percent = 0;
+            double map_percent = 0;
 
             for (auto processor : map_processors) {
-                if(map_percent < 20) {
+                if(map_percent < 20.00) {
                     map_percent = map_percent + 100.00 / map_processors.size();
 
                     processor_num = "";
@@ -204,12 +204,12 @@ void ChangeSpecOperations::add_tasks(DSE::SpecificationGraph *specification, vec
 }
 
 /* Add a neighbour (in z direction) each to the given processors */
-void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification, vector<Resource *> processor_list, int percentage) {
+void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification, vector<Resource *> processor_list, double percentage) {
     string name, configuration;
     string posX, posY, posZ;
     string resourceCost, staticPower;
     list<Resource *> processors;
-    int selection = 0;
+    double selection = 0.0;
 
     cout << "Going to add a neighbour to selected processors\n";
     /* Get current configuration */
@@ -272,6 +272,9 @@ void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification
             res2->setAttribute("staticPower", staticPower);
             /* TODO possibly copy staticPower, resourceCost from adjacent router */
 
+            /* Get characteristics for new links */
+            string routingDelay = specification->getArchitectureGraph()->getEdges().begin()->second->getAttribute("routingDelay");
+            string routingEnergy = specification->getArchitectureGraph()->getEdges().begin()->second->getAttribute("routingEnergy");
             /* Create corresponding links */
             auto l_num = specification->getArchitectureGraph()->getEdges().size() + 1;
             auto link_name = "l" + to_string(l_num);
@@ -289,6 +292,8 @@ void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification
 
             auto link_new = new Link(link_name, configuration, res_new, res2);
             specification->getArchitectureGraph()->addEdge(link_name, link_new);
+            link_new->setAttribute("routingDelay",routingDelay);
+            link_new->setAttribute("routingEnergy",routingEnergy);
             
             // Check if link name already in application exists
             condition = true;
@@ -303,6 +308,8 @@ void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification
             
             link_new = new Link(link_name, configuration, res2, res_new);
             specification->getArchitectureGraph()->addEdge(link_name, link_new);
+            link_new->setAttribute("routingDelay",routingDelay);
+            link_new->setAttribute("routingEnergy",routingEnergy);
 
             for (auto link : specification->getArchitectureGraph()->getEdges()) {
                 if (processor->getID() == link.second->sourceNode()->getID()) {
@@ -320,6 +327,8 @@ void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification
                     }
                     link_new = new Link(link_name, configuration, res2, router);
                     specification->getArchitectureGraph()->addEdge(link_name, link_new);
+                    link_new->setAttribute("routingDelay",routingDelay);
+                    link_new->setAttribute("routingEnergy",routingEnergy);
 
                     // Check if link name already in application exists
                     condition = true;
@@ -333,21 +342,23 @@ void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification
                     }
                     auto link_new = new Link(link_name, configuration, router, res2);
                     specification->getArchitectureGraph()->addEdge(link_name, link_new);
+                    link_new->setAttribute("routingDelay",routingDelay);
+                    link_new->setAttribute("routingEnergy",routingEnergy);
 
                     break;
                 }
             }
 
             /* Add new mappings (randomly selected tasks) */
-            vector< Task *> map_tasks = select_tasks(specification); // TODO
+            vector< Task *> map_tasks = select_tasks(specification);
             string ID, processor_num, application_num;
-            int map_percent = 0;
+            double map_percent = 0.00;
 
             processor_num = "";
             processor_num = processor_num + res_new->getID();
             
             for (auto task : map_tasks) {
-                if(map_percent < 5) {
+                if(map_percent < 5.00) {
                     map_percent = map_percent + 100.00 / map_tasks.size();
 
                     for(auto application : specification->getApplicationGraphs())
@@ -380,11 +391,11 @@ void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification
 }
 
 /* Delete the given tasks */
-void ChangeSpecOperations::delete_tasks(DSE::SpecificationGraph *specification, vector<Task *> task_list, int percentage) {
+void ChangeSpecOperations::delete_tasks(DSE::SpecificationGraph *specification, vector<Task *> task_list, double percentage) {
     string configuration, application_num;
     string message_new_name;
     ApplicationGraph *application;
-    int selection = 0;
+    double selection = 0;
 
     cout << "Going to delete selected tasks\n";
     // /* Get current configuration */
@@ -486,12 +497,12 @@ void ChangeSpecOperations::delete_tasks(DSE::SpecificationGraph *specification, 
 }
 
 /* Delete the given processors, router structure remains */
-void ChangeSpecOperations::delete_processors(DSE::SpecificationGraph *specification,
-                                             vector<Resource *> processor_list, int percentage) {
+double ChangeSpecOperations::delete_processors(DSE::SpecificationGraph *specification,
+                                             vector<Resource *> processor_list, double percentage) {
     Node *router;
     list<Node *> resources;
     string name, configuration;
-    int selection = 0;
+    double selection = 0.0;
     int delete_ok = 0;
 
     cout << "Going to delete selected processors\n";
@@ -503,7 +514,7 @@ void ChangeSpecOperations::delete_processors(DSE::SpecificationGraph *specificat
 
     for (auto processor : processor_list) {
         if(selection < percentage) {
-            std::cout << "DELETE to " << processor->getID() << " (" << selection << " % of " << percentage << " % in total) \n";
+            std::cout << "DELETE to " << processor->getID() << " (" << selection + 100.00 / processor_list.size() << " % of " << percentage << " % in total) \n";
 
             resources.clear();
 
@@ -563,15 +574,13 @@ void ChangeSpecOperations::delete_processors(DSE::SpecificationGraph *specificat
         }
     }
 
-    if(selection < percentage) {
-       std::cout << "This specification could only be changed up to " << selection << "%\n";
-    }
+    return selection;
 }
 
 /* Do random selected changes on the given tasks */
-void ChangeSpecOperations::combined_changes_tasks(DSE::SpecificationGraph *specification, vector<Task *> task_list, int percentage) {
+void ChangeSpecOperations::combined_changes_tasks(DSE::SpecificationGraph *specification, vector<Task *> task_list, double percentage) {
     int selection;
-    int selected_tasks = 0;
+    double selected_tasks = 0.0;
     int exchanged = 0;
     int added = 0;
     int deleted = 0;
@@ -616,21 +625,22 @@ void ChangeSpecOperations::combined_changes_tasks(DSE::SpecificationGraph *speci
         cout << e->getID() << " ";
     cout << "\n";
 
-    if (!exchange_list.empty()) exchange_tasks(specification, exchange_list, 100);
-    if (!add_list.empty()) add_tasks(specification, add_list, 100);
-    if (!delete_list.empty()) delete_tasks(specification, delete_list, 100);
+    if (!exchange_list.empty()) exchange_tasks(specification, exchange_list, 100.00);
+    if (!add_list.empty()) add_tasks(specification, add_list, 100.00);
+    if (!delete_list.empty()) delete_tasks(specification, delete_list, 100.00);
 
     cout << exchanged << " exchanged, " << added << " added and " << deleted << " deleted tasks\n";
 }
 
 /* Do random selected changes on the the given processors */
 void ChangeSpecOperations::combined_changes_processors(DSE::SpecificationGraph *specification,
-                                                       vector<Resource *> processor_list, int percentage) {
+                                                       vector<Resource *> processor_list, double percentage) {
     int selection;
-    int selected_processors = 0;
+    double selected_processors = 0.0;
     int exchanged = 0;
     int added = 0;
     int deleted = 0;
+    int changed = 0;
     vector<Resource *> exchange_list;
     vector<Resource *> add_list;
     vector<Resource *> delete_list;
@@ -657,8 +667,12 @@ void ChangeSpecOperations::combined_changes_processors(DSE::SpecificationGraph *
                     break;
             }
         }
+        /* In case that one processor cannot be removed, more processors are in the list */
+        else
+            delete_list.push_back(processor);
     }
 
+    changed = exchanged + added + deleted;
     cout << "EXCHANGE LIST: ";
     for(auto e : exchange_list)
         cout << e->getID() << " ";
@@ -667,14 +681,30 @@ void ChangeSpecOperations::combined_changes_processors(DSE::SpecificationGraph *
     for(auto e : add_list)
         cout << e->getID() << " ";
     cout << "\n";
-    cout << "DELETE LIST: ";
+    cout << "DELETE LIST + REMAINING elements from shuffled list: ";
     for(auto e : delete_list)
         cout << e->getID() << " ";
     cout << "\n";
 
-    if (!exchange_list.empty()) exchange_processors(specification, exchange_list, 100);
-    if (!add_list.empty()) add_processors(specification, add_list, 100);
-    if (!delete_list.empty()) delete_processors(specification, delete_list, 100);
+    /* Exchanging and addition of processor elements */
+    if (!exchange_list.empty()) exchange_processors(specification, exchange_list, 100.00);
+    if (!add_list.empty()) add_processors(specification, add_list, 100.00);
+
+    /* Deletion of processor elements */ 
+    double delete_list_part = (100.00 * deleted) / delete_list.size();
+    double deleted_part = 100.00;
+    if (deleted!=0)
+    {
+        deleted_part = delete_processors(specification, delete_list, delete_list_part);
+        deleted = deleted * deleted_part / delete_list_part;
+        deleted_part = 100.00 * deleted_part / delete_list_part;
+    }
+    /* In case that not all processor elements could be removed */
+    if(deleted_part < 100.00)
+    {
+        std::cout << "Only " << deleted_part << "% of the deletion of processors could be done.\n";
+        std::cout << "It could only be done up to " << (double) (exchanged + added + deleted)*100/changed << "% of the changes on the specification, that means up to " << (double) (exchanged + added + deleted) / processor_list.size() *100 << "% changes on the processor elements in total.\n";
+    }
 
     cout << exchanged << " exchanged, " << added << " added and " << deleted << " deleted processors\n";
 }
