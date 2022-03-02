@@ -88,15 +88,16 @@ void ChangeSpecOperations::add_tasks(DSE::SpecificationGraph *specification, vec
             auto t_num = application->getTasks().size() + 1;
             task_name = "t" + to_string(t_num);
 
-            // Check if task name already in application exists
+            // Check if task name already exists
             bool condition = true;
             while (condition) {
                 condition = false;
-                for (auto t : application->getTasks())
-                    if (t.second->getID() == task_name) {
-                        task_name = "t" + to_string(t_num++);
-                        condition = true;
-                    }
+                for (auto appl : specification->getApplicationGraphs()) 
+                    for (auto t : appl.second->getTasks())
+                        if (t.second->getID() == task_name) {
+                            task_name = "t" + to_string(t_num++);
+                            condition = true;
+                        }
             }
 
             auto task_new = new Task(task_name, configuration);
@@ -108,15 +109,16 @@ void ChangeSpecOperations::add_tasks(DSE::SpecificationGraph *specification, vec
             auto m_num = application->getMessages().size() + 1;
             message_name = "c" + to_string(m_num);
 
-            // Check if message name already in application exists
+            // Check if message name already exists
             condition = true;
             while (condition) {
                 condition = false;
-                for (auto m : application->getMessages())
-                    if (m.second->getID() == message_name) {
-                        message_name = "c" + to_string(m_num++);
-                        condition = true;
-                    }
+                for (auto appl : specification->getApplicationGraphs())
+                    for (auto m : appl.second->getMessages())
+                        if (m.second->getID() == message_name) {
+                            message_name = "c" + to_string(m_num++);
+                            condition = true;
+                        }
             }
             auto message_new = new Message(message_name, configuration);
             application->addMessage(message_name, message_new);
@@ -132,15 +134,16 @@ void ChangeSpecOperations::add_tasks(DSE::SpecificationGraph *specification, vec
                 m_num = application->getMessages().size() + 1;
                 string message_name2 = "c" + to_string(m_num);
 
-                // Check if message name already in application exists
+                // Check if message name already exists
                 condition = true;
                 while (condition) {
                     condition = false;
-                    for (auto m : application->getMessages())
-                        if (m.second->getID() == message_name2) {
-                            message_name2 = "c" + to_string(m_num++);
-                            condition = true;
-                        }
+                    for (auto appl : specification->getApplicationGraphs())
+                        for (auto m : appl.second->getMessages())
+                            if (m.second->getID() == message_name2) {
+                                message_name2 = "c" + to_string(m_num++);
+                                condition = true;
+                            }
                 }
 
                 auto message_new2 = new Message(message_name2, configuration);
@@ -231,7 +234,8 @@ void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification
 
             auto p_num = processors.size() + 1;
             name = "p" + to_string(p_num);
-            // Check if processor name already in application exists
+
+            // Check if processor name already exists
             bool condition = true;
             while (condition) {
                 condition = false;
@@ -279,7 +283,7 @@ void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification
             auto l_num = specification->getArchitectureGraph()->getEdges().size() + 1;
             auto link_name = "l" + to_string(l_num);
 
-            // Check if link name already in application exists
+            // Check if link name already exists
             condition = true;
             while (condition) {
                 condition = false;
@@ -295,7 +299,7 @@ void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification
             link_new->setAttribute("routingDelay",routingDelay);
             link_new->setAttribute("routingEnergy",routingEnergy);
             
-            // Check if link name already in application exists
+            // Check if link name already exists
             condition = true;
             while (condition) {
                 condition = false;
@@ -315,7 +319,7 @@ void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification
                 if (processor->getID() == link.second->sourceNode()->getID()) {
                     auto router = link.second->destNode();
 
-                    // Check if link name already in application exists
+                    // Check if link name already exists
                     condition = true;
                     while (condition) {
                         condition = false;
@@ -330,7 +334,7 @@ void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification
                     link_new->setAttribute("routingDelay",routingDelay);
                     link_new->setAttribute("routingEnergy",routingEnergy);
 
-                    // Check if link name already in application exists
+                    // Check if link name already exists
                     condition = true;
                     while (condition) {
                         condition = false;
@@ -462,15 +466,16 @@ void ChangeSpecOperations::delete_tasks(DSE::SpecificationGraph *specification, 
                     auto m_num = application->getMessages().size() + 1;
                     message_new_name = "c" + to_string(m_num);
 
-                    // Check if message name already in application exists
+                    // Check if message name already exists
                     bool condition = true;
                     while (condition) {
                         condition = false;
-                        for (auto m : application->getMessages())
-                            if (m.second->getID() == message_new_name) {
-                                message_new_name = "c" + to_string(m_num++);
-                                condition = true;
-                            }
+                        for (auto appl : specification->getApplicationGraphs())
+                            for (auto m : appl.second->getMessages())
+                                if (m.second->getID() == message_new_name) {
+                                    message_new_name = "c" + to_string(m_num++);
+                                    condition = true;
+                                }
                     }
 
                     auto message_new = new Message(message_new_name, configuration);

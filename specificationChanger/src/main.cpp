@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
     bool status;
 
     string path_in = "../../benchmarkInstances/parent/specification/";
-    string path_out = "../../benchmarkInstances/child/specification/3_60_60/";
+    string path_out = "../../benchmarkInstances/child/specification/1_20_20/";
     // string path_in = "../test/";
     string file_in, file_out, file_name, file_path;
 
