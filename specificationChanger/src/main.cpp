@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
     bool status;
 
     string path_in = "../../benchmarkInstances/parent/specification/";
-    string path_out = "../../benchmarkInstances/child/specification/3_60_60/";
+    string path_out = "../../benchmarkInstances/child/specification/1_20_20/";
     // string path_in = "../test/";
     string file_in, file_out, file_name, file_path;
 
@@ -96,6 +96,7 @@ int main(int argc, char *argv[]) {
             /* Make the random changes */
             std::cout << "Change randomly up to " << perc_processors << "% of the processor elements and up to " << perc_tasks << "% of the task elements (random seed: " << seed << ").\n";
             std::vector<Task *> task_list = ChangeSpecOperations::select_tasks(specification);
+            double deleted_part = perc_processors; /* Only needed for processor deletion */
 
             std::vector<Resource *> processor_list = ChangeSpecOperations::select_processors(specification);
 
@@ -110,7 +111,9 @@ int main(int argc, char *argv[]) {
                     break;
                 case 2:
                     ChangeSpecOperations::delete_tasks(specification, task_list, perc_tasks);
-                    ChangeSpecOperations::delete_processors(specification, processor_list, perc_processors);
+                    deleted_part =  ChangeSpecOperations::delete_processors(specification, processor_list, perc_processors);
+                    if(deleted_part < perc_processors)
+                        cout << "Only " << deleted_part << "% of the processors could be deleted.\n";
                     break;
                 case 3:
                     ChangeSpecOperations::combined_changes_tasks(specification, task_list, perc_tasks);

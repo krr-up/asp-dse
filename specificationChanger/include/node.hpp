@@ -18,6 +18,12 @@ namespace DSE {
 		 */
 		void addEdge(Edge *edge);
 		/**
+		 *\brief Remove a given Edge from the Node.
+		 *\param edge The Edge to be removed.
+		 */
+		void removeEdge(Edge *edge);
+		
+		/**
 		 *\brief Returns all edges associated to this Node. 
 		 */
 		list<Edge *> *edges();

@@ -88,15 +88,16 @@ void ChangeSpecOperations::add_tasks(DSE::SpecificationGraph *specification, vec
             auto t_num = application->getTasks().size() + 1;
             task_name = "t" + to_string(t_num);
 
-            // Check if task name already in application exists
+            // Check if task name already exists
             bool condition = true;
             while (condition) {
                 condition = false;
-                for (auto t : application->getTasks())
-                    if (t.second->getID() == task_name) {
-                        task_name = "t" + to_string(t_num++);
-                        condition = true;
-                    }
+                for (auto appl : specification->getApplicationGraphs()) 
+                    for (auto t : appl.second->getTasks())
+                        if (t.second->getID() == task_name) {
+                            task_name = "t" + to_string(t_num++);
+                            condition = true;
+                        }
             }
 
             auto task_new = new Task(task_name, configuration);
@@ -108,15 +109,16 @@ void ChangeSpecOperations::add_tasks(DSE::SpecificationGraph *specification, vec
             auto m_num = application->getMessages().size() + 1;
             message_name = "c" + to_string(m_num);
 
-            // Check if message name already in application exists
+            // Check if message name already exists
             condition = true;
             while (condition) {
                 condition = false;
-                for (auto m : application->getMessages())
-                    if (m.second->getID() == message_name) {
-                        message_name = "c" + to_string(m_num++);
-                        condition = true;
-                    }
+                for (auto appl : specification->getApplicationGraphs())
+                    for (auto m : appl.second->getMessages())
+                        if (m.second->getID() == message_name) {
+                            message_name = "c" + to_string(m_num++);
+                            condition = true;
+                        }
             }
             auto message_new = new Message(message_name, configuration);
             application->addMessage(message_name, message_new);
@@ -132,15 +134,16 @@ void ChangeSpecOperations::add_tasks(DSE::SpecificationGraph *specification, vec
                 m_num = application->getMessages().size() + 1;
                 string message_name2 = "c" + to_string(m_num);
 
-                // Check if message name already in application exists
+                // Check if message name already exists
                 condition = true;
                 while (condition) {
                     condition = false;
-                    for (auto m : application->getMessages())
-                        if (m.second->getID() == message_name2) {
-                            message_name2 = "c" + to_string(m_num++);
-                            condition = true;
-                        }
+                    for (auto appl : specification->getApplicationGraphs())
+                        for (auto m : appl.second->getMessages())
+                            if (m.second->getID() == message_name2) {
+                                message_name2 = "c" + to_string(m_num++);
+                                condition = true;
+                            }
                 }
 
                 auto message_new2 = new Message(message_name2, configuration);
@@ -160,8 +163,10 @@ void ChangeSpecOperations::add_tasks(DSE::SpecificationGraph *specification, vec
                 }
                 
                 application->removeEdge(message->outgoingEdges().front()->getID());
+                message->outgoingEdges().front()->getOpposite(message)->removeEdge(message->outgoingEdges().front());
                 application->removeMessage(edge_out->getOpposite(task)->getID());
                 application->removeEdge(edge_out->getID());
+                task->removeEdge(edge_out);
             }
 
             string dependency_name = "s" + message_name;
@@ -231,7 +236,8 @@ void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification
 
             auto p_num = processors.size() + 1;
             name = "p" + to_string(p_num);
-            // Check if processor name already in application exists
+
+            // Check if processor name already exists
             bool condition = true;
             while (condition) {
                 condition = false;
@@ -279,7 +285,7 @@ void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification
             auto l_num = specification->getArchitectureGraph()->getEdges().size() + 1;
             auto link_name = "l" + to_string(l_num);
 
-            // Check if link name already in application exists
+            // Check if link name already exists
             condition = true;
             while (condition) {
                 condition = false;
@@ -295,7 +301,7 @@ void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification
             link_new->setAttribute("routingDelay",routingDelay);
             link_new->setAttribute("routingEnergy",routingEnergy);
             
-            // Check if link name already in application exists
+            // Check if link name already exists
             condition = true;
             while (condition) {
                 condition = false;
@@ -315,7 +321,7 @@ void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification
                 if (processor->getID() == link.second->sourceNode()->getID()) {
                     auto router = link.second->destNode();
 
-                    // Check if link name already in application exists
+                    // Check if link name already exists
                     condition = true;
                     while (condition) {
                         condition = false;
@@ -330,7 +336,7 @@ void ChangeSpecOperations::add_processors(DSE::SpecificationGraph *specification
                     link_new->setAttribute("routingDelay",routingDelay);
                     link_new->setAttribute("routingEnergy",routingEnergy);
 
-                    // Check if link name already in application exists
+                    // Check if link name already exists
                     condition = true;
                     while (condition) {
                         condition = false;
@@ -424,6 +430,8 @@ void ChangeSpecOperations::delete_tasks(DSE::SpecificationGraph *specification, 
             for (auto edge_in : task->incomingEdges()) {
                 messages_pred.push_back(edge_in->getOpposite(task));
                 application->removeEdge(((Dependency *)edge_in)->getID());
+                task->removeEdge(edge_in);
+                edge_in->getOpposite(task)->removeEdge(edge_in);
             }
 
             /* Get predecessors tasks of predecessors messages */
@@ -433,6 +441,8 @@ void ChangeSpecOperations::delete_tasks(DSE::SpecificationGraph *specification, 
                 for (auto edge : message_pred->incomingEdges()) {
                     tasks_pred.push_back(edge->getOpposite(message_pred));
                     application->removeEdge(((Dependency *)edge)->getID());
+                    message_pred->removeEdge(edge);
+                    edge->getOpposite(message_pred)->removeEdge(edge);
                 }
                 application->removeMessage(message_pred->getID());
             }
@@ -442,6 +452,8 @@ void ChangeSpecOperations::delete_tasks(DSE::SpecificationGraph *specification, 
             for (auto edge_out : task->outgoingEdges()) {
                 messages_succ.push_back(edge_out->getOpposite(task));
                 application->removeEdge(((Dependency *)edge_out)->getID());
+                task->removeEdge(edge_out);
+                edge_out->getOpposite(task)->removeEdge(edge_out);
             }
 
             /* Get successors tasks of successors messages */
@@ -451,6 +463,8 @@ void ChangeSpecOperations::delete_tasks(DSE::SpecificationGraph *specification, 
                 for (auto edge : message_succ->outgoingEdges()) {
                     tasks_succ.push_back(edge->getOpposite(message_succ));
                     application->removeEdge(((Dependency *)edge)->getID());
+                    message_succ->removeEdge(edge);
+                    edge->getOpposite(message_succ)->removeEdge(edge);
                 }
                 application->removeMessage(message_succ->getID());
             }
@@ -462,15 +476,16 @@ void ChangeSpecOperations::delete_tasks(DSE::SpecificationGraph *specification, 
                     auto m_num = application->getMessages().size() + 1;
                     message_new_name = "c" + to_string(m_num);
 
-                    // Check if message name already in application exists
+                    // Check if message name already exists
                     bool condition = true;
                     while (condition) {
                         condition = false;
-                        for (auto m : application->getMessages())
-                            if (m.second->getID() == message_new_name) {
-                                message_new_name = "c" + to_string(m_num++);
-                                condition = true;
-                            }
+                        for (auto appl : specification->getApplicationGraphs())
+                            for (auto m : appl.second->getMessages())
+                                if (m.second->getID() == message_new_name) {
+                                    message_new_name = "c" + to_string(m_num++);
+                                    condition = true;
+                                }
                     }
 
                     auto message_new = new Message(message_new_name, configuration);
@@ -559,9 +574,15 @@ double ChangeSpecOperations::delete_processors(DSE::SpecificationGraph *specific
                     if (processor->getID() == link.second->sourceNode()->getID()) {
                         router = link.second->destNode();
                         specification->getArchitectureGraph()->removeEdge(link.second->getID());
+                        processor->removeEdge(link.second);
+                        router->removeEdge(link.second);
+
                     }
                     if (processor->getID() == link.second->destNode()->getID()) {
                     specification->getArchitectureGraph()->removeEdge(link.second->getID());
+                    router = link.second->sourceNode();
+                    processor->removeEdge(link.second);
+                    router->removeEdge(link.second);
                     }
                 }
 

@@ -10,6 +10,10 @@ void Node::addEdge(Edge *edge) {
 	edgeList.push_back(edge);
 }
 
+void Node:: removeEdge(Edge *edge) {
+     edgeList.remove(edge);
+}
+
 list<Edge *> *Node::edges() {
 	return &edgeList;
 }
