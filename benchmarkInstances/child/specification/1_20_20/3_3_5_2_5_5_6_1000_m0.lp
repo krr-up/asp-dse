@@ -72,7 +72,6 @@ comm(c15,a1).
 comm(c16,a1).
 comm(c20,a1).
 comm(c22,a1).
-comm(c26,a1).
 comm(c29,a1).
 comm(c31,a1).
 comm(c33,a1).
@@ -113,7 +112,6 @@ comm(c81,a2).
 comm(c82,a2).
 comm(c83,a2).
 comm(c89,a2).
-comm(c90,a2).
 comm(c13,a3).
 comm(c14,a3).
 comm(c2,a3).
@@ -148,13 +146,11 @@ comm(c79,a3).
 comm(c85,a3).
 comm(c86,a3).
 comm(c88,a3).
-comm(c91,a3).
 read(t13,c10).
 read(t23,c15).
 read(t23,c16).
 read(t25,c20).
-read(t17,c22).
-read(t1,c26).
+read(t1,c22).
 read(t56,c29).
 read(t1,c31).
 read(t35,c33).
@@ -177,7 +173,6 @@ send(t11,c15).
 send(t13,c16).
 send(t14,c20).
 send(t14,c22).
-send(t14,c26).
 send(t23,c29).
 send(t25,c31).
 send(t45,c33).
@@ -218,11 +213,10 @@ read(t18,c81).
 read(t4,c82).
 read(t6,c83).
 read(t26,c89).
-read(t18,c90).
 send(t8,c11).
 send(t8,c12).
 send(t18,c23).
-send(t15,c27).
+send(t2,c27).
 send(t24,c30).
 send(t26,c32).
 send(t28,c34).
@@ -238,11 +232,10 @@ send(t57,c70).
 send(t64,c77).
 send(t66,c78).
 send(t68,c80).
-send(t2,c81).
+send(t32,c81).
 send(t71,c82).
 send(t71,c83).
 send(t32,c89).
-send(t32,c90).
 read(t69,c13).
 read(t10,c14).
 read(t39,c2).
@@ -277,7 +270,6 @@ read(t58,c79).
 read(t72,c85).
 read(t12,c86).
 read(t22,c88).
-read(t12,c91).
 send(t10,c13).
 send(t12,c14).
 send(t3,c2).
@@ -296,7 +288,7 @@ send(t46,c57).
 send(t46,c58).
 send(t5,c6).
 send(t16,c61).
-send(t48,c62).
+send(t50,c62).
 send(t52,c63).
 send(t53,c64).
 send(t54,c65).
@@ -310,9 +302,8 @@ send(t61,c74).
 send(t62,c75).
 send(t69,c79).
 send(t48,c85).
-send(t50,c86).
+send(t72,c86).
 send(t74,c88).
-send(t72,c91).
 processor(p1,1,1,1).
 resourceCost(p1,32).
 staticPower(p1,42).

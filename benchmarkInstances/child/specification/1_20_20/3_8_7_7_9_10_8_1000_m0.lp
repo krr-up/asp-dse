@@ -128,7 +128,6 @@ task(t97,a3).
 comm(c100,a1).
 comm(c102,a1).
 comm(c103,a1).
-comm(c106,a1).
 comm(c11,a1).
 comm(c111,a1).
 comm(c114,a1).
@@ -137,7 +136,6 @@ comm(c122,a1).
 comm(c13,a1).
 comm(c141,a1).
 comm(c146,a1).
-comm(c149,a1).
 comm(c15,a1).
 comm(c16,a1).
 comm(c19,a1).
@@ -159,6 +157,7 @@ comm(c69,a1).
 comm(c7,a1).
 comm(c71,a1).
 comm(c73,a1).
+comm(c78,a1).
 comm(c81,a1).
 comm(c84,a1).
 comm(c91,a1).
@@ -262,7 +261,6 @@ comm(c70,a3).
 comm(c72,a3).
 comm(c75,a3).
 comm(c77,a3).
-comm(c78,a3).
 comm(c80,a3).
 comm(c83,a3).
 comm(c86,a3).
@@ -275,7 +273,6 @@ comm(c99,a3).
 read(t14,c100).
 read(t96,c102).
 read(t85,c103).
-read(t32,c106).
 read(t60,c11).
 read(t103,c111).
 read(t82,c114).
@@ -284,7 +281,6 @@ read(t96,c122).
 read(t53,c13).
 read(t16,c141).
 read(t119,c146).
-read(t35,c149).
 read(t101,c15).
 read(t12,c16).
 read(t26,c19).
@@ -306,6 +302,7 @@ read(t69,c69).
 read(t46,c7).
 read(t39,c71).
 read(t39,c73).
+read(t35,c78).
 read(t50,c81).
 read(t79,c84).
 read(t7,c91).
@@ -315,7 +312,6 @@ read(t85,c97).
 send(t85,c100).
 send(t93,c102).
 send(t87,c103).
-send(t25,c106).
 send(t10,c11).
 send(t93,c111).
 send(t96,c114).
@@ -324,7 +320,6 @@ send(t103,c122).
 send(t12,c13).
 send(t119,c141).
 send(t125,c146).
-send(t25,c149).
 send(t14,c15).
 send(t16,c16).
 send(t20,c19).
@@ -346,10 +341,11 @@ send(t60,c69).
 send(t7,c7).
 send(t66,c71).
 send(t69,c73).
+send(t25,c78).
 send(t72,c81).
 send(t72,c84).
 send(t79,c91).
-send(t29,c92).
+send(t25,c92).
 send(t82,c94).
 send(t82,c97).
 read(t40,c1).
@@ -499,7 +495,6 @@ read(t131,c70).
 read(t34,c72).
 read(t118,c75).
 read(t65,c77).
-read(t118,c78).
 read(t65,c80).
 read(t78,c83).
 read(t81,c86).
@@ -554,9 +549,8 @@ send(t59,c64).
 send(t132,c68).
 send(t76,c70).
 send(t65,c72).
-send(t13,c75).
+send(t127,c75).
 send(t68,c77).
-send(t127,c78).
 send(t71,c80).
 send(t74,c83).
 send(t74,c86).

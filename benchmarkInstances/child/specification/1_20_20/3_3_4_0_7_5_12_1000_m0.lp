@@ -193,7 +193,6 @@ comm(c86,a3).
 comm(c87,a3).
 comm(c88,a3).
 comm(c9,a3).
-comm(c90,a3).
 comm(c91,a3).
 comm(c92,a3).
 comm(c93,a3).
@@ -353,7 +352,6 @@ read(t71,c86).
 read(t72,c87).
 read(t57,c88).
 read(t36,c9).
-read(t57,c90).
 read(t75,c91).
 read(t78,c92).
 read(t44,c93).
@@ -400,7 +398,7 @@ send(t60,c75).
 send(t61,c76).
 send(t61,c77).
 send(t62,c78).
-send(t71,c79).
+send(t72,c79).
 send(t64,c80).
 send(t65,c81).
 send(t65,c82).
@@ -409,9 +407,8 @@ send(t67,c84).
 send(t68,c85).
 send(t69,c86).
 send(t69,c87).
-send(t72,c88).
+send(t93,c88).
 send(t8,c9).
-send(t93,c90).
 send(t73,c91).
 send(t73,c92).
 send(t74,c93).

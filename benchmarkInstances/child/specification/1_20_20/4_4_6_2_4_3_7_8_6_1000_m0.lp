@@ -108,8 +108,6 @@ task(t93,a4).
 task(t95,a4).
 task(t98,a4).
 comm(c104,a1).
-comm(c112,a1).
-comm(c115,a1).
 comm(c117,a1).
 comm(c122,a1).
 comm(c127,a1).
@@ -232,11 +230,8 @@ comm(c84,a4).
 comm(c87,a4).
 comm(c89,a4).
 comm(c97,a4).
-comm(c98,a4).
 comm(c99,a4).
 read(t110,c104).
-read(t81,c112).
-read(t29,c115).
 read(t21,c117).
 read(t5,c122).
 read(t108,c127).
@@ -270,8 +265,6 @@ read(t104,c90).
 read(t52,c92).
 read(t74,c95).
 send(t57,c104).
-send(t108,c112).
-send(t108,c115).
 send(t99,c117).
 send(t104,c122).
 send(t18,c127).
@@ -299,8 +292,8 @@ send(t61,c71).
 send(t64,c75).
 send(t67,c79).
 send(t69,c81).
-send(t18,c85).
-send(t18,c86).
+send(t108,c85).
+send(t108,c86).
 send(t74,c90).
 send(t78,c92).
 send(t81,c95).
@@ -447,8 +440,7 @@ read(t66,c83).
 read(t28,c84).
 read(t107,c87).
 read(t36,c89).
-read(t86,c97).
-read(t84,c98).
+read(t84,c97).
 read(t90,c99).
 send(t85,c100).
 send(t87,c102).
@@ -486,7 +478,6 @@ send(t32,c84).
 send(t32,c87).
 send(t76,c89).
 send(t66,c97).
-send(t66,c98).
 send(t84,c99).
 processor(p1,1,1,1).
 resourceCost(p1,22).

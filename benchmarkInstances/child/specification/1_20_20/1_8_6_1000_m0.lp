@@ -537,6 +537,6 @@ dynamicEnergy(mt9xa1xp8,1055).
 map(mt9xa1xp9,t35,p9).
 executionTime(mt9xa1xp9,70).
 dynamicEnergy(mt9xa1xp9,422).
-period(3707).
+period(4500).
 routingDelay(2).
 routingEnergy(21).
