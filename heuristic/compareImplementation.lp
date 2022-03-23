@@ -1,8 +1,8 @@
 % Compare the implementations of new and legacy configuration
 
-#show equal/2.
-#show equal/1.
-#show unequal/2.
+% #show equal/2.
+% #show equal/1.
+% #show unequal/2.
 
 %%%%%%%%%%%
 % BINDING %
@@ -60,4 +60,6 @@ unequal(parent,priority(TC1,TC2)) :- not task(TC2,A), legacy(task(TC2,A)), legac
 unequal(parent,priority(TC1,TC2)) :- not comm(TC1,A), legacy(comm(TC1,A)), legacy(priority(TC1,TC2)).
 unequal(parent,priority(TC1,TC2)) :- not comm(TC2,A), legacy(comm(TC2,A)), legacy(priority(TC1,TC2)).
 unequal(both,priority(TC1,TC2)) :- priority(TC1,TC2), not legacy(priority(TC1,TC2)), task(TC1,A1), task(TC2,A2), legacy(task(TC1,A1)), legacy(task(TC2,A2)).
+unequal(both,priority(TC1,TC2)) :- not priority(TC1,TC2), legacy(priority(TC1,TC2)), task(TC1,A1), task(TC2,A2), legacy(task(TC1,A1)), legacy(task(TC2,A2)).
 unequal(both,priority(TC1,TC2)) :- priority(TC1,TC2), not legacy(priority(TC1,TC2)), comm(TC1,A1), comm(TC2,A2), legacy(comm(TC1,A1)), legacy(comm(TC2,A2)).
+unequal(both,priority(TC1,TC2)) :- not priority(TC1,TC2), legacy(priority(TC1,TC2)), comm(TC1,A1), comm(TC2,A2), legacy(comm(TC1,A1)), legacy(comm(TC2,A2)).
