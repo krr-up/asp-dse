@@ -6,6 +6,7 @@ Similarity information, based on the
 	 - equally not existing parts: `equal(notExist,_)`
 	 - unequally existing in child implementation `unequal(child,_)`
 	 - unequally existing in parent implementation `unequal(parent,_)`
+	 - unequally existing in both implementations `unequal(both,_)`
 
 , can be used in
 
@@ -15,10 +16,10 @@ Similarity information, based on the
 
  - **Heuristics**
 	 - 
-	 -  Prefer equal / unequal design decisions
+	 - Prefer equal / unequal design decisions
 	 - Desired heuristic can be selected via constants **heuristicModifier** and **heuristicValue**
 
- - **Optimization**
+ - **Optimization / Preferences**
 	 - 
 	 - Hamming Distance
 	 - Punish unequal design decisions
@@ -27,4 +28,4 @@ Similarity information, based on the
 Further, it is possible to
  - **Select the desired synthesis steps**
 	 - 
-	 - For selecting one or several steps set constants **binding**, **routing**, **scheduling** to **true**
+	 - For selecting one or several steps, set constants **binding**, **routing**, **scheduling** to **true**
