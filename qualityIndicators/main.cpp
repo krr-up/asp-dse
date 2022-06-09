@@ -202,8 +202,10 @@ vector<vector<double>> paretoFilter(const vector<vector<double>> & frontsVector)
     for (auto i = 0; i < frontsVector.size(); i++) 
     {
         auto dominated_ = false;
-        for (auto j = i+1; j < frontsVector.size(); j++) 
+        for (auto j = 0; j < frontsVector.size(); j++) 
         {
+            if(i==j)
+                continue;
             if (frontsVector[i][1] >= frontsVector[j][1] && frontsVector[i][2] >= frontsVector[j][2] && 
                     frontsVector[i][3] >= frontsVector[j][3]) 
             {
