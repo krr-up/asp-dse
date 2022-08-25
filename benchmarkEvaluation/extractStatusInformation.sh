@@ -58,7 +58,7 @@ statusType5=( $(grep -rx "Pareto front:" | cut -d: -f 1) ) # Satisfiable before 
 timeout=900
 timeFirstAnswer=-1
 
-#The unsuccessful DSEs (type 2-4) don't get the deafult information
+# The unsuccessful DSEs (type 2-4) don't get the default information
 for type2 in ${statusType2[@]}
 do
     instanceName=( $(echo ${type2} | cut -d/ -f2 | cut -d. -f1 ) )
@@ -101,7 +101,3 @@ do
 done
 
 cd ${BASE_DIR}
-
-
-
-
