@@ -1,3 +1,6 @@
+# From experimental results, this script is extracting all design points (cost, latency, energy for each answer) and the corresponding timestamps
+# These information are stored in files where the script calculateIndicators.py is expecting them
+
 import os
 from natsort import natsorted
 

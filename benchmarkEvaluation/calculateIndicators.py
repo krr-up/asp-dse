@@ -1,3 +1,5 @@
+# This script calculates the hamming similarity and the epsilon dominance for each answer in each DSE run (each answer per case and instance)
+
 import os
 import subprocess
 from natsort import natsorted

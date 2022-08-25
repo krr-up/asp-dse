@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# From experimental results, this script is extracting all relevant information for the evaluation afterwards
+# From experimental results, this script is extracting all relevant status information for the evaluation afterwards
 # These information are stored in files where the script markdownGenerator.py is expecting them
 
 BASE_DIR="${PWD}"
