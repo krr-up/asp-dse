@@ -85,7 +85,7 @@ def write_result_info(instance, case, inputFilePath):
                 return
 
             # Write header of the file
-            outputFile.write(COST_STRING + ' ' + LATENCY_STRING + ' ' + ENERGY_STRING + ' ' + TIME_STRING + '\n')
+            outputFile.write(TIME_STRING + ' ' + COST_STRING + ' ' + LATENCY_STRING + ' ' + ENERGY_STRING + '\n')
 
             for line in inputFile:
                 solutionNumber = -1
@@ -117,12 +117,12 @@ def write_result_info(instance, case, inputFilePath):
                         solutions.append(["-1", "-1", "-1", "-1"])
 
                     if solutionData != -1:
-                        solutions[solutionNumber - 1][0] = solutionData[0]
-                        solutions[solutionNumber - 1][1] = solutionData[1]
-                        solutions[solutionNumber - 1][2] = solutionData[2]
+                        solutions[solutionNumber - 1][1] = solutionData[0]
+                        solutions[solutionNumber - 1][2] = solutionData[1]
+                        solutions[solutionNumber - 1][3] = solutionData[2]
 
                     if solutionTime != -1:
-                        solutions[solutionNumber - 1][3] = solutionTime
+                        solutions[solutionNumber - 1][0] = solutionTime
 
             # When all solutions have been read, print them on the file
             for solution in solutions:
