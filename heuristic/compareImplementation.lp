@@ -16,7 +16,7 @@ unequal(child,bind(M,T,R)) :- bind(M,T,R), map(M,T,R), not legacy(map(M,T,R)).
 unequal(parent,bind(M,T,R)) :- legacy(bind(M,T,R)), not map(M,T,R), legacy(map(M,T,R)).
 unequal(both,bind(M1,T,R1)) :- bind(M1,T,R1), legacy(bind(M2,T,R2)), map(M2,T,R2), legacy(map(M2,T,R2)),  R1!=R2.
 %NOTE This differentiation can be used to avoid counting unequally bound tasks twice
-
+% But one mapping option is swallowed and in no of the above categories
 
 %%%%%%%%%%%
 % ROUTING %
@@ -28,7 +28,7 @@ equal(notExist,reached(C,L,R1,R2)) :- not reached(C,L,R1,R2), not legacy(reached
 
 % Unequal, if communication only exists in one specification or it is routed on different resources
 unequal(child,reached(C,L,R1,R2)) :- reached(C,L,R1,R2), not legacy(comm(C,A)), comm(C,A).
-unequal(parent,reached(C,L,R1,R2)) :- not comm(C,A), legacy(comm(C,A)), legacy(reached(C,L,R1,R2)).
+unequal(parent,reached(C,L,R1,R2)) :- legacy(reached(C,L,R1,R2)), legacy(comm(C,A)),  not comm(C,A).
 unequal(both,reached(C,L,R1,R2)) :- reached(C,L,R1,R2), not legacy(reached(C,L,R1,R2)), comm(C,A), legacy(comm(C,A)).
 
 % Equal, if same number of hops for a communication
