@@ -2,11 +2,11 @@
 %% In implementation of unequal(both,bind(M,T,R)) a different binding of T is recorded as one difference instead of two different mappings
 % Binding step
 hammingBindingDistanceAdapted(H) :- H=#count{ M : unequal(_,bind(M,T,R)) }.
-hammingBindingDistance(H) :- H1=#count{ M : unequal(child,bind(M,T,R)) }, H2=#count{ M : unequal(parent,bind(M,T,R)) }, H3=#count{ M : unequal(both,bind(M,T,R)) }, H = 2*H1 + 2*H2 + 2*H3. 
+hammingBindingDistance(H) :- H=#count{ M1 : map(M1,T1,R1), bind(M1,T1,R1), not legacy(bind(M1,T1,R1)); M2 : legacy(map(M2,T2,R2)), legacy(bind(M2,T2,R2)), not bind(M2,T2,R2) }.
 
 % Routing step
 hammingRoutingDistanceAdapted(H) :- H=#count{ (C,L) : unequal(_,reached(C,L,R1,R2)) }.
-hammingRoutingDistance(H) :- H1=#count{ (C,L) : unequal(child,reached(C,L,R1,R2)) }, H2=#count{ (C,L) : unequal(parent,reached(C,L,R1,R2)) }, H3=#count{ (C,L) : unequal(both,reached(C,L,R1,R2)) }, H = 2*H1 + 2*H2 + 2*H3.
+hammingRoutingDistance(H) :- H=#count{ (C1,A1,L1) : comm(C1,A1), link(L1,_,_), reached(C1,L1,_,_), not legacy(reached(C1,L1,_,_)); (C2,A2,L2) : legacy(comm(C2,A2)), legacy(link(L2,_,_)), legacy(reached(C2,L2,_,_)), not reached(C2,L2,_,_) }.
 
 % Get the numbers towards the distances are normalized 
 numberMap(N) :- N=#count{ M1 : map(M1,T,R); M2 : legacy(map(M2,T,R)) }.
