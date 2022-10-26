@@ -1,5 +1,5 @@
-# From experimental results, this script is extracting all design points (cost, latency, energy for each answer) and the corresponding timestamps
-# These information are stored in files where the script calculateIndicators.py is expecting them
+# From experimental results, this script is extracting all design points (cost, latency, energy for each answer) as well as the corresponding solution numbers and timestamps
+# These information are stored in files which are used by the script calculateIndicators.py later on
 
 import os
 from natsort import natsorted
@@ -10,12 +10,12 @@ INPUT_BASE_DIR = './output_asp-dse-ed/asp-dse-child/hpc/results/asp-dse-child'
 INPUT_FILE_NAME = 'runsolver.solver'
 
 SEARCH_DATA_STRING = 'Answer: '
-SEARCH_SOLUTION_STRING = 'pref('
 SEARCH_TIME_STRING = 'found after'
 LATENCY_STRING = 'latency'
 ENERGY_STRING = 'energy'
 COST_STRING = 'cost'
 TIME_STRING = 'time'
+SOLUTION_STRING = 'solution'
 END_STRING = 'Pareto front'
 
 
@@ -29,7 +29,7 @@ def get_data_from_string(string):
     return str(int(content))
 
 
-def parse_solution_n_line(line):
+def parse_solution_number_line(line):
     terms = line.split(' ')
     try:
         time = int(terms[1])
@@ -56,7 +56,7 @@ def parse_solution_line(line):
 
 def parse_time_line(line):
     terms = line.split(' ')
-    instance = terms[1]
+    answerNumber = terms[1]
     time = terms[4]
 
     try:
@@ -64,17 +64,18 @@ def parse_time_line(line):
     except ValueError:
         return [-1, "-1"] # Error parsing time
 
-    if not instance.isnumeric(): # Error parsing instance number
+    if not answerNumber.isnumeric(): # Error parsing answer number
         return [-1, "-1"]
 
-    return [int(instance), str(float(time))]
+    return [int(answerNumber), str(float(time))]
 
             
-def write_result_info(instance, case, inputFilePath):
+def write_design_points(instance, case, inputFilePath):
 
-    instance = instance.split('.')[0]  # The output instance file name in the folder structure does not contain the '.lp', remove it
+    # Remove '.lp' from instance file name
+    instance = instance.split('.')[0]
     outputFilePath = OUTPUT_BASE_DIR + '/' + instance + '/' + case + '/' + OUTPUT_FILE_NAME
-    # solutions [ cost, latency, energy, time ]
+    # solutions [ solutionNumber, time, cost, latency, energy ]
     solutions = []
 
     with open(inputFilePath, 'r') as inputFile:
@@ -87,8 +88,8 @@ def write_result_info(instance, case, inputFilePath):
                 print("file can not be opened: " + outputFilePath )
                 return
 
-            # Write header of the file
-            outputFile.write(TIME_STRING + ' ' + COST_STRING + ' ' + LATENCY_STRING + ' ' + ENERGY_STRING + '\n')
+            # Write header in the output file
+            outputFile.write(SOLUTION_STRING + ' ' + TIME_STRING + ' ' + COST_STRING + ' ' + LATENCY_STRING + ' ' + ENERGY_STRING + '\n')
 
             for line in inputFile:
                 solutionNumber = -1
@@ -98,7 +99,7 @@ def write_result_info(instance, case, inputFilePath):
                 ## Extract data from output file of the DSE ##
                 # Check if line contains an answer (relevant data)
                 if SEARCH_DATA_STRING in line:  
-                    solutionNumber = parse_solution_n_line(line)
+                    solutionNumber = parse_solution_number_line(line)
                     solutionData = parse_solution_line(next(inputFile))
                     if solutionNumber == -1 or solutionTime == "-1":
                         print("Warning, unexpected value in :" + inputFilePath)
@@ -117,32 +118,34 @@ def write_result_info(instance, case, inputFilePath):
                 # Store the values in the list "solutions"
                 if solutionNumber != -1:
                     while len(solutions) < int(solutionNumber):
-                        solutions.append(["-1", "-1", "-1", "-1"])
+                        solutions.append([solutionNumber, "-1", "-1", "-1", "-1"])
+
+                    solutions[solutionNumber - 1][0] = solutionNumber
 
                     if solutionData != -1:
-                        solutions[solutionNumber - 1][1] = solutionData[0]
-                        solutions[solutionNumber - 1][2] = solutionData[1]
-                        solutions[solutionNumber - 1][3] = solutionData[2]
+                        solutions[solutionNumber - 1][2] = solutionData[0]
+                        solutions[solutionNumber - 1][3] = solutionData[1]
+                        solutions[solutionNumber - 1][4] = solutionData[2]
 
                     if solutionTime != -1:
-                        solutions[solutionNumber - 1][0] = solutionTime
+                        solutions[solutionNumber - 1][1] = solutionTime
 
             # When all solutions have been read, print them on the file
             for solution in solutions:
-                outputFile.write(solution[0] + ' ' + solution[1] + ' ' + solution[2] + ' ' + solution[3] + '\n')
+                outputFile.write(str(solution[0]) + ' ' + solution[1] + ' ' + solution[2] + ' ' + solution[3] + ' ' + solution[4] + '\n')
 
 def main():
     
-    cases = {entry.name for entry in os.scandir(INPUT_BASE_DIR) if entry.is_dir}
+    cases = {entry.name for entry in os.scandir(INPUT_BASE_DIR) if entry.is_dir()}
     cases = natsorted(cases)
     for case in cases:
         instancesPath = INPUT_BASE_DIR + '/' + case
-        instances = { entry.name for entry in os.scandir(instancesPath) if entry.is_dir}
+        instances = { entry.name for entry in os.scandir(instancesPath) if entry.is_dir()}
         instances = natsorted(instances)
 
         for instance in instances:
             filePath = instancesPath + '/' + instance + "/run1/" + INPUT_FILE_NAME
-            write_result_info(instance, case, filePath)
+            write_design_points(instance, case, filePath)
 
     exit(0)
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # From experimental results, this script is extracting all relevant status information for the evaluation afterwards
-# These information are stored in files where the script markdownGenerator.py is expecting them
+# These information are stored in files which are used by the script markdownGenerator.py later on
 
 BASE_DIR="${PWD}"
 OUTPUT="${BASE_DIR}/results"
@@ -53,18 +53,17 @@ statusType2=( $( grep -r UNSAT | cut -d: -f 1) )       # Unsatisfiable
 statusType3=( $( grep -r UNKNOWN | cut -d: -f 1) )     # Interrupted while Grounding
 statusType4=( $(grep -rL 'Answer\|UNSAT\|UNKNOWN\|NoneType' | grep runsolver.solver) ) # Interrupted while Searching
 statusType5=( $(grep -rx "Pareto front:" | cut -d: -f 1) ) # Satisfiable before timeout
-#statusType=( $( grep -r NoneType) )
 
 timeout=900
 timeFirstAnswer=-1
 
-# The unsuccessful DSEs (type 2-4) don't get the default information
+# The unsuccessful DSEs (type 2-4) get the default information
 for type2 in ${statusType2[@]}
 do
     instanceName=( $(echo ${type2} | cut -d/ -f2 | cut -d. -f1 ) )
     caseName=( $(echo ${type2} | cut -d/ -f1) )
 
-    echo "Unsatisfiable" ${timeFirstAnswer} ${timeout} > ${OUTPUT}/${instanceName}/${caseName}/statInfo.txt
+    echo "Unsatisfiable" ${timeFirstAnswer} ${timeout} "0" > ${OUTPUT}/${instanceName}/${caseName}/statInfo.txt
 done
 
 for type3 in ${statusType3[@]}
@@ -72,7 +71,7 @@ do
     instanceName=( $(echo ${type3} | cut -d/ -f2 | cut -d. -f1 ) )
     caseName=( $(echo ${type3} | cut -d/ -f1) )
 
-    echo "GroundTimeout" ${timeFirstAnswer} ${timeout} > ${OUTPUT}/${instanceName}/${caseName}/statInfo.txt
+    echo "GroundTimeout" ${timeFirstAnswer} ${timeout} "0" > ${OUTPUT}/${instanceName}/${caseName}/statInfo.txt
 done
 
 for type4 in ${statusType4[@]}
@@ -80,23 +79,24 @@ do
     instanceName=( $(echo ${type4} | cut -d/ -f2 | cut -d. -f1 ) )
     caseName=( $(echo ${type4} | cut -d/ -f1) )
 
-    echo "SolveTimeout" ${timeFirstAnswer} ${timeout} > ${OUTPUT}/${instanceName}/${caseName}/statInfo.txt
+    echo "SolveTimeout" ${timeFirstAnswer} ${timeout} "0" > ${OUTPUT}/${instanceName}/${caseName}/statInfo.txt
 done
 
-# First type DSE has found answers, so we extract the searching time up to the first answer
+# First type DSE has found answers, so we extract the searching time up to the first answer and the number of found design points
 for type1 in ${statusType1[@]}
 do
     instanceName=( $(echo ${type1} | cut -d/ -f2 | cut -d. -f1 ) )
     caseName=( $(echo ${type1} | cut -d/ -f1) )
 
     timeFirstAnswer=( $(cat ${type1} | grep "Answer 1 found after" | cut -d" " -f5) )
+    numberDesignPoints=( $(cat ${type1} | grep "found after" | tail -1 | cut -d" " -f2) )
     # If entry is also of type5, we extract the searching time
     if [[ " ${statusType5[*]} " =~ " ${type1} " ]]; then
         timeout=( $(cat ${type1} | grep "CPU Time" | cut -d: -f2 | cut -d" " -f2 | rev | cut -ds -f2 | rev) ) 
-        echo "SatisfiableNoTimeout" ${timeFirstAnswer} ${timeout} > ${OUTPUT}/${instanceName}/${caseName}/statInfo.txt
+        echo "SatisfiableNoTimeout" ${timeFirstAnswer} ${timeout} ${numberDesignPoints} > ${OUTPUT}/${instanceName}/${caseName}/statInfo.txt
     else
         timeout=900
-        echo "SatisfiableTimeout" ${timeFirstAnswer} ${timeout} > ${OUTPUT}/${instanceName}/${caseName}/statInfo.txt
+        echo "SatisfiableTimeout" ${timeFirstAnswer} ${timeout} ${numberDesignPoints} > ${OUTPUT}/${instanceName}/${caseName}/statInfo.txt
     fi
 done
 
