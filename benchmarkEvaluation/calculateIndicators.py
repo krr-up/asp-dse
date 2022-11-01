@@ -266,7 +266,7 @@ def get_pareto_front(inputPath):
     return referenceFrontArray
 
 
-def calculate_epsilon_dominance(inputPath, referenceFront):
+def calculate_and_output_epsilon_dominance(inputPath, referenceFront):
     epsilonSmallerOne = -1.0
     epsilonLargerOne = -1.0
 
@@ -393,7 +393,7 @@ def main():
             referenceFront = get_pareto_front(casesPath)
 
             for case in cases:
-                calculate_epsilon_dominance(casesPath + "/" + case, referenceFront) 
+                calculate_and_output_epsilon_dominance(casesPath + "/" + case, referenceFront) 
 
             # Free the memory used by C++ library
             cppLib.freeVector(referenceFront)

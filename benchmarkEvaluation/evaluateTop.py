@@ -1,5 +1,6 @@
 # This script evaluates the results from the DSE runs.
 # Per each instance, for different criteria the script filters the Top 3 cases
+# TODO Then the occurrences of the cases are counted
 
 # TODO Calculate arithmetic mean value for each case over all instances
 
@@ -10,6 +11,7 @@ WORKDIR = './results'
 STATUS_FILE = 'statInfo.txt'
 RESULT_FILE = 'results.txt'
 OUTPUT_FILE = './results/mdfiles/top.md'
+OUTPUT_FILE_2 = './results/mdfiles/topSummarized.md'
 
 class Results():
     def __init__(self):
@@ -34,7 +36,7 @@ class Results():
         self.relation_ = []
         self.relationFirst_ = []
 
-    def Empty(self):
+    def empty(self):
         isEmpty = (self.timeFirstSolution_ == [] or
         self.completeSearchTime_ == [] or
         self.hammingTotal_ == [] or
@@ -60,7 +62,7 @@ class Results():
         return isEmpty
 
     # This method keeps in a list the currently three biggest values
-    def MaximizeValue(self, values, candidateValue, candidateCase): 
+    def maximizeValue(self, values, candidateValue, candidateCase): 
         def SortFun(e):
             return float(e[0])
 
@@ -86,7 +88,7 @@ class Results():
                 values.pop()
     
     # This method keeps in a list the currently three smallest values
-    def MinimizeValue(self, values, candidateValue, candidateCase): 
+    def minimizeValue(self, values, candidateValue, candidateCase): 
         def SortFun(e):
             return float(e[0])
 
@@ -111,77 +113,185 @@ class Results():
                 values.sort(key=SortFun)
                 values.pop()
             
-    def BestRelation(self, candidateEpsilon, candidateHamming, candidateCase):
-        self.MaximizeValue(self.relation_, str(float(candidateEpsilon)*float(candidateHamming)), candidateCase)
+    def bestRelation(self, candidateEpsilon, candidateHamming, candidateCase):
+        self.maximizeValue(self.relation_, str(float(candidateEpsilon)*float(candidateHamming)), candidateCase)
 
-    def BestRelationFirst(self, candidateEpsilon, candidateHamming, candidateCase):
-        self.MaximizeValue(self.relationFirst_, str(float(candidateEpsilon)*float(candidateHamming)), candidateCase)
-
-
-# Function to format a single result line
-def FormatOutputMultiple(text, result, outputfile):
-    outputfile.write(text)
-    outputfile.write('**1.** ' + result[0] + ' ' + result[1] + '  \n')
+    def bestRelationFirst(self, candidateEpsilon, candidateHamming, candidateCase):
+        self.maximizeValue(self.relationFirst_, str(float(candidateEpsilon)*float(candidateHamming)), candidateCase)
         
+
 # Function to format a multiple result line
-def FormatOutputMultiple(text, results, outputfile):
+def formatOutputMultiple(text, results, outputfile):
     outputfile.write(text)
     outputfile.write('**1.** ' + results[0][0] + ' ' + results[0][1] + '  \n')
     outputfile.write('**2.** ' + results[1][0] + ' ' + results[1][1] + '  \n')
     outputfile.write('**3.** ' + results[2][0] + ' ' + results[2][1] + '  \n')
 
+
+# Try to access (and count) case in dictionary, if there is no such key, initialize it
+def updateDictionaryMultiple(dictionary, results):
+    try:
+        dictionary[results[0][1]] = dictionary[results[0][1]] + 1
+    except:
+        dictionary[results[0][1]] = 1  
+    try:
+        dictionary[results[1][1]] = dictionary[results[1][1]] + 1
+    except:
+        dictionary[results[1][1]] = 1  
+    try:
+        dictionary[results[2][1]] = dictionary[results[2][1]] + 1
+    except:
+        dictionary[results[2][1]] = 1  
+
+
+def outputDictionary(dictionary, outputfile):
+    outputfile.write('|Case|Count||\n')
+    outputfile.write('|:---:|:---:|:---:|\n')
+    for i in sorted(dictionary) :
+        outputfile.write('|' + i + '|' + str(dictionary[i]) + '|    |\n')
+
+
 def main(workdir, outputfile): 
     instances = {entry.name for entry in os.scandir(workdir) if "." not in entry.name and "mdfiles" not in entry.name}
     instances = natsorted(instances)
+
+    # Create dictionaries to count all occurrences of cases for each criteria
+    dictionaryTimeFirstSolution = {}
+    dictionaryCompleteSearchTime = {}
+    dictionaryHammingTotalFirst = {}
+    dictionaryHammingTotal = {}
+    dictionaryHammingBindingFirst = {}
+    dictionaryHammingBinding = {}
+    dictionaryHammingRoutingFirst = {}
+    dictionaryHammingRouting = {}
+    dictionaryHammingTotalAdaptedFirst = {}
+    dictionaryHammingTotalAdapted = {}
+    dictionaryHammingBindingAdaptedFirst = {}
+    dictionaryHammingBindingAdapted = {}
+    dictionaryHammingRoutingAdaptedFirst = {}
+    dictionaryHammingRoutingAdapted = {}
+    dictionaryEpsilonFirst = {}
+    dictionaryEpsilon = {}
+    dictionaryEpsilon2First = {}
+    dictionaryEpsilon2 = {}
+    dictionaryRelationFirst = {}
+    dictionaryRelation = {}
 
     with open(outputfile, 'w') as outputfile:
         for instance in instances:             
             # Evaluate results for certain instance
             filePath = workdir + '/' + instance
-            results = EvaluateResults(filePath) # Search through all cases for best hamming and epsilon values
+            # Search through all cases for best hamming and epsilon values
+            results = evaluateResults(filePath)
 
             # For each entry in instances, compose a section in output file
             outputfile.write('\n\n####################################################################\n')
             outputfile.write('# ' + instance + '\n\n')
             filePath = workdir + '/' + instance
 
-            if(results.Empty()):
+            if(results.empty()):
                 continue
 
             # Write data to output file
-            FormatOutputMultiple('## First solution time\n', results.timeFirstSolution_, outputfile)
-            FormatOutputMultiple('## First Complete search time\n', results.completeSearchTime_, outputfile)
+            formatOutputMultiple('## First solution time\n', results.timeFirstSolution_, outputfile)
+            formatOutputMultiple('## Complete search time\n', results.completeSearchTime_, outputfile)
 
-            FormatOutputMultiple('## Hamming total, only first solution\n', results.hammingTotalFirst_, outputfile)
-            FormatOutputMultiple('## Hamming total \n', results.hammingTotal_, outputfile)
+            formatOutputMultiple('## Hamming total, only first solution\n', results.hammingTotalFirst_, outputfile)
+            formatOutputMultiple('## Hamming total \n', results.hammingTotal_, outputfile)
 
-            FormatOutputMultiple('## Hamming binding, only first solution\n', results.hammingBindingFirst_, outputfile)
-            FormatOutputMultiple('## Hamming binding \n', results.hammingBinding_, outputfile)
+            formatOutputMultiple('## Hamming binding, only first solution\n', results.hammingBindingFirst_, outputfile)
+            formatOutputMultiple('## Hamming binding \n', results.hammingBinding_, outputfile)
 
-            FormatOutputMultiple('## Hamming routing, only first solution\n', results.hammingRoutingFirst_, outputfile)
-            FormatOutputMultiple('## Hamming routing \n', results.hammingRouting_, outputfile)
+            formatOutputMultiple('## Hamming routing, only first solution\n', results.hammingRoutingFirst_, outputfile)
+            formatOutputMultiple('## Hamming routing \n', results.hammingRouting_, outputfile)
 
-            FormatOutputMultiple('## Hamming total adapted, only first solution\n', results.hammingTotalAdaptedFirst_, outputfile)
-            FormatOutputMultiple('## Hamming total adapted\n', results.hammingTotalAdapted_, outputfile)
+            formatOutputMultiple('## Hamming total adapted, only first solution\n', results.hammingTotalAdaptedFirst_, outputfile)
+            formatOutputMultiple('## Hamming total adapted\n', results.hammingTotalAdapted_, outputfile)
 
-            FormatOutputMultiple('## Hamming binding adapted, only first solution\n', results.hammingBindingAdaptedFirst_, outputfile)
-            FormatOutputMultiple('## Hamming binding adapted\n', results.hammingBindingAdapted_, outputfile)
+            formatOutputMultiple('## Hamming binding adapted, only first solution\n', results.hammingBindingAdaptedFirst_, outputfile)
+            formatOutputMultiple('## Hamming binding adapted\n', results.hammingBindingAdapted_, outputfile)
 
-            FormatOutputMultiple('## Hamming routing adapted, only first solution\n', results.hammingRoutingAdaptedFirst_, outputfile)
-            FormatOutputMultiple('## Hamming routing adapted\n', results.hammingRoutingAdapted_, outputfile)
+            formatOutputMultiple('## Hamming routing adapted, only first solution\n', results.hammingRoutingAdaptedFirst_, outputfile)
+            formatOutputMultiple('## Hamming routing adapted\n', results.hammingRoutingAdapted_, outputfile)
 
-            FormatOutputMultiple('## Epsilon dominance, only first solution\n', results.epsilonFirst_, outputfile)
-            FormatOutputMultiple('## Epsilon dominance\n', results.epsilon_, outputfile)
+            formatOutputMultiple('## Epsilon dominance, only first solution\n', results.epsilonFirst_, outputfile)
+            formatOutputMultiple('## Epsilon dominance\n', results.epsilon_, outputfile)
 
-            FormatOutputMultiple('## Epsilon dominance 2, only first solution\n', results.epsilon2First_, outputfile)
-            FormatOutputMultiple('## eEpsilon dominance 2\n', results.epsilon2_, outputfile)
+            formatOutputMultiple('## Epsilon dominance 2, only first solution\n', results.epsilon2First_, outputfile)
+            formatOutputMultiple('## Epsilon dominance 2\n', results.epsilon2_, outputfile)
 
-            FormatOutputMultiple('## Epsilon-Hamming relation, only first solution\n', results.relationFirst_, outputfile)
-            FormatOutputMultiple('## Epsilon-Hamming relation\n', results.relation_, outputfile)
+            formatOutputMultiple('## Epsilon-Hamming relation, only first solution\n', results.relationFirst_, outputfile)
+            formatOutputMultiple('## Epsilon-Hamming relation\n', results.relation_, outputfile)
+
+            # Count the occurring cases per criteria
+            updateDictionaryMultiple(dictionaryTimeFirstSolution,results.timeFirstSolution_)
+            updateDictionaryMultiple(dictionaryCompleteSearchTime,results.completeSearchTime_)
+            updateDictionaryMultiple(dictionaryHammingTotalFirst,results.hammingTotalFirst_)
+            updateDictionaryMultiple(dictionaryHammingTotal,results.hammingTotal_)
+            updateDictionaryMultiple(dictionaryHammingBindingFirst,results.hammingBindingFirst_)
+            updateDictionaryMultiple(dictionaryHammingBinding,results.hammingBinding_)
+            updateDictionaryMultiple(dictionaryHammingRoutingFirst,results.hammingRoutingFirst_)
+            updateDictionaryMultiple(dictionaryHammingRouting,results.hammingRouting_)
+            updateDictionaryMultiple(dictionaryHammingTotalAdaptedFirst,results.hammingTotalAdaptedFirst_)
+            updateDictionaryMultiple(dictionaryHammingTotalAdapted,results.hammingTotalAdapted_)
+            updateDictionaryMultiple(dictionaryHammingBindingAdaptedFirst,results.hammingBindingAdaptedFirst_)
+            updateDictionaryMultiple(dictionaryHammingBindingAdapted,results.hammingBindingAdapted_)
+            updateDictionaryMultiple(dictionaryHammingRoutingAdaptedFirst,results.hammingRoutingAdaptedFirst_)
+            updateDictionaryMultiple(dictionaryHammingRoutingAdapted,results.hammingRoutingAdapted_)
+            updateDictionaryMultiple(dictionaryEpsilonFirst,results.epsilonFirst_)
+            updateDictionaryMultiple(dictionaryEpsilon,results.epsilon_)
+            updateDictionaryMultiple(dictionaryEpsilon2First,results.epsilon2First_)
+            updateDictionaryMultiple(dictionaryEpsilon2,results.epsilon2_)
+            updateDictionaryMultiple(dictionaryRelationFirst,results.relationFirst_)
+            updateDictionaryMultiple(dictionaryRelation,results.relation_)
+
+    # Output summarized top 3 evaluation in another document
+    with open(OUTPUT_FILE_2, 'w') as outputfile:
+        outputfile.write('## First solution time\n')
+        outputDictionary(dictionaryTimeFirstSolution, outputfile)
+        outputfile.write('## Complete search time\n')
+        outputDictionary(dictionaryCompleteSearchTime, outputfile)
+        outputfile.write('## Hamming total, only first solution\n')
+        outputDictionary(dictionaryHammingTotalFirst, outputfile)
+        outputfile.write('## Hamming total \n')
+        outputDictionary(dictionaryHammingTotal, outputfile)
+        outputfile.write('## Hamming binding, only first solution\n')
+        outputDictionary(dictionaryHammingBindingFirst, outputfile)
+        outputfile.write('## Hamming binding \n')
+        outputDictionary(dictionaryHammingBinding, outputfile)
+        outputfile.write('## Hamming routing, only first solution\n')
+        outputDictionary(dictionaryHammingRoutingFirst, outputfile)
+        outputfile.write('## Hamming routing \n')
+        outputDictionary(dictionaryHammingRouting, outputfile)
+        outputfile.write('## Hamming total adapted, only first solution\n')
+        outputDictionary(dictionaryHammingTotalAdaptedFirst, outputfile)
+        outputfile.write('## Hamming total adapted\n')
+        outputDictionary(dictionaryHammingTotalAdapted, outputfile)
+        outputfile.write('## Hamming binding adapted, only first solution\n')
+        outputDictionary(dictionaryHammingBindingAdaptedFirst, outputfile)
+        outputfile.write('## Hamming binding adapted\n')
+        outputDictionary(dictionaryHammingBindingAdapted, outputfile)
+        outputfile.write('## Hamming routing adapted, only first solution\n')
+        outputDictionary(dictionaryHammingRoutingAdaptedFirst, outputfile)
+        outputfile.write('## Hamming routing adapted\n')
+        outputDictionary(dictionaryHammingRoutingAdapted, outputfile)
+        outputfile.write('## Epsilon dominance, only first solution\n')
+        outputDictionary(dictionaryEpsilonFirst, outputfile)
+        outputfile.write('## Epsilon dominance\n')
+        outputDictionary(dictionaryEpsilon, outputfile)
+        outputfile.write('## Epsilon dominance 2, only first solution\n')
+        outputDictionary(dictionaryEpsilon2First, outputfile)
+        outputfile.write('## Epsilon dominance 2\n')
+        outputDictionary(dictionaryEpsilon2, outputfile)
+        outputfile.write('## Epsilon-Hamming relation, only first solution\n')
+        outputDictionary(dictionaryRelationFirst, outputfile)
+        outputfile.write('## Epsilon-Hamming relation\n')
+        outputDictionary(dictionaryRelation, outputfile)
 
 
-# Iterate through all cases to find best hamming distances and best epsilon dominances
-def EvaluateResults(casesPath):
+
+# Iterate through all cases to find best hamming distances and best epsilon dominance values
+def evaluateResults(casesPath):
     result = Results()
 
     cases = { entry.name for entry in os.scandir(casesPath) if entry.is_dir()}
@@ -198,9 +308,9 @@ def EvaluateResults(casesPath):
             
             terms = inputFile.readline().split(' ')
             # Minimize time up to first solution has been found
-            result.MinimizeValue(result.timeFirstSolution_, terms[1], case)
+            result.minimizeValue(result.timeFirstSolution_, terms[1], case)
             # Minimize time to complete the search or Timeout
-            result.MinimizeValue(result.completeSearchTime_, terms[2].rstrip(), case)
+            result.minimizeValue(result.completeSearchTime_, terms[2].rstrip(), case)
 
         with open(resultFilePath, 'r') as inputFile:
             if inputFile.closed:
@@ -213,15 +323,15 @@ def EvaluateResults(casesPath):
             terms = line.split(' ')
             if len(terms) == 10:
                 # Maximize the value of each criteria for the first entry in the input file
-                result.MaximizeValue(result.hammingTotalFirst_, terms[2], case)
-                result.MaximizeValue(result.hammingBindingFirst_, terms[3], case)
-                result.MaximizeValue(result.hammingRoutingFirst_, terms[4], case)
-                result.MaximizeValue(result.hammingTotalAdaptedFirst_, terms[5], case)
-                result.MaximizeValue(result.hammingRoutingAdaptedFirst_, terms[6], case)
-                result.MaximizeValue(result.hammingBindingAdaptedFirst_, terms[7], case)
-                result.MaximizeValue(result.epsilonFirst_, terms[8], case)
-                result.MaximizeValue(result.epsilon2First_, terms[9].rstrip(), case)
-                result.BestRelationFirst(terms[2], terms[8], case)
+                result.maximizeValue(result.hammingTotalFirst_, terms[2], case)
+                result.maximizeValue(result.hammingBindingFirst_, terms[3], case)
+                result.maximizeValue(result.hammingRoutingFirst_, terms[4], case)
+                result.maximizeValue(result.hammingTotalAdaptedFirst_, terms[5], case)
+                result.maximizeValue(result.hammingRoutingAdaptedFirst_, terms[6], case)
+                result.maximizeValue(result.hammingBindingAdaptedFirst_, terms[7], case)
+                result.maximizeValue(result.epsilonFirst_, terms[8], case)
+                result.maximizeValue(result.epsilon2First_, terms[9].rstrip(), case)
+                result.bestRelationFirst(terms[2], terms[8], case)
 
             caseErrorSup = False
             for line in inputFile:
@@ -233,15 +343,15 @@ def EvaluateResults(casesPath):
                     continue
 
                 # Maximize the value of each criteria for all entries in the input file
-                result.MaximizeValue(result.hammingTotal_, terms[2], case)
-                result.MaximizeValue(result.hammingBinding_, terms[3], case)
-                result.MaximizeValue(result.hammingRouting_, terms[4], case)
-                result.MaximizeValue(result.hammingTotalAdapted_, terms[5], case)
-                result.MaximizeValue(result.hammingRoutingAdapted_, terms[6], case)
-                result.MaximizeValue(result.hammingBindingAdapted_, terms[7], case)
-                result.MaximizeValue(result.epsilon_, terms[8], case)
-                result.MaximizeValue(result.epsilon2_, terms[9].rstrip(), case)
-                result.BestRelation(terms[2], terms[8], case)
+                result.maximizeValue(result.hammingTotal_, terms[2], case)
+                result.maximizeValue(result.hammingBinding_, terms[3], case)
+                result.maximizeValue(result.hammingRouting_, terms[4], case)
+                result.maximizeValue(result.hammingTotalAdapted_, terms[5], case)
+                result.maximizeValue(result.hammingRoutingAdapted_, terms[6], case)
+                result.maximizeValue(result.hammingBindingAdapted_, terms[7], case)
+                result.maximizeValue(result.epsilon_, terms[8], case)
+                result.maximizeValue(result.epsilon2_, terms[9].rstrip(), case)
+                result.bestRelation(terms[2], terms[8], case)
 
     return result
             
