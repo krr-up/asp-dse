@@ -129,19 +129,23 @@ def formatOutputMultiple(text, results, outputfile):
 
 
 # Try to access (and count) case in dictionary, if there is no such key, initialize it
+# If entry contains default value -1 or 900, skip it
 def updateDictionaryMultiple(dictionary, results):
-    try:
-        dictionary[results[0][1]] = dictionary[results[0][1]] + 1
-    except:
-        dictionary[results[0][1]] = 1  
-    try:
-        dictionary[results[1][1]] = dictionary[results[1][1]] + 1
-    except:
-        dictionary[results[1][1]] = 1  
-    try:
-        dictionary[results[2][1]] = dictionary[results[2][1]] + 1
-    except:
-        dictionary[results[2][1]] = 1  
+    if(results[0][0] != '-1' and results[0][0] != '900'):
+        try:
+            dictionary[results[0][1]] = dictionary[results[0][1]] + 1
+        except:
+            dictionary[results[0][1]] = 1  
+    if(results[1][0] != '-1' and results[1][0] != '900'):
+        try:
+            dictionary[results[1][1]] = dictionary[results[1][1]] + 1
+        except:
+            dictionary[results[1][1]] = 1 
+    if(results[2][0] != '-1' and results[2][0] != '900'): 
+        try:
+            dictionary[results[2][1]] = dictionary[results[2][1]] + 1
+        except:
+            dictionary[results[2][1]] = 1  
 
 
 def outputDictionary(dictionary, outputfile):
