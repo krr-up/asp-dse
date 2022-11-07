@@ -1,0 +1,151 @@
+"../../benchmarkInstances/extension/parent/specification/1_4_2.lp"
+##################################################################################################
+file_in: ../../benchmarkInstances/extension/parent/specification/1_4_2.lp and file_out: ../../benchmarkInstances/extension/child/specification/1_20_20/1_4_2_m0.lp
+Read out all elements from the specification
+Change randomly up to 20% of the processor elements and up to 20% of the task elements (random seed: 3337).
+EXCHANGE LIST: t24xa1 
+ADD LIST: t22xa1 
+DELETE LIST: t6xa1 
+Going to exchange selected tasks
+CHANGE to t24xa1 (100 % of 100 % in total) 
+Going to add a successor to selected tasks
+ADD to t22xa1 (100 % of 100 % in total) 
+ADDED: task t16
+New mapping for task t16 with ID mt0xa1xp5
+New mapping for task t16 with ID mt0xa1xp7
+Going to delete selected tasks
+DELETE to t6xa1 (100 % of 100 % in total) 
+1 exchanged, 1 added and 1 deleted tasks
+EXCHANGE LIST: p9 
+ADD LIST: p7 
+DELETE LIST + REMAINING elements from shuffled list: p2 p8 p6 p1 p4 p3 p5 
+Going to exchange selected processors
+CHANGE to p9 (100 % of 100 % in total) 
+Going to add a neighbour to selected processors
+ADD to p7 (100 % of 100 % in total) 
+ADDED: processor p10
+New mapping to processor p10 with ID mt0xa1xp10
+1 exchanged, 1 added and 0 deleted processors
+Save the new specification
+"../../benchmarkInstances/extension/parent/specification/1_1_1.lp"
+##################################################################################################
+file_in: ../../benchmarkInstances/extension/parent/specification/1_1_1.lp and file_out: ../../benchmarkInstances/extension/child/specification/1_20_20/1_1_1_m0.lp
+Read out all elements from the specification
+Change randomly up to 20% of the processor elements and up to 20% of the task elements (random seed: 3337).
+EXCHANGE LIST: 
+ADD LIST: t1xa1 
+DELETE LIST: t5xa1 
+Going to add a successor to selected tasks
+ADD to t1xa1 (100 % of 100 % in total) 
+ADDED: task t7
+New mapping for task t7 with ID mt0xa1xp6
+New mapping for task t7 with ID mt0xa1xp5
+Going to delete selected tasks
+DELETE to t5xa1 (100 % of 100 % in total) 
+0 exchanged, 1 added and 1 deleted tasks
+EXCHANGE LIST: p2 
+ADD LIST: p5 
+DELETE LIST + REMAINING elements from shuffled list: p7 p3 p1 p6 p9 p8 p4 
+Going to exchange selected processors
+CHANGE to p2 (100 % of 100 % in total) 
+Going to add a neighbour to selected processors
+ADD to p5 (100 % of 100 % in total) 
+ADDED: processor p10
+New mapping to processor p10 with ID mt0xa1xp10
+1 exchanged, 1 added and 0 deleted processors
+Save the new specification
+"../../benchmarkInstances/extension/parent/specification/1_6_1.lp"
+##################################################################################################
+file_in: ../../benchmarkInstances/extension/parent/specification/1_6_1.lp and file_out: ../../benchmarkInstances/extension/child/specification/1_20_20/1_6_1_m0.lp
+Read out all elements from the specification
+Change randomly up to 20% of the processor elements and up to 20% of the task elements (random seed: 3337).
+EXCHANGE LIST: t6xa1 
+ADD LIST: t28xa1 t25xa1 
+DELETE LIST: t19xa1 
+Going to exchange selected tasks
+CHANGE to t6xa1 (100 % of 100 % in total) 
+Going to add a successor to selected tasks
+ADD to t28xa1 (50 % of 100 % in total) 
+ADDED: task t17
+New mapping for task t17 with ID mt0xa1xp9
+New mapping for task t17 with ID mt0xa1xp5
+ADD to t25xa1 (100 % of 100 % in total) 
+ADDED: task t18
+New mapping for task t18 with ID mt0xa1xp6
+New mapping for task t18 with ID mt0xa1xp3
+Going to delete selected tasks
+DELETE to t19xa1 (100 % of 100 % in total) 
+1 exchanged, 2 added and 1 deleted tasks
+EXCHANGE LIST: 
+ADD LIST: p6 
+DELETE LIST + REMAINING elements from shuffled list: p5 p8 p7 p3 p2 p1 p4 p9 
+Going to add a neighbour to selected processors
+ADD to p6 (100 % of 100 % in total) 
+ADDED: processor p10
+New mapping to processor p10 with ID mt0xa1xp10
+Going to delete selected processors
+DELETE to p5 (12.5 % of 12.5 % in total) 
+0 exchanged, 1 added and 1 deleted processors
+Save the new specification
+"../../benchmarkInstances/extension/parent/specification/1_4_3.lp"
+##################################################################################################
+file_in: ../../benchmarkInstances/extension/parent/specification/1_4_3.lp and file_out: ../../benchmarkInstances/extension/child/specification/1_20_20/1_4_3_m0.lp
+Read out all elements from the specification
+Change randomly up to 20% of the processor elements and up to 20% of the task elements (random seed: 3337).
+EXCHANGE LIST: 
+ADD LIST: t3xa1 t15xa1 
+DELETE LIST: t24xa1 t20xa1 
+Going to add a successor to selected tasks
+ADD to t3xa1 (50 % of 100 % in total) 
+ADDED: task t19
+New mapping for task t19 with ID mt0xa1xp3
+New mapping for task t19 with ID mt0xa1xp6
+ADD to t15xa1 (100 % of 100 % in total) 
+ADDED: task t20
+New mapping for task t20 with ID mt1xa1xp6
+New mapping for task t20 with ID mt0xa1xp2
+Going to delete selected tasks
+DELETE to t24xa1 (50 % of 100 % in total) 
+DELETE to t20xa1 (100 % of 100 % in total) 
+0 exchanged, 2 added and 2 deleted tasks
+EXCHANGE LIST: 
+ADD LIST: p2 
+DELETE LIST + REMAINING elements from shuffled list: p9 p4 p1 p6 p8 p7 p3 p5 
+Going to add a neighbour to selected processors
+ADD to p2 (100 % of 100 % in total) 
+ADDED: processor p10
+New mapping to processor p10 with ID mt0xa1xp10
+Going to delete selected processors
+DELETE to p9 (12.5 % of 12.5 % in total) 
+0 exchanged, 1 added and 1 deleted processors
+Save the new specification
+"../../benchmarkInstances/extension/parent/specification/1_6_2.lp"
+##################################################################################################
+file_in: ../../benchmarkInstances/extension/parent/specification/1_6_2.lp and file_out: ../../benchmarkInstances/extension/child/specification/1_20_20/1_6_2_m0.lp
+Read out all elements from the specification
+Change randomly up to 20% of the processor elements and up to 20% of the task elements (random seed: 3337).
+EXCHANGE LIST: 
+ADD LIST: t1xa1 t17xa1 
+DELETE LIST: t29xa1 t23xa1 
+Going to add a successor to selected tasks
+ADD to t1xa1 (50 % of 100 % in total) 
+ADDED: task t20
+New mapping for task t20 with ID mt0xa1xp7
+New mapping for task t20 with ID mt0xa1xp1
+ADD to t17xa1 (100 % of 100 % in total) 
+ADDED: task t21
+New mapping for task t21 with ID mt0xa1xp3
+New mapping for task t21 with ID mt0xa1xp8
+Going to delete selected tasks
+DELETE to t29xa1 (50 % of 100 % in total) 
+DELETE to t23xa1 (100 % of 100 % in total) 
+0 exchanged, 2 added and 2 deleted tasks
+EXCHANGE LIST: p5 
+ADD LIST: 
+DELETE LIST + REMAINING elements from shuffled list: p3 p2 p7 p1 p6 p8 p9 p4 
+Going to exchange selected processors
+CHANGE to p5 (100 % of 100 % in total) 
+Going to delete selected processors
+DELETE to p3 (12.5 % of 12.5 % in total) 
+1 exchanged, 0 added and 1 deleted processors
+Save the new specification
