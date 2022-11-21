@@ -1,7 +1,5 @@
 # This script evaluates the results from the DSE runs.
 # Per each instance, for different criteria the script filters the Top 3 cases
-# TODO Then the occurrences of the cases are counted
-
 # TODO Calculate arithmetic mean value for each case over all instances
 
 import os

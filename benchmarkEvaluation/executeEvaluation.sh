@@ -17,8 +17,19 @@ python3 -u calculateIndicators.py > results/processOutput.txt 2> results/process
 
 echo "###############################################################"
 echo "Create the plots: Hamming similarity & epsilon dominance over time"
-python3 HEPlot.py
+python3 HEPlot.py 1
+python3 HEPlot.py 2
+python3 HEPlot.py 3
 
 echo "###############################################################"
 echo "Evaluate the Top 3 methods in different categories and create top.md"
 python3 evaluateTop.py
+
+echo "###############################################################"
+echo "Generate Markdown files to summarize evaluation results"
+python3 markdownGenerator.py 1
+python3 markdownGenerator.py 2
+python3 markdownGenerator.py 3
+python3 markdownGenerator.py 4
+python3 markdownGenerator.py 5
+python3 markdownGenerator.py 6
