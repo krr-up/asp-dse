@@ -65,9 +65,19 @@ def generateMarkdown(workdir, outputfile, type):
     cases = natsorted(cases)
 
     if type == '5' or type == '6':
-        defaultCase = defaultInstance + "/asp-dse-ed-v1.0.0-" + cases[0] + "/uniformScaling"
+        condition = False
+        i=0
+        while condition == False:
+            defaultCase = defaultInstance + "/asp-dse-ed-v1.0.0-" + cases[i] + "/uniformScaling"
+            try: 
+                os.scandir(defaultCase)
+                condition = True
+            except:
+                i = i + 1 
+
     else:
         defaultCase = defaultInstance + "/asp-dse-ed-v1.0.0-" + cases[0]
+
     pngFiles = {entry.name for entry in os.scandir(defaultCase) if entry.name.endswith('.png')}
     pngFiles = natsorted(pngFiles)
 
