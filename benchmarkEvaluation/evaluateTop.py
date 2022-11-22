@@ -31,7 +31,7 @@ class Results():
         self.epsilonFirst_ = []
         self.epsilon2_ = []
         self.epsilon2First_ = []
-        self.epsilonEqualsOne_ = []
+        #self.epsilonEqualsOne_ = []
         self.relation_ = []
         self.relationFirst_ = []
 
@@ -81,10 +81,12 @@ class Results():
                 values.sort(reverse = True, key=SortFun)
             # If better value has been found, keep it
             # Reorder list and delete weakest one
-            elif(float(values[2][0]) < float(candidateValue)):
+            elif(float(values[2][0]) <= float(candidateValue)):
                 values.append([candidateValue, candidateCase])
                 values.sort(reverse = True, key=SortFun)
-                values.pop()
+                if(float(values[2][0]) != float(values[len(values)-1][0])):
+                    while len(values) > 3:
+                        values.pop()
     
     # This method keeps in a list the currently three smallest values
     def minimizeValue(self, values, candidateValue, candidateCase): 
@@ -107,10 +109,12 @@ class Results():
                 values.sort(key=SortFun)
             # If better value has been found, keep it
             # Reorder list and delete weakest one
-            elif(float(values[2][0]) > float(candidateValue)):
+            elif(float(values[2][0]) >= float(candidateValue)):
                 values.append([candidateValue, candidateCase])
                 values.sort(key=SortFun)
-                values.pop()
+                if(float(values[2][0]) != float(values[len(values)-1][0])):
+                    while len(values) > 3:
+                        values.pop()
 
     def valueEqualsOne(self, values, candidateValue, candidateCase):
         if(float(candidateValue) == 1.0):
@@ -127,9 +131,8 @@ class Results():
 # Function to format a multiple result line
 def formatOutputMultiple(text, results, outputfile):
     outputfile.write(text)
-    outputfile.write('**1.** ' + results[0][0] + ' ' + results[0][1] + '  \n')
-    outputfile.write('**2.** ' + results[1][0] + ' ' + results[1][1] + '  \n')
-    outputfile.write('**3.** ' + results[2][0] + ' ' + results[2][1] + '  \n')
+    for i in range(len(results)):
+        outputfile.write('**' + str(i+1) + '.** ' + results[i][0] + ' ' + results[i][1] + '  \n')
 
 
 def formatOutputNEntries(text, results, outputfile):
@@ -141,29 +144,12 @@ def formatOutputNEntries(text, results, outputfile):
 # Try to access (and count) case in dictionary, if there is no such key, initialize it
 # If entry contains default value -1 or 900, skip it
 def updateDictionaryMultiple(dictionary, results):
-    if(results[0][0] != '-1' and results[0][0] != '900'):
-        try:
-            dictionary[results[0][1]] = dictionary[results[0][1]] + 1
-        except:
-            dictionary[results[0][1]] = 1  
-    if(results[1][0] != '-1' and results[1][0] != '900'):
-        try:
-            dictionary[results[1][1]] = dictionary[results[1][1]] + 1
-        except:
-            dictionary[results[1][1]] = 1 
-    if(results[2][0] != '-1' and results[2][0] != '900'): 
-        try:
-            dictionary[results[2][1]] = dictionary[results[2][1]] + 1
-        except:
-            dictionary[results[2][1]] = 1  
-
-
-def updateDictionaryNEntries(dictionary, results):
     for i in range(len(results)):
-        try: 
-            dictionary[results[i][1]] = dictionary[results[i][1]] + 1
-        except:
-            dictionary[results[i][1]] = 1 
+        if(results[i][0] != '-1' and results[i][0] != '900'):
+            try: 
+                dictionary[results[i][1]] = dictionary[results[i][1]] + 1
+            except:
+                dictionary[results[i][1]] = 1
 
 
 def outputDictionary(dictionary, outputfile):
@@ -196,7 +182,7 @@ def main(workdir, outputfile):
     dictionaryEpsilon = {}
     dictionaryEpsilon2First = {}
     dictionaryEpsilon2 = {}
-    dictionaryEpsilonEqualsOne = {}
+    #dictionaryEpsilonEqualsOne = {}
     dictionaryRelationFirst = {}
     dictionaryRelation = {}
 
@@ -243,7 +229,7 @@ def main(workdir, outputfile):
             formatOutputMultiple('## Epsilon dominance 2, only first solution\n', results.epsilon2First_, outputfile)
             formatOutputMultiple('## Epsilon dominance 2\n', results.epsilon2_, outputfile)
 
-            formatOutputNEntries('## Epsilon dominance equals one\n', results.epsilonEqualsOne_, outputfile)
+            #formatOutputNEntries('## Epsilon dominance equals one\n', results.epsilonEqualsOne_, outputfile)
 
             formatOutputMultiple('## Epsilon-Hamming relation, only first solution\n', results.relationFirst_, outputfile)
             formatOutputMultiple('## Epsilon-Hamming relation\n', results.relation_, outputfile)
@@ -267,7 +253,7 @@ def main(workdir, outputfile):
             updateDictionaryMultiple(dictionaryEpsilon,results.epsilon_)
             updateDictionaryMultiple(dictionaryEpsilon2First,results.epsilon2First_)
             updateDictionaryMultiple(dictionaryEpsilon2,results.epsilon2_)
-            updateDictionaryNEntries(dictionaryEpsilonEqualsOne,results.epsilonEqualsOne_)
+            #updateDictionaryMultiple(dictionaryEpsilonEqualsOne,results.epsilonEqualsOne_)
             updateDictionaryMultiple(dictionaryRelationFirst,results.relationFirst_)
             updateDictionaryMultiple(dictionaryRelation,results.relation_)
 
@@ -309,8 +295,8 @@ def main(workdir, outputfile):
         outputDictionary(dictionaryEpsilon2First, outputfile)
         outputfile.write('## Epsilon dominance 2\n')
         outputDictionary(dictionaryEpsilon2, outputfile)
-        outputfile.write('## Epsilon dominance equals one\n')
-        outputDictionary(dictionaryEpsilonEqualsOne, outputfile)
+        #outputfile.write('## Epsilon dominance equals one\n')
+        #outputDictionary(dictionaryEpsilonEqualsOne, outputfile)
         outputfile.write('## Epsilon-Hamming relation, only first solution\n')
         outputDictionary(dictionaryRelationFirst, outputfile)
         outputfile.write('## Epsilon-Hamming relation\n')
@@ -379,7 +365,7 @@ def evaluateResults(casesPath):
                 result.maximizeValue(result.hammingBindingAdapted_, terms[7], case)
                 result.maximizeValue(result.epsilon_, terms[8], case)
                 result.minimizeValue(result.epsilon2_, terms[9].rstrip(), case)
-                result.valueEqualsOne(result.epsilonEqualsOne_, terms[8], case)
+                #result.valueEqualsOne(result.epsilonEqualsOne_, terms[8], case)
                 result.bestRelation(terms[2], terms[8], case)
 
     return result

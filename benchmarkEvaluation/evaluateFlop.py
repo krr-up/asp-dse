@@ -63,7 +63,9 @@ class Results():
             elif(float(values[2][0]) < float(candidateValue)):
                 values.append([candidateValue, candidateCase])
                 values.sort(reverse = True, key=SortFun)
-                values.pop()
+                if(float(values[2][0]) != float(values[len(values)-1][0])):
+                    while len(values) > 3:
+                        values.pop()
     
     # This method keeps in a list the currently three smallest values
     def minimizeValue(self, values, candidateValue, candidateCase): 
@@ -89,7 +91,9 @@ class Results():
             elif(float(values[2][0]) > float(candidateValue)):
                 values.append([candidateValue, candidateCase])
                 values.sort(key=SortFun)
-                values.pop()
+                if(float(values[2][0]) != float(values[len(values)-1][0])):
+                    while len(values) > 3:
+                        values.pop()
             
     def bestRelation(self, candidateEpsilon, candidateHamming, candidateCase):
         self.minimizeValue(self.relation_, str(float(candidateEpsilon)*float(candidateHamming)), candidateCase)
@@ -101,9 +105,8 @@ class Results():
 # Function to format a multiple result line
 def formatOutputMultiple(text, results, outputfile):
     outputfile.write(text)
-    outputfile.write('**1.** ' + results[0][0] + ' ' + results[0][1] + '  \n')
-    outputfile.write('**2.** ' + results[1][0] + ' ' + results[1][1] + '  \n')
-    outputfile.write('**3.** ' + results[2][0] + ' ' + results[2][1] + '  \n')
+    for i in range(len(results)):
+        outputfile.write('**' + str(i+1) + '.** ' + results[i][0] + ' ' + results[i][1] + '  \n')
 
 
 # Try to access (and count) case in dictionary, if there is no such key, initialize it
