@@ -22,8 +22,12 @@ python3 HEPlot.py 2
 python3 HEPlot.py 3
 
 echo "###############################################################"
-echo "Evaluate the Top 3 methods in different categories and create top.md"
+echo "Evaluate the Top 3 methods in different categories"
 python3 evaluateTop.py
+
+echo "###############################################################"
+echo "Evaluate the Flop 3 methods in different categories"
+python3 evaluateFlop.py
 
 echo "###############################################################"
 echo "Generate Markdown files to summarize evaluation results"
