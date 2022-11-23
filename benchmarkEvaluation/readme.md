@@ -28,7 +28,12 @@
 #### **evaluateTop.py** :
 - Evaluates the extracted information and calculated results according to different criteria
 - Takes its input from **./results/path_to_case/statInfo.txt** and **./results/path_to_case/results.txt**
-- For each criteria the TOP 3 best cases are selected and printed to **./results/mdfiles/top.md**
+- For each criteria the TOP 3 best cases are selected and printed to **./results/mdfiles/top.md** and **./results/mdfiles/topSummarized.md**
+
+#### **evaluateFlop.py** :
+- Evaluates the extracted information and calculated results according to different criteria
+- Takes its input from **./results/path_to_case/statInfo.txt** and **./results/path_to_case/results.txt**
+- For each criteria the FLOP 3 worst cases are selected and printed to **./results/mdfiles/flop.md** and **./results/mdfiles/flopSummarized.md**
 
 #### **markdownGenerator.py**
 - Generates a markdown file to present the summarized evaluation results
