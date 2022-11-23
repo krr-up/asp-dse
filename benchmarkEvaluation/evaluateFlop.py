@@ -1,5 +1,5 @@
 # This script evaluates the results from the DSE runs.
-# Per each instance, for different criteria the script filters the Top 3 cases
+# Per each instance, for different criteria the script filters the Flop 3 cases
 # TODO Calculate arithmetic mean value for each case over all instances
 
 import os
@@ -63,6 +63,7 @@ class Results():
             elif(float(values[2][0]) < float(candidateValue)):
                 values.append([candidateValue, candidateCase])
                 values.sort(reverse = True, key=SortFun)
+                # Only allow to have more than 3 entries, if they have the same value
                 if(float(values[2][0]) != float(values[len(values)-1][0])):
                     while len(values) > 3:
                         values.pop()
@@ -91,6 +92,7 @@ class Results():
             elif(float(values[2][0]) > float(candidateValue)):
                 values.append([candidateValue, candidateCase])
                 values.sort(key=SortFun)
+                # Only allow to have more than 3 entries, if they have the same value
                 if(float(values[2][0]) != float(values[len(values)-1][0])):
                     while len(values) > 3:
                         values.pop()
@@ -156,7 +158,7 @@ def main(workdir, outputfile):
         for instance in instances:             
             # Evaluate results for certain instance
             filePath = workdir + '/' + instance
-            # Search through all cases for best hamming and epsilon values
+            # Search through all cases for worst hamming and epsilon values
             results = evaluateResults(filePath)
 
             # For each entry in instances, compose a section in output file
@@ -195,7 +197,7 @@ def main(workdir, outputfile):
             updateDictionaryMultiple(dictionaryRelationFirst,results.relationFirst_)
             updateDictionaryMultiple(dictionaryRelation,results.relation_)
 
-    # Output summarized top 3 evaluation in another document
+    # Output summarized flop 3 evaluation in another document
     with open(OUTPUT_FILE_2, 'w') as outputfile:
         outputfile.write('## Hamming total, only first solution\n')
         outputDictionary(dictionaryHammingTotalFirst, outputfile)
@@ -220,7 +222,7 @@ def main(workdir, outputfile):
 
 
 
-# Iterate through all cases to find best hamming distances and best epsilon dominance values
+# Iterate through all cases to find worst hamming distances and worst epsilon dominance values
 def evaluateResults(casesPath):
     result = Results()
 

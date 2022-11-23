@@ -31,7 +31,7 @@ class Results():
         self.epsilonFirst_ = []
         self.epsilon2_ = []
         self.epsilon2First_ = []
-        #self.epsilonEqualsOne_ = []
+        self.epsilonFirstReachOne_ = []
         self.relation_ = []
         self.relationFirst_ = []
 
@@ -84,6 +84,7 @@ class Results():
             elif(float(values[2][0]) <= float(candidateValue)):
                 values.append([candidateValue, candidateCase])
                 values.sort(reverse = True, key=SortFun)
+                # Only allow to have more than 3 entries, if they have the same value
                 if(float(values[2][0]) != float(values[len(values)-1][0])):
                     while len(values) > 3:
                         values.pop()
@@ -112,14 +113,11 @@ class Results():
             elif(float(values[2][0]) >= float(candidateValue)):
                 values.append([candidateValue, candidateCase])
                 values.sort(key=SortFun)
+                # Only allow to have more than 3 entries, if they have the same value
                 if(float(values[2][0]) != float(values[len(values)-1][0])):
                     while len(values) > 3:
                         values.pop()
-
-    def valueEqualsOne(self, values, candidateValue, candidateCase):
-        if(float(candidateValue) == 1.0):
-            if([candidateValue, candidateCase] not in values):
-                values.append([candidateValue, candidateCase])
+                        
             
     def bestRelation(self, candidateEpsilon, candidateHamming, candidateCase):
         self.maximizeValue(self.relation_, str(float(candidateEpsilon)*float(candidateHamming)), candidateCase)
@@ -182,7 +180,7 @@ def main(workdir, outputfile):
     dictionaryEpsilon = {}
     dictionaryEpsilon2First = {}
     dictionaryEpsilon2 = {}
-    #dictionaryEpsilonEqualsOne = {}
+    dictionaryEpsilonFirstReachOne = {}
     dictionaryRelationFirst = {}
     dictionaryRelation = {}
 
@@ -229,7 +227,7 @@ def main(workdir, outputfile):
             formatOutputMultiple('## Epsilon dominance 2, only first solution\n', results.epsilon2First_, outputfile)
             formatOutputMultiple('## Epsilon dominance 2\n', results.epsilon2_, outputfile)
 
-            #formatOutputNEntries('## Epsilon dominance equals one\n', results.epsilonEqualsOne_, outputfile)
+            formatOutputMultiple('## Time Epsilon dominance = 1 has been reached first\n', results.epsilonFirstReachOne_, outputfile)
 
             formatOutputMultiple('## Epsilon-Hamming relation, only first solution\n', results.relationFirst_, outputfile)
             formatOutputMultiple('## Epsilon-Hamming relation\n', results.relation_, outputfile)
@@ -253,7 +251,7 @@ def main(workdir, outputfile):
             updateDictionaryMultiple(dictionaryEpsilon,results.epsilon_)
             updateDictionaryMultiple(dictionaryEpsilon2First,results.epsilon2First_)
             updateDictionaryMultiple(dictionaryEpsilon2,results.epsilon2_)
-            #updateDictionaryMultiple(dictionaryEpsilonEqualsOne,results.epsilonEqualsOne_)
+            updateDictionaryMultiple(dictionaryEpsilonFirstReachOne,results.epsilonFirstReachOne_)
             updateDictionaryMultiple(dictionaryRelationFirst,results.relationFirst_)
             updateDictionaryMultiple(dictionaryRelation,results.relation_)
 
@@ -295,8 +293,8 @@ def main(workdir, outputfile):
         outputDictionary(dictionaryEpsilon2First, outputfile)
         outputfile.write('## Epsilon dominance 2\n')
         outputDictionary(dictionaryEpsilon2, outputfile)
-        #outputfile.write('## Epsilon dominance equals one\n')
-        #outputDictionary(dictionaryEpsilonEqualsOne, outputfile)
+        outputfile.write('## Time Epsilon dominance = 1 has been reached first\n')
+        outputDictionary(dictionaryEpsilonFirstReachOne, outputfile)
         outputfile.write('## Epsilon-Hamming relation, only first solution\n')
         outputDictionary(dictionaryRelationFirst, outputfile)
         outputfile.write('## Epsilon-Hamming relation\n')
@@ -365,7 +363,10 @@ def evaluateResults(casesPath):
                 result.maximizeValue(result.hammingBindingAdapted_, terms[7], case)
                 result.maximizeValue(result.epsilon_, terms[8], case)
                 result.minimizeValue(result.epsilon2_, terms[9].rstrip(), case)
-                #result.valueEqualsOne(result.epsilonEqualsOne_, terms[8], case)
+                
+                if float(terms[8]) == 1.0 :
+                    result.minimizeValue(result.epsilonFirstReachOne_, terms[1], case)
+                
                 result.bestRelation(terms[2], terms[8], case)
 
     return result
