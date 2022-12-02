@@ -1,3 +1,6 @@
+# Prerequisite
+- Build library from epsilon dominance calculation by use of Makefile in **./qualityIndicators**
+
 # Usage
 ## Execution script
 - Execute **executeEvaluation.sh** to run all extraction and evaluation steps
