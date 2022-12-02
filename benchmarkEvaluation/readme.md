@@ -37,8 +37,8 @@
 
 #### **markdownGenerator.py**
 - Generates a markdown file to present the summarized evaluation results
-- With input argument "1" : Markdown file is ordered according to instances and contains status information per case (extracted from **./results/path_to_case/statInfo.txt**). It is saved as **./results/mdfile/status.md** and summarized in **./results/mdfile/statusSummarized.md**
-- With input argument "2" : Markdown file is ordered according to cases and contains status information per instance (extracted from **./results/path_to_case/statInfo.txt**). It is saved as **./results/mdfile/statusV2.md** and summarized in **./results/mdfile/statusSummarizedV2.md**
+- With input argument "1" : Markdown file is ordered according to instances and contains status information per case (extracted from **./results/path_to_case/statInfo.txt**). It is saved as **./results/mdfile/status.md**, summarized in **./results/mdfile/statusSummarized.md** and average values in **./results/mdfile/statusAveraged.md**
+- With input argument "2" : Markdown file is ordered according to cases and contains status information per instance (extracted from **./results/path_to_case/statInfo.txt**). It is saved as **./results/mdfile/statusV2.md**, summarized in **./results/mdfile/statusSummarizedV2.md** and average values in **./results/mdfile/statusAveragedV2.md**
 - With input argument "3" : Markdown file is ordered according to instances and contains all plots per case (taken from **./results/path_to_case/*.png**). It is saved as **./results/mdfile/plots.md**
 - With input argument "4" : Markdown file is ordered according to cases and contains all plots per instance (taken from **./results/path_to_case/*.png**). It is saved as **./results/mdfile/plotsV2.md**
 - With input argument "5" : Markdown file is ordered according to instances and contains all plots with uniformed scaling per case (taken from **./results/path_to_case//uniformScaling/*.png**). It is saved as **./results/mdfile/plotsUniformed.md**

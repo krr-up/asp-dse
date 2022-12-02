@@ -24,6 +24,8 @@ FILETYPE5 = 'plotsUniformed.md'
 FILETYPE6 = 'plotsUniformedV2.md'
 FILETYPE1_SUMMARIZED = 'statusSummarized.md'
 FILETYPE2_SUMMARIZED = 'statusSummarizedV2.md'
+FILETYPE1_AVERAGED = 'statusAveraged.md'
+FILETYPE2_AVERAGED = 'statusAveragedV2.md'
 
 def getStatData(workdir,instance,case):
     inputFilePath = workdir + "/" + instance + "/asp-dse-ed-v1.0.0-" + case + "/" + "statInfo.txt"
@@ -53,9 +55,22 @@ def printSummarizedStati(_section, statusCount, fileType):
         summarizedOutputfile.write(''.join(row) + '|\n')
 
 
+def printAveragedStati(_section, validInstances, timeFirstSolutionAverage, timeCompleteSearchAverage, numberDesignPointsAverage, fileType):
+    outputPath = OUTPUTDIR + '/' +  fileType
+
+    row = []
+    with open(outputPath, 'a') as averagedOutputfile:
+        row.append('|' + _section + '|' + str(validInstances) + '|' + str(timeFirstSolutionAverage) + '|' + str(timeCompleteSearchAverage) + '|' + str(numberDesignPointsAverage) + '|')
+        averagedOutputfile.write(''.join(row) + '|\n')
+
+
 def generateMarkdown(workdir, outputfile, type):
     # Count DSE stati
     statusCount = {}
+
+    timeFirstSolutionAverage = 0
+    timeCompleteSearchAverage = 0
+    numberDesignPointsAverage = 0
 
     instances = {entry.name for entry in os.scandir(workdir) if "." not in entry.name and "mdfiles" not in entry.name}
     instances = natsorted(instances)
@@ -63,6 +78,10 @@ def generateMarkdown(workdir, outputfile, type):
 
     cases = { entry.name.split("-", 4)[4] for entry in os.scandir(defaultInstance) if ".txt" not in entry.name }
     cases = natsorted(cases)
+
+    # Used later for calculating the average
+    validCases = len(cases)
+    validInstances = len(instances)
 
     if type == '5' or type == '6':
         condition = False
@@ -81,16 +100,28 @@ def generateMarkdown(workdir, outputfile, type):
     pngFiles = {entry.name for entry in os.scandir(defaultCase) if entry.name.endswith('.png')}
     pngFiles = natsorted(pngFiles)
 
+    # Prepare md file for summarized results and for averaged results
     if type == '1':
         outputPath = OUTPUTDIR + '/' +  FILETYPE1_SUMMARIZED
         with open(outputPath, 'w') as summarizedOutputfile:
             summarizedOutputfile.write(''.join(['|Instance|SatisfiableNoTimeout|SatisfiableTimeout|SolveTimeout|GroundTimeout|Unsatisfiable|']) + '\n')
             summarizedOutputfile.write(''.join(['|:---:|:---:|:---:|:---:|:---:|:---:|']) + '\n')
+
+        outputPath = OUTPUTDIR + '/' +  FILETYPE1_AVERAGED
+        with open(outputPath, 'w') as averagedOutputfile:
+            averagedOutputfile.write(''.join(['|Instance|ValidCases|Time first solution|Timeout|Number design points||']) + '\n')
+            averagedOutputfile.write(''.join(['|:---:|:---:|:---:|:---:|:---:|:---:|']) + '\n')
+
     if type == '2':
         outputPath = OUTPUTDIR + '/' +  FILETYPE2_SUMMARIZED
         with open(outputPath, 'w') as summarizedOutputfile:
             summarizedOutputfile.write(''.join(['|Case|SatisfiableNoTimeout|SatisfiableTimeout|SolveTimeout|GroundTimeout|Unsatisfiable|']) + '\n')
             summarizedOutputfile.write(''.join(['|:---:|:---:|:---:|:---:|:---:|:---:|']) + '\n')
+        
+        outputPath = OUTPUTDIR + '/' +  FILETYPE2_AVERAGED
+        with open(outputPath, 'w') as averagedOutputfile:
+            averagedOutputfile.write(''.join(['|Case|ValidInstances|Time first solution|Timeout|Number design points||']) + '\n')
+            averagedOutputfile.write(''.join(['|:---:|:---:|:---:|:---:|:---:|:---:|']) + '\n')
 
     section = ''
     subsection = ''
@@ -132,9 +163,29 @@ def generateMarkdown(workdir, outputfile, type):
                             else:
                                statusCount["SatisfiableNoTimeout"] = statusCount["SatisfiableNoTimeout"]+1
 
+                        # Calculate the averages for the valid instances
+                        if statData[1] != "-1" :
+                            timeFirstSolutionAverage = timeFirstSolutionAverage + float(statData[1])
+                            timeCompleteSearchAverage = timeCompleteSearchAverage + float(statData[2])
+                            numberDesignPointsAverage = numberDesignPointsAverage + int(statData[3])
+                        else:
+                            validCases = validCases - 1
+                    
+                    if validCases != 0:
+                        timeFirstSolutionAverage = timeFirstSolutionAverage / validCases
+                        timeCompleteSearchAverage = timeCompleteSearchAverage / validCases
+                        numberDesignPointsAverage = int(numberDesignPointsAverage / validCases)
+
                     outputfile.write(''.join(row) + '|\n')
 
                     printSummarizedStati(_section, statusCount, FILETYPE1_SUMMARIZED)
+                    printAveragedStati(_section, validCases, timeFirstSolutionAverage, timeCompleteSearchAverage, numberDesignPointsAverage, FILETYPE1_AVERAGED)
+                    
+                    # Reset variables
+                    timeFirstSolutionAverage = 0
+                    timeCompleteSearchAverage = 0
+                    numberDesignPointsAverage = 0
+                    validCases = len(cases)
 
                 # Output resulting pictures only (Ordered according to instances)
                 elif type == '3' or type == '5':
@@ -200,10 +251,30 @@ def generateMarkdown(workdir, outputfile, type):
                                 statusCount["SatisfiableTimeout"] = statusCount["SatisfiableTimeout"]+1
                             else:
                                statusCount["SatisfiableNoTimeout"] = statusCount["SatisfiableNoTimeout"]+1
-                            
+                        
+                        # Calculate the averages for the valid instances
+                        if statData[1] != "-1" :
+                            timeFirstSolutionAverage = timeFirstSolutionAverage + float(statData[1])
+                            timeCompleteSearchAverage = timeCompleteSearchAverage + float(statData[2])
+                            numberDesignPointsAverage = numberDesignPointsAverage + int(statData[3])
+                        else:
+                            validInstances = validInstances - 1
+
+                    if validInstances != 0:
+                        timeFirstSolutionAverage = timeFirstSolutionAverage / validInstances
+                        timeCompleteSearchAverage = timeCompleteSearchAverage / validInstances
+                        numberDesignPointsAverage = int(numberDesignPointsAverage / validInstances)
+
                     outputfile.write(''.join(row) + '|\n')
 
                     printSummarizedStati(_section, statusCount, FILETYPE2_SUMMARIZED)
+                    printAveragedStati(_section, validInstances, timeFirstSolutionAverage, timeCompleteSearchAverage, numberDesignPointsAverage, FILETYPE2_AVERAGED)
+
+                    # Reset variables
+                    timeFirstSolutionAverage = 0
+                    timeCompleteSearchAverage = 0
+                    numberDesignPointsAverage = 0
+                    validInstances = len(instances)
 
                 # Output resulting pictures only (Ordered according to cases)
                 elif type == '4' or type == '6':
