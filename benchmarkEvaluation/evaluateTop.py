@@ -1,13 +1,10 @@
 # This script evaluates the results from the DSE runs.
 # Per each instance, for different criteria the script filters the Top 3 cases
-# TODO Calculate arithmetic mean value for each case over all instances
 
 import os
 from natsort import natsorted
 
 WORKDIR = './results'
-STATUS_FILE = 'statInfo.txt'
-RESULT_FILE = 'results.txt'
 OUTPUT_FILE = './results/mdfiles/top.md'
 OUTPUT_FILE_2 = './results/mdfiles/topSummarized.md'
 
@@ -54,6 +51,7 @@ class Results():
         self.epsilonFirst_ == [] or
         self.epsilon2_ == [] or
         self.epsilon2First_ == [] or
+        self.epsilonFirstReachOne_ == [] or
         self.relation_ == [] or
         self.relationFirst_ == [])
         if isEmpty == 1:
@@ -126,13 +124,14 @@ class Results():
         self.maximizeValue(self.relationFirst_, str(float(candidateEpsilon)*float(candidateHamming)), candidateCase)
         
 
-# Function to format a multiple result line
+# Function to format a line with multiple results
 def formatOutputMultiple(text, results, outputfile):
     outputfile.write(text)
     for i in range(len(results)):
         outputfile.write('**' + str(i+1) + '.** ' + results[i][0] + ' ' + results[i][1] + '  \n')
 
 
+# Function to format multiple lines output
 def formatOutputNEntries(text, results, outputfile):
     outputfile.write(text)
     for i in range(len(results)):
@@ -150,6 +149,7 @@ def updateDictionaryMultiple(dictionary, results):
                 dictionary[results[i][1]] = 1
 
 
+# Function to format dictionary output
 def outputDictionary(dictionary, outputfile):
     outputfile.write('|Case|Count||\n')
     outputfile.write('|:---:|:---:|:---:|\n')

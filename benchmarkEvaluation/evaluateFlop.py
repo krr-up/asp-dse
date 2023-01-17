@@ -1,13 +1,10 @@
 # This script evaluates the results from the DSE runs.
 # Per each instance, for different criteria the script filters the Flop 3 cases
-# TODO Calculate arithmetic mean value for each case over all instances
 
 import os
 from natsort import natsorted
 
 WORKDIR = './results'
-STATUS_FILE = 'statInfo.txt'
-RESULT_FILE = 'results.txt'
 OUTPUT_FILE = './results/mdfiles/flop.md'
 OUTPUT_FILE_2 = './results/mdfiles/flopSummarized.md'
 
@@ -104,7 +101,7 @@ class Results():
         self.minimizeValue(self.relationFirst_, str(float(candidateEpsilon)*float(candidateHamming)), candidateCase)
         
 
-# Function to format a multiple result line
+# Function to format a line with multiple results
 def formatOutputMultiple(text, results, outputfile):
     outputfile.write(text)
     for i in range(len(results)):
@@ -131,6 +128,7 @@ def updateDictionaryMultiple(dictionary, results):
             dictionary[results[2][1]] = 1  
 
 
+# Function to format dictionary output
 def outputDictionary(dictionary, outputfile):
     outputfile.write('|Case|Count||\n')
     outputfile.write('|:---:|:---:|:---:|\n')
@@ -242,7 +240,7 @@ def evaluateResults(casesPath):
             line = inputFile.readline()
             terms = line.split(' ')
             if len(terms) == 10:
-                # Maximize the value of each criteria for the first entry in the input file
+                # Minimize the value of each criteria for the first entry in the input file
                 result.minimizeValue(result.hammingTotalFirst_, terms[2], case)
                 result.minimizeValue(result.hammingBindingFirst_, terms[3], case)
                 result.minimizeValue(result.hammingRoutingFirst_, terms[4], case)
@@ -258,7 +256,7 @@ def evaluateResults(casesPath):
                         print("warning, not enough arguments in file: " + resultFilePath)
                     continue
 
-                # Maximize the value of each criteria for all entries in the input file
+                # MInimize the value of each criteria for all entries in the input file
                 result.minimizeValue(result.hammingTotal_, terms[2], case)
                 result.minimizeValue(result.hammingBinding_, terms[3], case)
                 result.minimizeValue(result.hammingRouting_, terms[4], case)
