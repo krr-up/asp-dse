@@ -38,6 +38,12 @@
 - Takes its input from **./results/path_to_case/statInfo.txt** and **./results/path_to_case/results.txt**
 - For each criteria the FLOP 3 worst cases are selected and printed to **./results/mdfiles/flop.md** and **./results/mdfiles/flopSummarized.md**
 
+#### **evaluateRank.py** :
+- Evaluates the extracted information and calculated results according to different criteria
+- Takes its input from **./results/path_to_case/statInfo.txt** and **./results/path_to_case/results.txt**
+- For each criteria the ranking for all cases is evaluated and printed to **./results/mdfiles/ranks.md**
+- Considering all instances, an average rank per case per category is calculated and printed to **./results/mdfiles/ranksAveraged.md** (ordered by case) and **./results/mdfiles/ranksAveragedOrdered.md** (ordered by rank)
+
 #### **markdownGenerator.py**
 - Generates a markdown file to present the summarized evaluation results
 - With input argument "1" : Markdown file is ordered according to instances and contains status information per case (extracted from **./results/path_to_case/statInfo.txt**). It is saved as **./results/mdfile/status.md**, summarized in **./results/mdfile/statusSummarized.md** and average values in **./results/mdfile/statusAveraged.md**
