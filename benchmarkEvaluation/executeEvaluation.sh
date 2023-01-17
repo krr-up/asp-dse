@@ -30,6 +30,10 @@ echo "Evaluate the Flop 3 methods in different categories"
 python3 evaluateFlop.py
 
 echo "###############################################################"
+echo "Evaluate the Ranking and the average rank of the cases in different categories"
+python3 evaluateRank.py
+
+echo "###############################################################"
 echo "Generate Markdown files to summarize evaluation results"
 python3 markdownGenerator.py 1
 python3 markdownGenerator.py 2
