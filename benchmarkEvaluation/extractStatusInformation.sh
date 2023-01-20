@@ -42,6 +42,12 @@ do
         if [[ ! -f "${OUTPUT}/${instanceName}/${caseName}/results.txt" ]]; then
             > "${OUTPUT}/${instanceName}/${caseName}/results.txt"
         fi
+        if [[ ! -f "${OUTPUT}/${instanceName}/${caseName}/resultsHammingMax.txt" ]]; then
+            > "${OUTPUT}/${instanceName}/${caseName}/resultsHammingMax.txt"
+        fi
+        if [[ ! -f "${OUTPUT}/${instanceName}/${caseName}/resultsHammingAverage.txt" ]]; then
+            > "${OUTPUT}/${instanceName}/${caseName}/resultsHammingAverage.txt"
+        fi
     done
 done
 
