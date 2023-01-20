@@ -1,5 +1,6 @@
 # Prerequisite
 - Build library from epsilon dominance calculation by use of Makefile in **./qualityIndicators**
+- Install Python package "natsort"
 
 # Usage
 ## Execution script
@@ -20,6 +21,9 @@
 - For each answer (each child implementation) in each DSE run, it calculates the hamming similarity (compared to legacy implementation) and the epsilon dominance
 - Currently evaluated child implementation saved in **./temp/answer.lp**
 - Solution numbers, timestamps and results saved in **./results/path_to_case/results.txt**
+- Further, it calculates the hamming similarity of the front in each time step (it only considers the nondominated design points)
+- Maximum Hamming similarity of all points in the current front is saved in **./results/path_to_case/resultsHammingMax.txt**
+- Average Hamming similarity over all points in the current front is saved in **./results/path_to_case/resultsHammingAverage.txt**
 
 #### **HEPlot.py** :
 - This script takes its input from **./results/path_to_case/results.txt**
