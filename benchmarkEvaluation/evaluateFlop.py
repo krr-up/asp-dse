@@ -16,6 +16,12 @@ class Results():
         self.hammingBindingFirst_ = []
         self.hammingRouting_ = []
         self.hammingRoutingFirst_ = []
+        self.avgHammingTotal_ = []
+        self.avgHammingBinding_ = []
+        self.avgHammingRouting_ = []
+        self.maxHammingTotal_ = []
+        self.maxHammingBinding_ = []
+        self.maxHammingRouting_ = []
         self.epsilon_ = []
         self.epsilonFirst_ = []
         self.relation_ = []
@@ -28,6 +34,12 @@ class Results():
         self.hammingBindingFirst_ == [] or
         self.hammingRouting_ == [] or
         self.hammingRoutingFirst_ == [] or
+        self.avgHammingTotal_ == [] or
+        self.avgHammingBinding_ == [] or
+        self.avgHammingRouting_ == [] or
+        self.maxHammingTotal_ == [] or
+        self.maxHammingBinding_ == [] or
+        self.maxHammingRouting_ == [] or
         self.epsilon_ == [] or
         self.epsilonFirst_ == [] or
         self.relation_ == [] or
@@ -147,6 +159,12 @@ def main(workdir, outputfile):
     dictionaryHammingBinding = {}
     dictionaryHammingRoutingFirst = {}
     dictionaryHammingRouting = {}
+    dictionaryAvgHammingTotal= {}
+    dictionaryAvgHammingBinding= {}
+    dictionaryAvgHammingRouting= {}
+    dictionaryMaxHammingTotal= {}
+    dictionaryMaxHammingBinding= {}
+    dictionaryMaxHammingRouting= {}
     dictionaryEpsilonFirst = {}
     dictionaryEpsilon = {}
     dictionaryRelationFirst = {}
@@ -177,6 +195,14 @@ def main(workdir, outputfile):
             formatOutputMultiple('## Hamming routing, only first solution\n', results.hammingRoutingFirst_, outputfile)
             formatOutputMultiple('## Hamming routing \n', results.hammingRouting_, outputfile)
 
+            formatOutputMultiple('## Average Hamming total\n', results.avgHammingTotal_, outputfile)
+            formatOutputMultiple('## Average Hamming binding\n', results.avgHammingBinding_, outputfile)
+            formatOutputMultiple('## Average Hamming routing\n', results.avgHammingRouting_, outputfile)
+
+            formatOutputMultiple('## Maximum Hamming total\n',   results.maxHammingTotal_, outputfile)
+            formatOutputMultiple('## Maximum Hamming binding\n', results.maxHammingBinding_, outputfile)
+            formatOutputMultiple('## Maximum Hamming routing\n', results.maxHammingRouting_, outputfile)
+
             formatOutputMultiple('## Epsilon dominance, only first solution\n', results.epsilonFirst_, outputfile)
             formatOutputMultiple('## Epsilon dominance\n', results.epsilon_, outputfile)
 
@@ -190,6 +216,12 @@ def main(workdir, outputfile):
             updateDictionaryMultiple(dictionaryHammingBinding,results.hammingBinding_)
             updateDictionaryMultiple(dictionaryHammingRoutingFirst,results.hammingRoutingFirst_)
             updateDictionaryMultiple(dictionaryHammingRouting,results.hammingRouting_)
+            updateDictionaryMultiple(dictionaryAvgHammingTotal,results.avgHammingTotal_)
+            updateDictionaryMultiple(dictionaryAvgHammingBinding,results.avgHammingBinding_)
+            updateDictionaryMultiple(dictionaryAvgHammingRouting,results.avgHammingRouting_)
+            updateDictionaryMultiple(dictionaryMaxHammingTotal,results.maxHammingTotal_)
+            updateDictionaryMultiple(dictionaryMaxHammingBinding,results.maxHammingBinding_)
+            updateDictionaryMultiple(dictionaryMaxHammingRouting,results.maxHammingRouting_)
             updateDictionaryMultiple(dictionaryEpsilonFirst,results.epsilonFirst_)
             updateDictionaryMultiple(dictionaryEpsilon,results.epsilon_)
             updateDictionaryMultiple(dictionaryRelationFirst,results.relationFirst_)
@@ -209,6 +241,18 @@ def main(workdir, outputfile):
         outputDictionary(dictionaryHammingRoutingFirst, outputfile)
         outputfile.write('## Hamming routing \n')
         outputDictionary(dictionaryHammingRouting, outputfile)
+        outputfile.write('## Average Hamming\n')
+        outputDictionary(dictionaryAvgHammingTotal, outputfile)
+        outputfile.write('## Average Hamming binding\n')
+        outputDictionary(dictionaryAvgHammingBinding, outputfile)
+        outputfile.write('## Average Hamming routing\n')
+        outputDictionary(dictionaryAvgHammingRouting, outputfile)
+        outputfile.write('## Maximum Hamming\n')
+        outputDictionary(dictionaryMaxHammingTotal, outputfile)
+        outputfile.write('## Maximum Hamming binding\n')
+        outputDictionary(dictionaryMaxHammingBinding, outputfile)
+        outputfile.write('## Maximum Hamming routing\n')
+        outputDictionary(dictionaryMaxHammingRouting, outputfile)
         outputfile.write('## Epsilon dominance, only first solution\n')
         outputDictionary(dictionaryEpsilonFirst, outputfile)
         outputfile.write('## Epsilon dominance\n')
@@ -229,6 +273,8 @@ def evaluateResults(casesPath):
 
     for case in cases:
         resultFilePath = casesPath + '/'+ case + "/results.txt"
+        avgResultFilePath = casesPath + '/'+ case + "/resultsHammingAverage.txt"
+        maxResultFilePath = casesPath + '/'+ case + "/resultsHammingMax.txt"
 
         with open(resultFilePath, 'r') as inputFile:
             if inputFile.closed:
@@ -262,6 +308,56 @@ def evaluateResults(casesPath):
                 result.minimizeValue(result.hammingRouting_, terms[4], case)
                 result.minimizeValue(result.epsilon_, terms[8], case)
                 result.bestRelation(terms[2], terms[8], case)
+
+        with open(avgResultFilePath, 'r') as inputFile:
+            if inputFile.closed:
+                print("file can not be opened: " + resultFilePath)
+                return
+
+            # Read only the last line
+            lastLine = inputFile.readlines()[-1]
+
+            caseErrorSup = False
+            terms = lastLine.split(' ')
+            if len(terms) != 8:
+                if not caseErrorSup:
+                    caseErrorSup = True
+                    print("warning, not enough arguments in file: " + resultFilePath)
+                continue
+
+            # If the last line contains the heading, there is no data available
+            if(terms[0] == "solution"):
+                continue
+            else:
+                # Maximize the value of each criteria for all entries in the input file
+                result.minimizeValue(result.avgHammingTotal_, terms[2], case)
+                result.minimizeValue(result.avgHammingBinding_, terms[3], case)
+                result.minimizeValue(result.avgHammingRouting_, terms[4], case)
+
+        with open(maxResultFilePath, 'r') as inputFile:
+            if inputFile.closed:
+                print("file can not be opened: " + resultFilePath)
+                return
+
+            # Read only the last line
+            lastLine = inputFile.readlines()[-1]
+
+            caseErrorSup = False
+            terms = lastLine.split(' ')
+            if len(terms) != 8:
+                if not caseErrorSup:
+                    caseErrorSup = True
+                    print("warning, not enough arguments in file: " + resultFilePath)
+                continue
+
+            # If the last line contains the heading, there is no data available
+            if(terms[0] == "solution"):
+                continue
+            else:
+                # Maximize the value of each criteria for all entries in the input file
+                result.minimizeValue(result.maxHammingTotal_, terms[2], case)
+                result.minimizeValue(result.maxHammingBinding_, terms[3], case)
+                result.minimizeValue(result.maxHammingRouting_, terms[4], case)
 
     return result
             
