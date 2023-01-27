@@ -28,8 +28,8 @@
 #### **HEPlot.py** :
 - This script takes its input from **./results/path_to_case/results.txt**
 - Various plots are generated and saved in **./results/path_to_case/**
-- With input argument "1" : Plot HammingTotal and Epsilon dominance (2x) over time and save in **./results/path_to_case/HEPlot.\* and ./results/path_to_case/HE2Plot.\***
-- With input argument "2" : Plot hamming distance types over time and save in **./results/path_to_case/HTypePlot.\* and ./results/path_to_case/HAdaptedTypePlot.\***
+- With input argument "1" : Plot HammingTotal and Epsilon dominance (Either type smaller or greater 1) over time and save in **./results/path_to_case/HEPlot.\* and ./results/path_to_case/HE2Plot.\***; Plot avgHammingTotal, maxHammingTotal and Epsilon dominance (Smaller 1) over time and in **./results/path_to_case/HEAveragePlot.\*
+- With input argument "2" : Plot hamming distance types over time and save in **./results/path_to_case/HTypePlot.\*, ./results/path_to_case/HAdaptedTypePlot.\*, ./results/path_to_case/AverageHTypePlot.\* and ./results/path_to_case/MaxHTypePlot.\***
 - With input argument "3" : Plot HammingTotal and Epsilon dominance (Smaller 1) with uniform time scaling and timeout marker and save in **./results/path_to_case/HEUniformPlot.\***
 
 #### **evaluateTop.py** :
