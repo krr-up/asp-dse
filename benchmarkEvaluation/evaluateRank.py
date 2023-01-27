@@ -414,7 +414,7 @@ def evaluateResults(casesPath):
 
         with open(avgResultFilePath, 'r') as inputFile:
             if inputFile.closed:
-                print("file can not be opened: " + resultFilePath)
+                print("file can not be opened: " + avgResultFilePath)
                 return
 
             # Read only the last line
@@ -426,14 +426,12 @@ def evaluateResults(casesPath):
                 if not caseErrorSup:
                     caseErrorSup = True
                     print("warning, not enough arguments in file: " + resultFilePath)
-                continue
 
             # If the last line contains the heading, there is no data available
             if(terms[0] == "solution"):
                 result.buildMaxList(result.avgHammingTotal_, wcMaximization, case)
                 result.buildMaxList(result.avgHammingBinding_, wcMaximization, case)
                 result.buildMaxList(result.avgHammingRouting_, wcMaximization, case)
-                continue
             else:
                 # Maximize the value of each criteria for all entries in the input file
                 result.buildMaxList(result.avgHammingTotal_, terms[2], case)
@@ -442,7 +440,7 @@ def evaluateResults(casesPath):
 
         with open(maxResultFilePath, 'r') as inputFile:
             if inputFile.closed:
-                print("file can not be opened: " + resultFilePath)
+                print("file can not be opened: " + maxResultFilePath)
                 return
 
             # Read only the last line
@@ -454,14 +452,12 @@ def evaluateResults(casesPath):
                 if not caseErrorSup:
                     caseErrorSup = True
                     print("warning, not enough arguments in file: " + resultFilePath)
-                continue
 
             # If the last line contains the heading, there is no data available
             if(terms[0] == "solution"):
                 result.buildMaxList(result.maxHammingTotal_, wcMaximization, case)
                 result.buildMaxList(result.maxHammingBinding_, wcMaximization, case)
                 result.buildMaxList(result.maxHammingRouting_, wcMaximization, case)
-                continue
             else:
                 # Maximize the value of each criteria for all entries in the input file
                 result.buildMaxList(result.maxHammingTotal_, terms[2], case)
