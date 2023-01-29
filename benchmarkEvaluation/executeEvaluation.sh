@@ -32,6 +32,8 @@ python3 evaluateFlop.py
 echo "###############################################################"
 echo "Evaluate the Ranking and the average rank of the cases in different categories"
 python3 evaluateRank.py
+# Execution can be exchanged by the following to also receive the standard deviation values
+# python3 evaluateRankSTDEV.py
 
 echo "###############################################################"
 echo "Generate Markdown files to summarize evaluation results"
