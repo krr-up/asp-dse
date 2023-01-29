@@ -171,6 +171,7 @@ def outputDictionaryOrdered(dictionary, numInstances, outputfile):
     outputfile.write('|Case|Average Rank||\n')
     outputfile.write('|:---:|:---:|:---:|\n')
     for i in sorted(dictionary, key=dictionary.get) :
+        # Mark cases "DSE from scratch" red
         if i == "asp-dse-ed-v1.0.0-xyz-n1" or i == "asp-dse-ed-v1.0.0-bound-n1" or i == "asp-dse-ed-v1.0.0-arb-n1" :
             outputfile.write('|' + "<span style=\"color: red;\">" + i + "</span>" + '|' + str(dictionary[i]/numInstances) + '|    |\n')
         else:
@@ -201,6 +202,9 @@ def main(workdir, outputfile):
     dictionaryEpsilonFirstReachOne = {}
     dictionaryRelationFirst = {}
     dictionaryRelation = {}
+
+    countEqualToAv = 0
+    countEqualToMax = 0
 
     with open(outputfile, 'w') as outputfile:
         for instance in instances:             
@@ -245,6 +249,27 @@ def main(workdir, outputfile):
 
             formatOutputMultiple('## Epsilon-Hamming relation, only first solution\n', results.relationFirst_, dictionaryRelationFirst, outputfile)
             formatOutputMultiple('## Epsilon-Hamming relation\n', results.relation_, dictionaryRelation, outputfile)
+
+            # Evaluate per case if best reached Hamming similarity is also contained in best solution front
+            if(results.hammingTotal_[0][0] == results.avgHammingTotal_[0][0]):
+                print("hammingTotal_ equal avgHammingTotal_")
+                print(instance)
+                print(results.hammingTotal_[0])
+                print(results.avgHammingTotal_[0])
+                print("\n")
+                countEqualToAv = countEqualToAv + 1
+
+            if(results.hammingTotal_[0][0] == results.maxHammingTotal_[0][0]):
+                print("hammingTotal_ equal maxHammingTotal_")
+                print(instance)
+                print(results.hammingTotal_[0])
+                print(results.maxHammingTotal_[0])
+                print("\n")
+                countEqualToMax = countEqualToMax + 1
+
+    # Output number of cases where best reached Hamming similarity is contained in best solution front
+    print("hammingTotal_ equal avgHammingTotal_:" + str(countEqualToAv))
+    print("hammingTotal_ equal maxHammingTotal_:" + str(countEqualToMax))
 
     # Output averaged ranks per criteria ordered by their key
     numInstances = len(instances)
