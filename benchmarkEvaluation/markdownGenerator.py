@@ -13,8 +13,7 @@ import sys
 from natsort import natsorted
 
 WORKDIR = './results'
-OUTPUTDIR = './results/mdfiles'
-MDFILE = './plots.md'
+OUTPUTDIR = WORKDIR + '/mdfiles'
 
 FILETYPE1 = 'status.md'
 FILETYPE2 = 'statusV2.md'
@@ -200,14 +199,14 @@ def generateMarkdown(workdir, outputfile, type):
                         row = []
                         for pngFile in pngFiles:
                             if type == '3':
-                                filePath = "./results/" + section + "/asp-dse-ed-v1.0.0-" + subsection + "/" + pngFile
+                                filePath = WORKDIR + "/" + section + "/asp-dse-ed-v1.0.0-" + subsection + "/" + pngFile
                                 if os.path.isfile(filePath):
                                     filePath = "../" + section + "/asp-dse-ed-v1.0.0-" + subsection + "/" + pngFile
                                     row.append("![](" + filePath + ")")
                                 else:
                                     row.append('N/A')
                             elif type == '5':
-                                filePath = "./results/" + section + "/asp-dse-ed-v1.0.0-" + subsection + "/uniformScaling/" + pngFile
+                                filePath = WORKDIR + "/" + section + "/asp-dse-ed-v1.0.0-" + subsection + "/uniformScaling/" + pngFile
                                 if os.path.isfile(filePath):
                                     filePath = "../" + section + "/asp-dse-ed-v1.0.0-" + subsection + "/uniformScaling/" + pngFile
                                     row.append("![](" + filePath + ")")
@@ -289,14 +288,14 @@ def generateMarkdown(workdir, outputfile, type):
                         row = []
                         for pngFile in pngFiles:
                             if type == '4':
-                                filePath = "./results/" + subsection + "/asp-dse-ed-v1.0.0-" + section + "/" + pngFile
+                                filePath = WORKDIR + "/" + subsection + "/asp-dse-ed-v1.0.0-" + section + "/" + pngFile
                                 if os.path.isfile(filePath):
                                     filePath = "../" + subsection + "/asp-dse-ed-v1.0.0-" + section + "/" + pngFile
                                     row.append("![](" + filePath + ")")
                                 else:
                                     row.append('N/A')
                             elif type == '6':
-                                filePath = "./results/" + subsection + "/asp-dse-ed-v1.0.0-" + section + "/uniformScaling/" + pngFile
+                                filePath = WORKDIR + "/" + subsection + "/asp-dse-ed-v1.0.0-" + section + "/uniformScaling/" + pngFile
                                 if os.path.isfile(filePath):
                                     filePath = "../" + subsection + "/asp-dse-ed-v1.0.0-" + section + "/uniformScaling/" + pngFile
                                     row.append("![](" + filePath + ")")
