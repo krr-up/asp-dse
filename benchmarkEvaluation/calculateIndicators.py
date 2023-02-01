@@ -516,6 +516,7 @@ def main():
     cases = natsorted(cases)
 
     for case in cases:
+        timeStartCase = time.time()
         instancesPath = INPUT_BASE_DIR + '/' + case
         instances = { entry.name for entry in os.scandir(instancesPath) if entry.is_dir()}
         instances = natsorted(instances)
@@ -524,6 +525,9 @@ def main():
             filePath = instancesPath + '/' + instance + "/run1/" + INPUT_FILE_NAME
             prepare_and_output_hamming_per_design_point(instance, case, filePath)
             prepare_and_output_hamming_for_front(instance, case, filePath)
+        
+        timeEndCase = time.time()
+        print("Finish " + case + " for all instances after " + str(timeEndCase - timeStartCase) + "s")
 
 
     timeEnd = time.time()
@@ -558,3 +562,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    
