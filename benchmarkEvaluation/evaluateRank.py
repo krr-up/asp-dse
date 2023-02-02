@@ -34,6 +34,7 @@ class Results():
         self.epsilonFirstReachOne_ = []
         self.relation_ = []
         self.relationFirst_ = []
+        self.relationFront_ = []
 
     def empty(self):
         isEmpty = (self.timeFirstSolution_ == [] or
@@ -53,7 +54,8 @@ class Results():
         self.epsilon_ == [] or
         self.epsilonFirst_ == [] or
         self.relation_ == [] or
-        self.relationFirst_ == [])
+        self.relationFirst_ == [] or
+        self.relationFront_ == [])
         if isEmpty == 1:
             print("warning, empty instance")
         return isEmpty
@@ -120,6 +122,9 @@ class Results():
 
     def bestRelationFirst(self, candidateEpsilon, candidateHamming, candidateCase):
         self.buildMaxList(self.relationFirst_, str(float(candidateEpsilon)*float(candidateHamming)), candidateCase)
+
+    def bestRelationFront(self, candidateEpsilon, candidateHamming, candidateCase):
+        self.buildMaxList(self.relationFront_, str(float(candidateEpsilon)*float(candidateHamming)), candidateCase)
         
 
 # Function to format a line with multiple results
@@ -200,6 +205,7 @@ def main(workdir, outputfile):
     dictionaryEpsilonFirst = {}
     dictionaryEpsilon = {}
     dictionaryEpsilonFirstReachOne = {}
+    dictionaryRelationFront = {}
     dictionaryRelationFirst = {}
     dictionaryRelation = {}
 
@@ -207,6 +213,7 @@ def main(workdir, outputfile):
     countEqualToMax = 0
 
     with open(outputfile, 'w') as outputfile:
+        numInstances = len(instances)
         for instance in instances:             
             # Evaluate results for certain instance
             filePath = workdir + '/' + instance
@@ -219,6 +226,7 @@ def main(workdir, outputfile):
             filePath = workdir + '/' + instance
 
             if(results.empty()):
+                numInstances = numInstances -1
                 continue
 
             # Write data (ranking list) to output file and record the occurring ranks (value) for each case (key) per criteria
@@ -249,9 +257,11 @@ def main(workdir, outputfile):
 
             formatOutputMultiple('## Epsilon-Hamming relation, only first solution\n', results.relationFirst_, dictionaryRelationFirst, outputfile)
             formatOutputMultiple('## Epsilon-Hamming relation\n', results.relation_, dictionaryRelation, outputfile)
+            formatOutputMultiple('## Epsilon-Hamming relation for the final solution front\n', results.relationFront_, dictionaryRelationFront, outputfile)
+
 
             # Evaluate per case if best reached Hamming similarity is also contained in best solution front
-            if(results.hammingTotal_[0][0] == results.avgHammingTotal_[0][0]):
+            if(results.hammingTotal_[0][0] == results.avgHammingTotal_[0][0] != '0'):
                 print("hammingTotal_ equal avgHammingTotal_")
                 print(instance)
                 print(results.hammingTotal_[0])
@@ -259,7 +269,7 @@ def main(workdir, outputfile):
                 print("\n")
                 countEqualToAv = countEqualToAv + 1
 
-            if(results.hammingTotal_[0][0] == results.maxHammingTotal_[0][0]):
+            if(results.hammingTotal_[0][0] == results.maxHammingTotal_[0][0] != '0'):
                 print("hammingTotal_ equal maxHammingTotal_")
                 print(instance)
                 print(results.hammingTotal_[0])
@@ -272,7 +282,6 @@ def main(workdir, outputfile):
     print("hammingTotal_ equal maxHammingTotal_:" + str(countEqualToMax))
 
     # Output averaged ranks per criteria ordered by their key
-    numInstances = len(instances)
     with open(OUTPUT_FILE_2, 'w') as outputfile:
         outputfile.write('## First solution time\n')
         outputDictionary(dictionaryTimeFirstSolution, numInstances, outputfile)
@@ -311,7 +320,9 @@ def main(workdir, outputfile):
         outputfile.write('## Epsilon-Hamming relation, only first solution\n')
         outputDictionary(dictionaryRelationFirst, numInstances, outputfile)
         outputfile.write('## Epsilon-Hamming relation\n')
-        outputDictionary(dictionaryRelation, numInstances, outputfile)
+        outputDictionary(dictionaryRelation, numInstances, outputfile)#
+        outputfile.write('## Epsilon-Hamming relation for final solution front\n')
+        outputDictionary(dictionaryRelationFront, numInstances, outputfile)
 
     # Output averaged ranks per criteria ordered by their value
     with open(OUTPUT_FILE_3, 'w') as outputfile:
@@ -353,6 +364,8 @@ def main(workdir, outputfile):
         outputDictionaryOrdered(dictionaryRelationFirst, numInstances, outputfile)
         outputfile.write('## Epsilon-Hamming relation\n')
         outputDictionaryOrdered(dictionaryRelation, numInstances, outputfile)
+        outputfile.write('## Epsilon-Hamming relation for final solution front\n')
+        outputDictionaryOrdered(dictionaryRelationFront, numInstances, outputfile)
 
 
 # Iterate through all cases to find best hamming distances and best epsilon dominance values
@@ -367,7 +380,9 @@ def evaluateResults(casesPath):
         avgResultFilePath = casesPath + '/'+ case + "/resultsHammingAverage.txt"
         maxResultFilePath = casesPath + '/'+ case + "/resultsHammingMax.txt"
         statFilePath = casesPath + '/'+ case + "/statInfo.txt"
+        epsilonFront = -1
 
+        # Evaluate status data
         with open(statFilePath, 'r') as inputFile:
             if inputFile.closed:
                 print("file can not be opened: " + statFilePath)
@@ -383,19 +398,19 @@ def evaluateResults(casesPath):
             # Minimize time to complete the search or Timeout as worst case
             result.buildMinList(result.completeSearchTime_, terms[2].rstrip(), case)
 
+        # Evaluate results from design points
         with open(resultFilePath, 'r') as inputFile:
             if inputFile.closed:
                 print("file can not be opened: " + resultFilePath)
                 return
 
-            # Skip the first line, where the header is
+            # Read file, but skip the first line, where the header is
             inputFile.readline()
+            lines = inputFile.readlines()
 
             # Invalid case, when no data is available
             # Set data to worst case
-            line = inputFile.readline()
-            terms = line.split(' ')
-            if len(terms) == 1:
+            if len(lines) == 0 :
                 result.buildMaxList(result.hammingTotalFirst_, wcMaximization, case)
                 result.buildMaxList(result.hammingBindingFirst_, wcMaximization, case)
                 result.buildMaxList(result.hammingRoutingFirst_, wcMaximization, case)
@@ -407,36 +422,35 @@ def evaluateResults(casesPath):
                 result.buildMaxList(result.epsilon_, wcMaximization, case)
                 result.buildMinList(result.epsilonFirstReachOne_, wcMinimization, case)
                 result.bestRelation(wcMaximization, wcMaximization, case)
+            else:
 
-            if len(terms) == 10:
-                # Maximize the value of each criteria for the first entry in the input file
-                result.buildMaxList(result.hammingTotalFirst_, terms[2], case)
-                result.buildMaxList(result.hammingBindingFirst_, terms[3], case)
-                result.buildMaxList(result.hammingRoutingFirst_, terms[4], case)
-                result.buildMaxList(result.epsilonFirst_, terms[8], case)
-                result.bestRelationFirst(terms[2], terms[8], case)
+                for line in lines:
+                    terms = line.split(' ')
+                    if (line == lines[0]):
+                        # Maximize the value of each criteria for the first entry in the input file
+                        result.buildMaxList(result.hammingTotalFirst_, terms[2], case)
+                        result.buildMaxList(result.hammingBindingFirst_, terms[3], case)
+                        result.buildMaxList(result.hammingRoutingFirst_, terms[4], case)
+                        result.buildMaxList(result.epsilonFirst_, terms[8], case)
+                        result.bestRelationFirst(terms[2], terms[8], case)
 
-            caseErrorSup = False
-            for line in inputFile:
-                terms = line.split(' ')
-                if len(terms) != 10:
-                    if not caseErrorSup:
-                        caseErrorSup = True
-                        print("warning, not enough arguments in file: " + resultFilePath)
-                    continue
+                     # Save epsilon dominance of final solution front for later calculation of relation Hamming Average total to epsilon dominance
+                    if(line == lines[-1]):
+                        epsilonFront = terms[8]   
 
-                # Maximize the value of each criteria for all entries in the input file
-                result.buildMaxList(result.hammingTotal_, terms[2], case)
-                result.buildMaxList(result.hammingBinding_, terms[3], case)
-                result.buildMaxList(result.hammingRouting_, terms[4], case)
-                result.buildMaxList(result.epsilon_, terms[8], case)
-                
-                # Get the minimum time per case when epsilon == 1.0 was reached
-                if float(terms[8]) == 1.0 :
-                    result.buildMinList(result.epsilonFirstReachOne_, terms[1], case)
-                
-                result.bestRelation(terms[2], terms[8], case)
+                    # Maximize the value of each criteria for all entries in the input file
+                    result.buildMaxList(result.hammingTotal_, terms[2], case)
+                    result.buildMaxList(result.hammingBinding_, terms[3], case)
+                    result.buildMaxList(result.hammingRouting_, terms[4], case)
+                    result.buildMaxList(result.epsilon_, terms[8], case)
+                    
+                    # Get the minimum time per case when epsilon == 1.0 was reached
+                    if float(terms[8]) == 1.0 :
+                        result.buildMinList(result.epsilonFirstReachOne_, terms[1], case)
+                    
+                    result.bestRelation(terms[2], terms[8], case)
 
+        # Evaluate results from final solution front (average)
         with open(avgResultFilePath, 'r') as inputFile:
             if inputFile.closed:
                 print("file can not be opened: " + avgResultFilePath)
@@ -445,24 +459,24 @@ def evaluateResults(casesPath):
             # Read only the last line
             lastLine = inputFile.readlines()[-1]
 
-            caseErrorSup = False
             terms = lastLine.split(' ')
             if len(terms) != 8:
-                if not caseErrorSup:
-                    caseErrorSup = True
-                    print("warning, not enough arguments in file: " + resultFilePath)
+                print("warning, not enough arguments in file: " + resultFilePath)
 
             # If the last line contains the heading, there is no data available
             if(terms[0] == "solution"):
                 result.buildMaxList(result.avgHammingTotal_, wcMaximization, case)
                 result.buildMaxList(result.avgHammingBinding_, wcMaximization, case)
                 result.buildMaxList(result.avgHammingRouting_, wcMaximization, case)
+                result.bestRelationFront(wcMaximization, wcMaximization, case)
             else:
                 # Maximize the value of each criteria for all entries in the input file
                 result.buildMaxList(result.avgHammingTotal_, terms[2], case)
                 result.buildMaxList(result.avgHammingBinding_, terms[3], case)
                 result.buildMaxList(result.avgHammingRouting_, terms[4], case)
+                result.bestRelationFront(terms[2], epsilonFront, case)
 
+        # Evaluate results from final solution front (maximum)
         with open(maxResultFilePath, 'r') as inputFile:
             if inputFile.closed:
                 print("file can not be opened: " + maxResultFilePath)
@@ -471,12 +485,9 @@ def evaluateResults(casesPath):
             # Read only the last line
             lastLine = inputFile.readlines()[-1]
 
-            caseErrorSup = False
             terms = lastLine.split(' ')
             if len(terms) != 8:
-                if not caseErrorSup:
-                    caseErrorSup = True
-                    print("warning, not enough arguments in file: " + resultFilePath)
+                print("warning, not enough arguments in file: " + resultFilePath)
 
             # If the last line contains the heading, there is no data available
             if(terms[0] == "solution"):
@@ -510,6 +521,7 @@ def evaluateResults(casesPath):
     result.maximizedRanks(result.epsilon_)
     result.minimizedRanks(result.epsilonFirstReachOne_)
     result.maximizedRanks(result.relation_)
+    result.maximizedRanks(result.relationFront_)
 
     return result
             

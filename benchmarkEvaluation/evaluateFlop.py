@@ -26,6 +26,7 @@ class Results():
         self.epsilonFirst_ = []
         self.relation_ = []
         self.relationFirst_ = []
+        self.relationFront_ = []
 
     def empty(self):
         isEmpty = (self.hammingTotal_ == [] or
@@ -43,7 +44,8 @@ class Results():
         self.epsilon_ == [] or
         self.epsilonFirst_ == [] or
         self.relation_ == [] or
-        self.relationFirst_ == [])
+        self.relationFirst_ == []or
+        self.relationFront_ == [])
         if isEmpty == 1:
             print("warning, empty instance")
         return isEmpty
@@ -111,7 +113,10 @@ class Results():
 
     def bestRelationFirst(self, candidateEpsilon, candidateHamming, candidateCase):
         self.minimizeValue(self.relationFirst_, str(float(candidateEpsilon)*float(candidateHamming)), candidateCase)
-        
+    
+    def bestRelationFront(self, candidateEpsilon, candidateHamming, candidateCase):
+        self.minimizeValue(self.relationFront_, str(float(candidateEpsilon)*float(candidateHamming)), candidateCase)
+
 
 # Function to format a line with multiple results
 def formatOutputMultiple(text, results, outputfile):
@@ -167,6 +172,7 @@ def main(workdir, outputfile):
     dictionaryMaxHammingRouting= {}
     dictionaryEpsilonFirst = {}
     dictionaryEpsilon = {}
+    dictionaryRelationFront = {}
     dictionaryRelationFirst = {}
     dictionaryRelation = {}
 
@@ -208,6 +214,7 @@ def main(workdir, outputfile):
 
             formatOutputMultiple('## Epsilon-Hamming relation, only first solution\n', results.relationFirst_, outputfile)
             formatOutputMultiple('## Epsilon-Hamming relation\n', results.relation_, outputfile)
+            formatOutputMultiple('## Epsilon-Hamming relation for the final solution front\n', results.relationFront_, outputfile)
 
             # Count the occurring cases per criteria
             updateDictionaryMultiple(dictionaryHammingTotalFirst,results.hammingTotalFirst_)
@@ -224,6 +231,7 @@ def main(workdir, outputfile):
             updateDictionaryMultiple(dictionaryMaxHammingRouting,results.maxHammingRouting_)
             updateDictionaryMultiple(dictionaryEpsilonFirst,results.epsilonFirst_)
             updateDictionaryMultiple(dictionaryEpsilon,results.epsilon_)
+            updateDictionaryMultiple(dictionaryRelationFront,results.relationFront_)
             updateDictionaryMultiple(dictionaryRelationFirst,results.relationFirst_)
             updateDictionaryMultiple(dictionaryRelation,results.relation_)
 
@@ -261,6 +269,8 @@ def main(workdir, outputfile):
         outputDictionary(dictionaryRelationFirst, outputfile)
         outputfile.write('## Epsilon-Hamming relation\n')
         outputDictionary(dictionaryRelation, outputfile)
+        outputfile.write('## Epsilon-Hamming relation for the final solution front\n')
+        outputDictionary(dictionaryRelationFront, outputfile)
 
 
 
@@ -275,40 +285,49 @@ def evaluateResults(casesPath):
         resultFilePath = casesPath + '/'+ case + "/results.txt"
         avgResultFilePath = casesPath + '/'+ case + "/resultsHammingAverage.txt"
         maxResultFilePath = casesPath + '/'+ case + "/resultsHammingMax.txt"
+        epsilonFront = -1
 
+         # Evaluate results from design points
         with open(resultFilePath, 'r') as inputFile:
             if inputFile.closed:
                 print("file can not be opened: " + resultFilePath)
                 return
 
-            # Skip the first line, where the header is
+            # Read file, but skip the first line, where the header is
             inputFile.readline()
-            line = inputFile.readline()
-            terms = line.split(' ')
-            if len(terms) == 10:
-                # Minimize the value of each criteria for the first entry in the input file
-                result.minimizeValue(result.hammingTotalFirst_, terms[2], case)
-                result.minimizeValue(result.hammingBindingFirst_, terms[3], case)
-                result.minimizeValue(result.hammingRoutingFirst_, terms[4], case)
-                result.minimizeValue(result.epsilonFirst_, terms[8], case)
-                result.bestRelationFirst(terms[2], terms[8], case)
+            lines = inputFile.readlines()
 
-            caseErrorSup = False
-            for line in inputFile:
+            # Invalid case, when no data is available
+            # Set data to worst case
+            if len(lines) == 0 :
+                continue
+
+            for line in lines:
                 terms = line.split(' ')
                 if len(terms) != 10:
-                    if not caseErrorSup:
-                        caseErrorSup = True
-                        print("warning, not enough arguments in file: " + resultFilePath)
+                    print("warning, not enough arguments in file: " + resultFilePath)
                     continue
 
-                # MInimize the value of each criteria for all entries in the input file
+                if (line == lines[0]):
+                    # Minimize the value of each criteria for the first entry in the input file
+                    result.minimizeValue(result.hammingTotalFirst_, terms[2], case)
+                    result.minimizeValue(result.hammingBindingFirst_, terms[3], case)
+                    result.minimizeValue(result.hammingRoutingFirst_, terms[4], case)
+                    result.minimizeValue(result.epsilonFirst_, terms[8], case)
+                    result.bestRelationFirst(terms[2], terms[8], case)
+                
+                # Save epsilon dominance of final solution front for later calculation of relation Hamming Average total to epsilon dominance
+                if(line == lines[-1]):
+                    epsilonFront = terms[8]
+
+                # Minimize the value of each criteria for all entries in the input file
                 result.minimizeValue(result.hammingTotal_, terms[2], case)
                 result.minimizeValue(result.hammingBinding_, terms[3], case)
                 result.minimizeValue(result.hammingRouting_, terms[4], case)
                 result.minimizeValue(result.epsilon_, terms[8], case)
                 result.bestRelation(terms[2], terms[8], case)
 
+        # Evaluate results from final solution front (average)
         with open(avgResultFilePath, 'r') as inputFile:
             if inputFile.closed:
                 print("file can not be opened: " + resultFilePath)
@@ -317,12 +336,9 @@ def evaluateResults(casesPath):
             # Read only the last line
             lastLine = inputFile.readlines()[-1]
 
-            caseErrorSup = False
             terms = lastLine.split(' ')
             if len(terms) != 8:
-                if not caseErrorSup:
-                    caseErrorSup = True
-                    print("warning, not enough arguments in file: " + resultFilePath)
+                print("warning, not enough arguments in file: " + resultFilePath)
                 continue
 
             # If the last line contains the heading, there is no data available
@@ -333,7 +349,9 @@ def evaluateResults(casesPath):
                 result.minimizeValue(result.avgHammingTotal_, terms[2], case)
                 result.minimizeValue(result.avgHammingBinding_, terms[3], case)
                 result.minimizeValue(result.avgHammingRouting_, terms[4], case)
+                result.bestRelationFront(terms[2], epsilonFront, case)
 
+        # Evaluate results from final solution front (maximum)
         with open(maxResultFilePath, 'r') as inputFile:
             if inputFile.closed:
                 print("file can not be opened: " + resultFilePath)
@@ -342,12 +360,9 @@ def evaluateResults(casesPath):
             # Read only the last line
             lastLine = inputFile.readlines()[-1]
 
-            caseErrorSup = False
             terms = lastLine.split(' ')
             if len(terms) != 8:
-                if not caseErrorSup:
-                    caseErrorSup = True
-                    print("warning, not enough arguments in file: " + resultFilePath)
+                print("warning, not enough arguments in file: " + resultFilePath)
                 continue
 
             # If the last line contains the heading, there is no data available
