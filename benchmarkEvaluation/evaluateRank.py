@@ -142,7 +142,7 @@ def formatOutputMultiple(text, results, dictionary, outputfile):
 
         outputfile.write('**' + str(rank) + '.** ' + results[i][0] + ' ' + results[i][1] + '  \n')
         key = results[i][1]
-        updateDictionaryMultiple(dictionary, key, rank)
+        updateDictionaryMultiple(dictionary, key, rank, float(results[i][0]))
 
 
 # Function to format multiple lines output
@@ -154,33 +154,34 @@ def formatOutputNEntries(text, results, outputfile):
 
 # Try to access case in dictionary, if there is no such key, initialize it
 # Record the ranks (value) for each case (key)
-def updateDictionaryMultiple(dictionary, key, rank):
+def updateDictionaryMultiple(dictionary, key, rank, value):
     if rank != 0 :
-        try: 
-            dictionary[key] = dictionary[key] + rank
-        except:
-            dictionary[key] = rank
+        dictionary.setdefault(key,{})
+        dictionary[key].setdefault("rank",0)
+        dictionary[key].setdefault("value",0)
+        dictionary[key]["rank"] += rank
+        dictionary[key]["value"] += value
     else:
         print("Exception: Rank is 0")
 
 # Function to format dictionary output
 def outputDictionary(dictionary, numInstances, outputfile):
-    outputfile.write('|Case|Average Rank||\n')
+    outputfile.write('|Case|Average Rank|Average Value|\n')
     outputfile.write('|:---:|:---:|:---:|\n')
     for i in sorted(dictionary) :
-        outputfile.write('|' + i + '|' + str(dictionary[i]/numInstances) + '|    |\n')
+        outputfile.write('|' + i + '|' + str(dictionary[i]["rank"]/numInstances) + '|' + str(dictionary[i]["value"]/numInstances) + '|\n')
 
 
 # Function to format dictionary output (ordered by the values)
 def outputDictionaryOrdered(dictionary, numInstances, outputfile):
-    outputfile.write('|Case|Average Rank||\n')
+    outputfile.write('|Case|Average Rank|Average Value|\n')
     outputfile.write('|:---:|:---:|:---:|\n')
-    for i in sorted(dictionary, key=dictionary.get) :
+    for i in sorted(dictionary, key=lambda x: dictionary[x]["rank"]) :
         # Mark cases "DSE from scratch" red
         if i == "asp-dse-ed-v1.0.0-xyz-n1" or i == "asp-dse-ed-v1.0.0-bound-n1" or i == "asp-dse-ed-v1.0.0-arb-n1" :
-            outputfile.write('|' + "<span style=\"color: red;\">" + i + "</span>" + '|' + str(dictionary[i]/numInstances) + '|    |\n')
+            outputfile.write('|' + "<span style=\"color: red;\">" + i + "</span>" + '|' + str(dictionary[i]["rank"]/numInstances) + '|' + str(dictionary[i]["value"]/numInstances) + '|\n')
         else:
-            outputfile.write('|' + i + '|' + str(dictionary[i]/numInstances) + '|    |\n')
+            outputfile.write('|' + i + '|' + str(dictionary[i]["rank"]/numInstances) + '|' + str(dictionary[i]["value"]/numInstances) + '|\n')
 
 
 def main(workdir, outputfile): 
