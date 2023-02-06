@@ -157,8 +157,8 @@ def formatOutputNEntries(text, results, outputfile):
 def updateDictionaryMultiple(dictionary, key, rank, value):
     if rank != 0 :
         dictionary.setdefault(key,{})
-        dictionary[key].setdefault("rank",rank)
-        dictionary[key].setdefault("value",value)
+        dictionary[key].setdefault("rank",0)
+        dictionary[key].setdefault("value",0)
         dictionary[key]["rank"] += rank
         dictionary[key]["value"] += value
     else:
@@ -179,7 +179,7 @@ def outputDictionaryOrdered(dictionary, numInstances, outputfile):
     for i in sorted(dictionary, key=lambda x: dictionary[x]["rank"]) :
         # Mark cases "DSE from scratch" red
         if i == "asp-dse-ed-v1.0.0-xyz-n1" or i == "asp-dse-ed-v1.0.0-bound-n1" or i == "asp-dse-ed-v1.0.0-arb-n1" :
-            outputfile.write('|' + "<span style=\"color: red;\">" + i + "</span>" + str(dictionary[i]["rank"]/numInstances) + '|' + str(dictionary[i]["value"]/numInstances) + '|\n')
+            outputfile.write('|' + "<span style=\"color: red;\">" + i + "</span>" + '|' + str(dictionary[i]["rank"]/numInstances) + '|' + str(dictionary[i]["value"]/numInstances) + '|\n')
         else:
             outputfile.write('|' + i + '|' + str(dictionary[i]["rank"]/numInstances) + '|' + str(dictionary[i]["value"]/numInstances) + '|\n')
 
