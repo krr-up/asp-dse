@@ -24,6 +24,7 @@ node(N;N') :- link(_,N,N').
 visit(C,R) :- send(T,C), bind(_,T,R).
 visit(C,R') :- visit(C,R), reached(C,_,R,R').
 :- reached(C,_,_,R), not visit(C,R).
+:- reached(C,_,R,_), not visit(C,R).
 :- read(T,C), bind(_,T,R), not visit(C,R).
 :- read(T,C), bind(_,T,R), reached(C,_,R,_).
 

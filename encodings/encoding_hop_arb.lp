@@ -27,6 +27,7 @@ nr_links(NR) :- NR=#count{ link(L,N,N') : link(L,N,N'), link(L,N',N), N<N'; link
 visit(C,R) :- send(T,C), bind(_,T,R).
 visit(C,R') :- visit(C,R), reached(C,_,R,R').
 :- reached(C,_,_,R), not visit(C,R).
+:- reached(C,_,R,_), not visit(C,R).
 :- read(T,C), bind(_,T,R), not visit(C,R).
 :- read(T,C), bind(_,T,R), reached(C,_,R,_).
 	
